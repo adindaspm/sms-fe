@@ -1,0 +1,54 @@
+<div class="p-4 sm:ml-64">
+    <div class="p-4 mt-14">
+        <h1 class="text-4xl font-extrabold text-fontdark dark:text-black">Dashboard</h1>
+        <h2 class="text-2xl font-normal text-font dark:text-black mb-6">Superadmin</h2>
+
+        <div class="grid grid-cols-3">
+            <div class="max-w-sm w-full bg-primary-30 rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+                <div class="flex justify-center">
+                    <h2 class="text-xl font-extrabold text-font dark:text-white">Jumlah Kegiatan per Satker</h2>
+                </div>
+            
+                <!-- Chart 1: Kegiatan per Satker -->
+                <!-- Pie Chart: Kegiatan per Satker -->
+                <div id="pie-satker"
+                    class="my-10"
+                    th:data-labels="${labelsSatker}"
+                    th:data-data="${dataSatker}"
+                    th:data-hasdata="${hasDataSatker}">
+                </div>
+            </div>
+            <!-- Bar Chart -->
+            <div class="max-w-sm w-full bg-primary-30  rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+                
+                <div class="flex justify-center">
+                    <h2 class="text-xl font-extrabold text-font dark:text-white">Jumlah Kegiatan per Satker</h2>
+                </div>
+                <!-- Chart 2: Kegiatan per Satker -->
+                <div id="bar-satker"
+                    class="my-8"
+                    th:data-labels="${labelsSatker}"
+                    th:data-data="${dataSatker}"
+                    th:data-hasdata="${hasDataSatker}">
+                </div>
+            </div>
+<!-- Blok 3 -->
+            <div class="max-w-sm w-full bg-primary-30  rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
+                <div class="flex justify-center">
+                    <h2 class="text-xl font-extrabold text-font dark:text-white">Jumlah Kegiatan per Satker</h2>
+                </div>
+                <!-- Chart 3: Horizontal Kegiatan per Satker -->
+                <div id="hbar-satker"
+                    class="my-8"
+                    th:data-labels="${labelsSatker}"
+                    th:data-data="${dataSatker}"
+                    th:data-hasdata="${hasDataSatker}">
+                </div>
+                
+            </div>
+
+        </div>
+        
+
+    </div>
+</div>

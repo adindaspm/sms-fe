@@ -1,0 +1,496 @@
+<div class="p-4 sm:ml-64">
+    <div class="p-4 mt-14">
+        <div class="m-6">
+            <h1 class="text-4xl text-font font-extrabold dark:text-white" th:text="${kegiatan.name}"></h1>
+            <h2 class="text-2xl text-font font-normal dark:text-white mb-6" th:text="${kegiatan.satker}"></h2>
+        </div>
+
+        <!-- Main Tabs -->
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+                <li class="me-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="umum-tab" data-tabs-target="#umum" type="button" role="tab" aria-controls="umum" aria-selected="false">Umum</button>
+                </li>
+                <li class="me-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-white dark:hover:text-gray-300" id="tahap-tab" data-tabs-target="#tahap" type="button" role="tab" aria-controls="tahap" aria-selected="false">Tahap</button>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Main Tab Content -->
+        <div id="default-tab-content">
+            <!-- Tab Umum Content -->
+            <div class="hidden p-4 rounded-lg bg-primary-30 dark:bg-gray-800" id="umum" role="tabpanel" aria-labelledby="umum-tab">
+                <form class="w-full mx-auto">
+                    <!-- Umum form fields -->
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" id="floating_id_kegiatan" th:value="${kegiatan.id}" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled/>
+                        <label for="floating_id_kegiatan" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Id Kegiatan</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" id="floating_nama_kegiatan" th:value="${kegiatan.name}" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                        <label for="floating_nama_kegiatan" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Aktivitas</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" id="floating_program_kegiatan" th:value="${kegiatan.program}" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                        <label for="floating_program_kegiatan" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Kegiatan</label>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-5 group">
+                            <input type="text" name="floating_tanggal_mulai" id="floating_tanggal_mulai" th:value="${kegiatan.startDate}" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                            <label for="floating_tanggal_mulai" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tanggal Mulai</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-5 group">
+                            <input type="text" name="floating_tanggal_selesai" id="floating_tanggal_selesai" th:value="${kegiatan.endDate}" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                            <label for="floating_tanggal_selesai" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tanggal Selesai</label>
+                        </div>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" name="floating_satker" id="floating_satker" th:value="${kegiatan.satker}" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                        <label for="floating_satker" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Satuan Kerja</label>
+                    </div>   
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" name="floating_pj" id="floating_pj" th:value="${kegiatan.user}" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                        <label for="floating_pj" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Penanggung Jawab</label>
+                    </div>                    
+                    <!-- Progress Bar -->
+                    <div class="relative z-0 w-full mb-5 group">
+                        <div class="pt-2 5">
+                            <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                                <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style="width: 45%"> 45%</div>
+                            </div>
+                        </div>
+                        <label class="absolute text-sm text-fontdark dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Status</label>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Tab Tahap Content -->
+            <div class="hidden p-4 rounded-lg border border-primary dark:bg-gray-800" id="tahap" role="tabpanel" aria-labelledby="tahap-tab">
+                <div class="md:flex">
+                    <!-- Step Tabs -->
+                    <ul class="flex-column space-y space-y-4 text-sm font-medium text-fontdark dark:text-gray-400 md:me-4 mb-4 md:mb-0" id="subtahap-tab" data-tabs-toggle="#subtahap-tab-content" role="tablist">
+                        <!-- Static step tabs - will be replaced by data from API -->
+                        <li th:each="step, index : ${steps}" role="presentation">
+                            <button th:id="${step.tahap.toLowerCase() + '-tab'}" 
+                                    th:class="${'inline-flex items-center px-4 py-3 rounded-lg w-full ' + 
+                                    (step.isActive ? 'text-white bg-blue-700 active dark:bg-blue-600' : 
+                                    (step.isCompleted ? 'text-gray-900 bg-green-200 hover:bg-green-300' : 
+                                    'text-gray-400 cursor-not-allowed bg-primary-30 dark:text-fontdark'))}"
+                                    th:attr="data-tabs-target='#' + ${step.tahap.toLowerCase()}, 
+                                             aria-controls=${step.tahap.toLowerCase()},
+                                             aria-selected=${step.isActive},
+                                             disabled=${!step.isActive && !step.isCompleted}"
+                                    type="button" 
+                                    role="tab">
+                                <svg class="w-4 h-4 me-2" th:class="${step.isActive ? 'text-white' : 'text-gray-400 dark:text-fontdark'}" 
+                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
+                                </svg>
+                                <span th:text="${step.tahap.replace('_', ' ')}">Step</span>
+                                <span th:if="${step.isActive && step.progressPercentage > 0 && step.progressPercentage < 100}" 
+                                      class="text-xs italic ml-1" 
+                                      th:text="${'(' + step.progressPercentage + '%)'}"></span>
+                                <span th:if="${step.isCompleted}" class="text-xs italic ml-1">(Selesai)</span>
+                                <span th:if="${!step.isActive && !step.isCompleted}" class="text-xs italic ml-1">(Belum Dimulai)</span>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Step Tab Content -->
+                    <div id="subtahap-tab-content" class="w-full">
+                        <!-- Step content for each step - will be populated dynamically -->
+                        <div th:each="step : ${steps}" 
+                             th:id="${step.tahap.toLowerCase()}" 
+                             th:class="${'p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full' + (step.isActive ? '' : ' hidden')}" 
+                             role="tabpanel" 
+                             th:attr="aria-labelledby=${step.tahap.toLowerCase() + '-tab'}">
+                            
+                            <!-- Tab content header -->
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4" th:text="${'Daftar Sub Tahap ' + step.tahap.replace('_', ' ')}">Step Name</h3>
+                            
+                            <!-- Progress indicator -->
+                            <div class="mb-6">
+                                <p class="text-sm font-medium text-gray-700 mb-2" th:text="${'Progress Tahap ' + step.tahap.replace('_', ' ') + ':'}">Progress:</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" th:style="${'width: ' + step.progressPercentage + '%'}"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Form for step's substeps -->
+                            <form th:id="${'substeps-form-' + step.id}" class="space-y-4 mb-6">
+                                <input type="hidden" name="tahapId" th:value="${step.id}">
+                                <input type="hidden" name="kegiatanId" th:value="${kegiatan.id}">
+                                
+                                <!-- Sample substeps - would be replaced by actual data -->
+                                <div th:if="${step.tahap == 'SPECIFY_NEEDS'}" class="flex items-center">
+                                    <input id="subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                    <label for="subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Identifikasi kebutuhan data</label>
+                                </div>
+                                <!-- Add more substeps based on step type -->
+                            </form>
+                            
+                            <!-- Action buttons -->
+                            <div class="mt-6 flex flex-wrap gap-4">
+                                <!-- Different buttons based on step type -->
+                                <th:block th:if="${step.tahap == 'SPECIFY_NEEDS'}">
+                                    <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                        Input di iPlan
+                                        <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                        </svg>
+                                    </a>
+                                </th:block>
+                                
+                                <th:block th:if="${step.tahap == 'DESIGN' || step.tahap == 'BUILD'}">
+                                    <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                        Input di FASIH
+                                        <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                        </svg>
+                                    </a>
+                                </th:block>
+                                
+                                <!-- File upload for certain step types -->
+                                <th:block th:if="${step.tahap == 'COLLECT' || step.tahap == 'PROCESS' || step.tahap == 'ANALYZE' || step.tahap == 'DISSEMINATE' || step.tahap == 'EVALUATE'}">
+                                    <label th:for="${'upload-file-' + step.id}" class="cursor-pointer inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300">
+                                        <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                        </svg>
+                                        <span th:if="${step.tahap == 'COLLECT'}">Upload Data Survei</span>
+                                        <span th:if="${step.tahap == 'PROCESS'}">Upload Data Hasil Pengolahan</span>
+                                        <span th:if="${step.tahap == 'ANALYZE'}">Upload Data Hasil Analisis</span>
+                                        <span th:if="${step.tahap == 'DISSEMINATE'}">Upload File Publikasi</span>
+                                        <span th:if="${step.tahap == 'EVALUATE'}">Upload Laporan Evaluasi</span>
+                                    </label>
+                                    <input class="hidden" th:id="${'upload-file-' + step.id}" type="file" multiple th:attr="data-tahap-id=${step.id}"/>
+                                </th:block>
+                                
+                                <!-- Complete step button only for active steps -->
+                                <button th:if="${step.isActive && !step.isCompleted}" 
+                                        th:id="${'complete-' + step.tahap.toLowerCase()}" 
+                                        th:attr="data-tahap-id=${step.id}"
+                                        class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                    Selesaikan Tahap
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            <!-- Show uploaded files if present -->
+                            <div th:if="${step.uploadedFiles != null && !step.uploadedFiles.isEmpty()}" class="mt-6">
+                                <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-2">File yang telah diupload:</h4>
+                                <ul class="list-disc pl-5">
+                                    <li th:each="file : ${step.uploadedFiles}" class="text-sm text-gray-700">
+                                        <a th:href="${'/uploads/kegiatan/' + kegiatan.id + '/tahap/' + step.id + '/' + file}" 
+                                           target="_blank" class="text-blue-600 hover:underline" th:text="${file}">Filename</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize main tabs
+    const tabElements = document.querySelectorAll('[data-tabs-toggle]');
+    if (window.Flowbite && window.Flowbite.initTabs) {
+        window.Flowbite.initTabs(tabElements);
+    }
+    
+    // Load step data when Tahap tab is clicked
+    const tahapTab = document.getElementById('tahap-tab');
+    if (tahapTab) {
+        tahapTab.addEventListener('click', function() {
+            const kegiatanId = document.querySelector('input[name="kegiatanId"]')?.value || 1;
+            fetchStepData(kegiatanId);
+        });
+    }
+    
+    // Function to fetch step data from API
+    function fetchStepData(kegiatanId) {
+        fetch(`/api/debug/kegiatan/${kegiatanId}/steps`)
+            .then(response => response.json())
+            .then(steps => {
+                updateStepTabs(steps);
+                initializeStepEventHandlers(steps);
+            })
+            .catch(error => {
+                console.error('Error fetching step data:', error);
+            });
+    }
+    
+    // Function to update step tabs with data from API
+    function updateStepTabs(steps) {
+        // Sort steps by ID
+        steps.sort((a, b) => a.id - b.id);
+        
+        // Update the step tabs
+        const stepList = document.getElementById('subtahap-tab');
+        const stepContent = document.getElementById('subtahap-tab-content');
+        
+        // If the tabs are already pre-rendered by Thymeleaf, just update them
+        // Otherwise, this would create the tabs dynamically
+    }
+    
+    // Function to initialize event handlers for steps
+    function initializeStepEventHandlers(steps) {
+        // Add event handlers for completing steps
+        document.querySelectorAll('[id^="complete-"]').forEach(button => {
+            button.addEventListener('click', function() {
+                const tahapId = this.dataset.tahapId;
+                completeStep(tahapId);
+            });
+        });
+        
+        // Add event handlers for checkboxes to update progress
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const form = this.closest('form');
+                const tahapId = form.querySelector('input[name="tahapId"]').value;
+                updateSubsteps(tahapId, form);
+            });
+        });
+        
+        // Add event handlers for file uploads
+        document.querySelectorAll('input[type="file"]').forEach(fileInput => {
+            fileInput.addEventListener('change', function() {
+                if (this.files.length === 0) return;
+                const tahapId = this.dataset.tahapId;
+                uploadFile(tahapId, this.files[0]);
+            });
+        });
+    }
+    
+    // Function to complete a step
+    function completeStep(tahapId) {
+        const kegiatanId = document.querySelector('input[name="kegiatanId"]').value;
+        
+        // Confirm completion with the user
+        if (!confirm('Apakah Anda yakin ingin menyelesaikan tahap ini?')) {
+            return;
+        }
+        
+        // Send API request to complete step
+        fetch(`/operator/surveys/${kegiatanId}/tahap/${tahapId}/complete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showNotification('Tahap berhasil diselesaikan', 'success');
+                
+                // Reload page to show updated UI
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                showNotification('Gagal menyelesaikan tahap: ' + data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error completing step:', error);
+            showNotification('Terjadi kesalahan saat menyelesaikan tahap', 'error');
+        });
+    }
+    
+    // Function to update substeps
+    function updateSubsteps(tahapId, form) {
+        const kegiatanId = form.querySelector('input[name="kegiatanId"]').value;
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        const subSteps = [];
+        
+        checkboxes.forEach((cb, index) => {
+            subSteps.push({
+                label: cb.nextElementSibling.textContent.trim(),
+                completed: cb.checked
+            });
+        });
+        
+        // Send API request to update substeps
+        fetch(`/operator/surveys/${kegiatanId}/tahap/${tahapId}/substeps`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(subSteps)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Update progress bar
+                const progressBar = document.querySelector(`#${data.tahap.toLowerCase()} .bg-blue-600`);
+                if (progressBar) {
+                    progressBar.style.width = `${data.progress}%`;
+                }
+                
+                showNotification('Sub-tahap berhasil diperbarui', 'success');
+            } else {
+                showNotification('Gagal memperbarui sub-tahap: ' + data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating sub-steps:', error);
+            showNotification('Terjadi kesalahan saat memperbarui sub-tahap', 'error');
+        });
+    }
+    
+    // Function to upload a file
+    function uploadFile(tahapId, file) {
+        const kegiatanId = document.querySelector('input[name="kegiatanId"]').value;
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Send API request to upload file
+        fetch(`/operator/surveys/${kegiatanId}/tahap/${tahapId}/upload`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showNotification(`File ${data.originalFilename} berhasil diupload`, 'success');
+                
+                // Reload the page to show the new file
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                showNotification('Gagal mengupload file: ' + data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error uploading file:', error);
+            showNotification('Terjadi kesalahan saat mengupload file', 'error');
+        });
+    }
+    
+    // Function to switch between sub tabs
+    function switchToTab(tabId) {
+        // Hide all tab contents
+        document.querySelectorAll('#subtahap-tab-content > div[role="tabpanel"]').forEach(panel => {
+            panel.classList.add('hidden');
+        });
+        
+        // Show the selected tab content
+        const targetPanel = document.getElementById(tabId);
+        if (targetPanel) {
+            targetPanel.classList.remove('hidden');
+        }
+        
+        // Update active state on tab buttons
+        document.querySelectorAll('#subtahap-tab button[role="tab"]').forEach(tab => {
+            if (!tab.disabled) {
+                const isTargetTab = tab.getAttribute('data-tabs-target') === '#' + tabId || 
+                                   tab.getAttribute('data-tabs-target') === tabId;
+                
+                // Set appropriate ARIA attributes and styling
+                tab.setAttribute('aria-selected', isTargetTab ? 'true' : 'false');
+                
+                if (isTargetTab) {
+                    tab.classList.remove('text-gray-500', 'hover:text-gray-700', 'bg-primary-30');
+                    tab.classList.add('text-white', 'bg-blue-700', 'active');
+                } else {
+                    tab.classList.remove('text-white', 'bg-blue-700', 'active');
+                    tab.classList.add('text-gray-500', 'hover:text-gray-700', 'bg-primary-30');
+                }
+            }
+        });
+    }
+    
+    // Add click handlers to all tabs (only enabled ones will respond)
+    document.querySelectorAll('#subtahap-tab button[role="tab"]').forEach(tab => {
+        tab.addEventListener('click', function() {
+            if (!this.disabled) {
+                const target = this.getAttribute('data-tabs-target');
+                if (target) {
+                    switchToTab(target.replace('#', ''));
+                }
+            }
+        });
+    });
+    
+    // Helper function to show notifications
+    function showNotification(message, type) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white ${type === 'success' ? 'bg-green-600' : 'bg-red-600'} shadow-lg z-50 transition-opacity duration-500`;
+        notification.style.opacity = '0';
+        notification.textContent = message;
+        
+        // Add to DOM
+        document.body.appendChild(notification);
+        
+        // Fade in
+        setTimeout(() => {
+            notification.style.opacity = '1';
+        }, 10);
+        
+        // Fade out after 3 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            
+            // Remove from DOM after fade out
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 500);
+        }, 3000);
+    }
+
+    // Check if we need to initialize tabs manually (fallback)
+    if (!window.Flowbite || !window.Flowbite.initTabs) {
+        console.warn("Flowbite tabs initialization not found, using manual tab handling");
+        
+        // Main tab initialization
+        document.querySelectorAll('#default-tab button[role="tab"]').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-tabs-target').replace('#', '');
+                
+                // Hide all main tab contents
+                document.querySelectorAll('#default-tab-content > div[role="tabpanel"]').forEach(panel => {
+                    panel.classList.add('hidden');
+                });
+                
+                // Show target tab content
+                const targetPanel = document.getElementById(targetId);
+                if (targetPanel) {
+                    targetPanel.classList.remove('hidden');
+                }
+                
+                // Update active state on main tab buttons
+                document.querySelectorAll('#default-tab button[role="tab"]').forEach(btn => {
+                    btn.setAttribute('aria-selected', 'false');
+                    btn.classList.remove('border-blue-600', 'text-blue-600');
+                });
+                
+                // Set active state on clicked button
+                this.setAttribute('aria-selected', 'true');
+                this.classList.add('border-blue-600', 'text-blue-600');
+                
+                // If Tahap tab was clicked, fetch step data
+                if (targetId === 'tahap') {
+                    const kegiatanId = document.querySelector('input[name="kegiatanId"]')?.value || 1;
+                    fetchStepData(kegiatanId);
+                }
+            });
+        });
+        
+        // Initial active tab
+        const initialTab = document.querySelector('#default-tab button[aria-selected="true"]') || 
+                           document.querySelector('#default-tab button[role="tab"]');
+        if (initialTab) {
+            initialTab.click();
+        }
+    }
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
