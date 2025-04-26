@@ -1,12 +1,11 @@
-  // Cek apakah token login ada
-  const token = localStorage.getItem('authToken');
-
-  // Kalau tidak ada, redirect ke halaman login
-  if (!token) {
-    window.location.href = '/login.html'; // ganti sesuai nama file login kamu
+function isAuthenticated(req, res, next) {
+  if (req.session.user && req.session.user.accessToken) {
+    // User ada dan punya accessToken
+    next();
+  } else {
+    // Belum login, redirect ke login page
+    res.redirect('/login'); // atau tampilkan error JSON kalau mau
   }
+}
 
-  function logout() {
-    localStorage.removeItem('authToken');
-    window.location.href = '/login.html'; // redirect ke login
-  }
+module.exports = { isAuthenticated };

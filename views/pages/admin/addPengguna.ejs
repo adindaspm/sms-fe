@@ -1,0 +1,85 @@
+<div class="p-4 sm:ml-64">
+    <div class="p-4 mt-14">
+        <div class="mb-6">
+            <h1 class="text-4xl text-font font-extrabold dark:text-white">Tambah Pengguna</h1>
+        </div>
+        
+        <div th:if="${param.success}" id="alert-additional-content-3" class="p-4 mb-4 text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
+            <div class="flex items-center">
+              <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+              </svg>
+              <span class="sr-only">Info</span>
+              <h3 class="text-lg font-medium">Success</h3>
+            </div>
+            <div class="mt-2 mb-4 text-sm">
+              Sukses menambahkan pengguna!
+            </div>
+            <div class="flex">
+              <button type="button" class="text-green-800 bg-transparent border border-green-800 hover:bg-green-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-green-600 dark:border-green-600 dark:text-green-400 dark:hover:text-white dark:focus:ring-green-800" data-dismiss-target="#alert-additional-content-3" aria-label="Close">
+                Dismiss
+              </button>
+            </div>
+        </div>
+        
+        <form class="w-full mx-auto" role="form" method="post" th:action="@{/superadmin/users/save}" th:object="${user}">
+            <div class="w-full p-6 bg-primary-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="floating_first_name" id="floating_first_name" th:field="*{firstName}" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="floating_first_name" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Depan</label>
+                    <p th:if="${#fields.hasErrors('firstName')}" class="text-danger" th:errors="*{firstName}"></p>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="floating_last_name" id="floating_last_name" th:field="*{lastName}" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="floating_last_name" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Belakang</label>
+                    <p th:if="${#fields.hasErrors('lastName')}" class="text-danger" th:errors="*{lastName}"></p>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="floating_nip" id="floating_nip" th:field="*{nip}" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="floating_nip" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">NIP</label>
+                    <p th:if="${#fields.hasErrors('nip')}" class="text-danger" th:errors="*{nip}"></p>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="floating_email" id="floating_email" th:field="*{email}" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+                    <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p>
+                </div>
+                <div class="bg-primary-100 relative z-0 w-full mb-5 group">
+                    <select th:field="*{satker}" name="floating_satker" id="floating_satker" class="bg-primary-100 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required>
+                        <option class="bg-primary-100" value="">Pilih Satuan Kerja</option>
+                        <th:block th:each="cat : ${listSatkers}">
+                            <option class="bg-primary-100" th:text="${cat.name}" th:value="${cat.id}">
+                        </th:block>
+                    </select>
+                    <label for="floating_satker" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Satuan Kerja</label>
+                </div>
+
+                <div class="relative z-0 w-full mb-5 group">   
+                    <p class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Upload Foto Profil</p>                                             
+                    <div class="flex items-center justify-center w-full">
+                    <label for="dropzone-file" class="mt-3 flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-4 text-gray-600 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-600 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 400x400px)</p>
+                        </div>
+                        <input name="fotoProfil" id="dropzone-file" type="file" class="hidden" />
+                    </label>
+                    </div> 
+                </div>
+            </div>
+            <div class="flex justify-between">
+                <div class="mt-6">
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>            
+                </div>
+                <div class="mt-6">
+                    <a th:href="@{/superadmin/users}">
+                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Kembali</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

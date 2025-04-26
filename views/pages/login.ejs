@@ -111,7 +111,7 @@
                 <h2 class="text-2xl font-bold mb-4 text-center">Selamat Datang</h2>
                 <p class="text-fontdark mb-4 text-center">Silakan masuk untuk mengakses sistem</p>
 
-                <form class="space-y-6" method="post" role="form" th:action="@{/login}">
+                <form class="space-y-6" method="post" role="form" action="/login-user">
                     <div>
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                         <div class="relative">
@@ -121,7 +121,7 @@
                                     <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
                                 </svg>
                             </div>
-                            <input type="email" name="username" id="username" placeholder="Enter email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                            <input type="email" name="email" id="email" placeholder="Enter email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                         </div>
                     </div>
 
