@@ -1,0 +1,99 @@
+<div class="p-4 sm:ml-64">
+    <div class="p-4 mt-14">
+      <div class="flex justify-between mb-6">
+        <h1 class="text-4xl text-font font-extrabold dark:text-white">Kelola Peran Pengguna</h1>
+        <a href="/admin/users">
+          <button class="text-fontdark bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Kembali</button>
+        </a>
+      </div>
+  
+      <!-- User Information -->
+      <div class="w-full p-6 bg-primary-30 border border-primary-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-6">
+        <h2 class="text-2xl text-fontdark font-bold mb-4">User Information</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="relative z-0 w-full mb-5 group">
+            <input type="text" id="user_id" class="block py-2.5 px-0 w-full text-sm text-font bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.id %>" disabled />
+            <label for="user_id" class="absolute text-sm text-fontdark dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]">User ID</label>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <input type="text" id="user_name" class="block py-2.5 px-0 w-full text-sm text-font bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.name %>" disabled />
+            <label for="user_name" class="absolute text-sm text-fontdark dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]">Name</label>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <input type="text" id="user_email" class="block py-2.5 px-0 w-full text-sm text-font bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.email %>" disabled />
+            <label for="user_email" class="absolute text-sm text-fontdark dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]">Email</label>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <input type="text" id="user_satker" class="block py-2.5 px-0 w-full text-sm text-font bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.namaSatker %>" disabled />
+            <label for="user_satker" class="absolute text-sm text-fontdark dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]">Satuan Kerja</label>
+          </div>
+        </div>
+      </div>
+  
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Current Roles -->
+        <div class="w-full h-full p-6 bg-primary-30 border border-primary-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-6">
+          <h2 class="text-2xl text-fontdark font-bold mb-4">Current Roles</h2>
+          <div class="overflow-x-auto text-font">
+            <table id="roles-table">
+              <thead>
+                <tr>
+                  <th class="bg-primary-50 text-fontdark">Role ID</th>
+                  <th class="bg-primary-50 text-fontdark">Role Name</th>
+                  <th class="bg-primary-50 text-fontdark">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (userRoleDtos.length > 0) { %>
+                  <% userRoleDtos.forEach(role => { %>
+                    <tr>
+                      <td class="font-medium text-fontdark whitespace-nowrap dark:text-white"><%= role.id %></td>
+                      <td class="text-font"><%= role.name %></td>
+                      <td class="flex justify-center">
+                        <form action="/admin/users/<%= userDto.id %>/roles/remove" method="post">
+                          <input type="hidden" name="roleId" value="<%= role.id %>" />
+                          <button type="submit" class="text-fontdark bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">
+                            Remove
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  <% }); %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="3" class="font-medium text-fontdark whitespace-nowrap dark:text-white text-center">No roles assigned</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+  
+        <!-- Assign New Role -->
+        <div class="w-full h-full p-6 bg-primary-30 border border-primary-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <h2 class="text-2xl text-fontdark font-bold mb-4">Assign New Role</h2>
+          <form action="/admin/users/<%= userDto.id %>/roles/assign" method="post" class="space-y-6">
+            <div class="relative z-0 w-full mb-1 group">
+              <label for="roleId" class="block mb-2 text-sm font-medium text-fontdark dark:text-white">Select Role</label>
+              <div class="flex justify-between w-full">
+                <select id="roleId" name="roleId" class="bg-gray-50 border border-primary-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-3/5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value="" selected>Choose a role</option>
+                  <% roleDtos.forEach(role => { %>
+                    <option value="<%= role.id %>"><%= role.name %></option>
+                  <% }); %>
+                </select>
+                <button type="submit" class="text-fontdark bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-2/5 sm:w-auto px-2.5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  Assign Role
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+  <script src="/js/assignrole-table.js"></script>
+  

@@ -2,7 +2,7 @@
     <div class="p-4 mt-14">
         <div class="flex justify-between mb-6">
             <h1 class="text-4xl text-font font-extrabold dark:text-white">Manajemen Pengguna</h1>
-            <a th:href="@{/superadmin/users/add}">
+            <a href="/admin/users/add">
                 <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Tambah Pengguna</button>
             </a>
         </div>
@@ -18,7 +18,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th data-type="date" data-format="YYYY/DD/MM">
+                    <th>
                         <span class="flex items-center">
                             Nama Lengkap
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -53,24 +53,32 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer" th:each="user : ${users}">
-                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white" th:text="${user.id}">ID</td>
-                    <td th:text="${user.fullName}">Nama</td>
-                    <td th:text="${user.email}">Email</td>
-                    <td>
-                        <a th:href="@{/superadmin/users/{id}/roles(id=${user.id})}">
+                <% if (userDtos && userDtos.length > 0) { %>
+                  <% userDtos.forEach(function(userDto) { %>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+                      <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= userDto.id %></td>
+                      <td><%= userDto.name %></td>
+                      <td><%= userDto.email %></td>
+                      <td>
+                        <a href="/admin/users/<%= userDto.id %>/roles">
                             <button class="text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-500 dark:hover:bg-purple-600 dark:focus:ring-purple-700">Kelola Peran</button>
                         </a>
-                    </td>
-                    <td>
+                      </td>
+                      <td>
                         <div class="flex space-x-2">
-                            <a th:href="@{/superadmin/users/detail(id=${user.id})}">
+                            <a href="/admin/users/detail/<%= userDto.id %>">
                                 <button class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700">Detail</button>
                             </a>
                         </div>
-                    </td>
-                </tr>
-            </tbody>
+                      </td>
+                    </tr>
+                  <% }); %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="4" class="text-center">Data tidak tersedia</td>
+                  </tr>
+                <% } %>
+            </tbody>              
         </table>
     </div>
 </div>

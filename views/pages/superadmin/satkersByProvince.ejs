@@ -45,13 +45,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer" th:each="satker : ${satkers}">
-                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white" th:text="${satker.id}">ID</td>
-                    <td th:text="${satker.code}">Kode</td>
-                    <td th:text="${satker.name}">Nama</td>
-                    <td th:text="${satker.email}">Email</td>
-                </tr>
-            </tbody>
+                <% if (satkerDtos && satkerDtos.length > 0) { %>
+                  <% satkerDtos.forEach(function(satker) { %>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+                      <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= satker.id %></td>
+                      <td><%= satker.code %></td>
+                      <td><%= satker.name %></td>
+                      <td><%= satker.email || '-' %></td> <!-- Kalau email gaada, tampilkan '-' -->
+                    </tr>
+                  <% }); %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="4" class="text-center py-4">Tidak ada satker ditemukan.</td>
+                  </tr>
+                <% } %>
+              </tbody>              
         </table>
 
     </div>
@@ -59,4 +67,4 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
-<script th:src="@{/js/manUser-table.js}"></script>
+<script src="/js/manUser-table.js"></script>
