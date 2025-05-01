@@ -4,10 +4,17 @@
   <meta charset="UTF-8">
   <title><%= title %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+  <link rel="icon" href="/img/SMS-Logo.png" type="image/png" sizes="32x32" />
+  <!-- <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" /> -->
+  <!-- <link href="/css/datatable.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/css/flowbite.min.css">
+  <link rel="stylesheet" href="/css/all.min.css">
   <link href="/css/output.css" rel="stylesheet">
+  
   <!-- <script src="/js/auth.js"></script> -->
-  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+   
+  <script src="/js/flowbite.min.js"></script>
+  <script src="/js/datatable.js"></script>
   <% if (successMessage) { %>
     <!-- Modal Sukses -->
     <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -52,11 +59,12 @@
   <!-- Footer
   <%- include('partials/footer') %> -->
 
-  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="/js/simple-datatables.js"></script>
   <script src="/js/piechart.js"></script>
   <script src="/js/barchart.js"></script>
   <script src="/js/horizontal-barchart.js"></script>
-  <script src="/js/darklightmode.js"></script>
+  <script src="/js/darklightmode.js"></script>  
+
 </body>
 </html>

@@ -91,6 +91,7 @@ app.get('/', (req, res) => {
   res.render('layout', {
     title: 'Dashboard | SMS',
     page: 'pages/dashboard',
+    activePage: 'dashboard',
     labelsSatker,dataSatker,hasDataSatker
   });
 });
@@ -186,6 +187,9 @@ app.get('/operator/surveys', async (req, res) => {
     }
 
     const response = await axios.get('http://localhost/kegiatans', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -212,6 +216,7 @@ app.get('/operator/surveys', async (req, res) => {
     res.render('layout', {
       title: 'Kegiatan | SMS',
       page: 'pages/operator/manajemenKegiatan',
+      activePage: 'surveys',
       kegiatans  // Kirim data kegiatan ke view
     });
   } catch (error) {
@@ -223,9 +228,19 @@ app.get('/operator/surveys/add', async (req, res) => {
   try {
     const token = req.session.user?.accessToken;
     const programsResponse = await axios.get('http://localhost/programs', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const outputsResponse = await axios.get('http://localhost/outputs', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: { 'Authorization': `Bearer ${token}` }
     });
     let programDtos = programsResponse.data._embedded.programs || [];
+    let outputDtos = outputsResponse.data._embedded.outputs || [];
 
     programDtos = programDtos.map(program => {
       const href = program._links?.self?.href || '';
@@ -240,6 +255,18 @@ app.get('/operator/surveys/add', async (req, res) => {
         name: program.name
       };
     });
+    outputDtos = outputDtos.map(output => {
+      const href = output._links?.self?.href || '';
+      const idMatch = href.match(/\/outputs\/(\d+)/);
+      const id = idMatch ? idMatch[1] : null;
+
+      return {
+        href, 
+        id,
+        ...output
+      };
+    });
+
     const userId = req.session.user ? req.session.user.idUser : null;
     const userName = req.session.user ? req.session.user.namaUser : null;
     const satkerName = req.session.user ? req.session.user.namaSatker : null;
@@ -250,12 +277,13 @@ app.get('/operator/surveys/add', async (req, res) => {
     res.render('layout', {
       title: 'Tambah Kegiatan | SMS',
       page: 'pages/operator/addKegiatan', 
+      activePage: 'surveys',
       programDtos,
+      outputDtos,
       userName,
       userId,
       satkerName,
-      satkerId,
-      query: req.query // supaya <%= query.error %> bisa diakses
+      satkerId
     });
   } catch (error) {
     console.error(error);
@@ -278,6 +306,7 @@ app.get('/operator/surveys/detail/:id', async (req, res) => {
     res.render('layout', {
       title: 'Detail Kegiatan | SMS',
       page: 'pages/operator/detailKegiatan',
+      activePage: 'surveys',
       id,
       kegiatan // kirim data kegiatan ke halaman
     });
@@ -293,6 +322,7 @@ app.post('/operator/surveys', async (req, res) => {
     const {
       name,
       program,
+      output,
       code,
       startDate,
       endDate,
@@ -304,7 +334,7 @@ app.post('/operator/surveys', async (req, res) => {
     const now = new Date().toISOString();
 
     // Ambil detail lengkap user, satker, dan program
-    const [userRes, satkerRes, provinceRes, programRes] = await Promise.all([
+    const [userRes, satkerRes, provinceRes, programRes, outputRes] = await Promise.all([
       axios.get(`http://localhost/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       }),
@@ -316,28 +346,44 @@ app.post('/operator/surveys', async (req, res) => {
       }),
       axios.get(`http://localhost/programs/${program}`, {
         headers: { Authorization: `Bearer ${token}` }
-      })
+      }),
+      axios.get(`http://localhost/outputs/${output}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }),
     ]);
 
     let userData = userRes.data;
     let satkerData = satkerRes.data;
     const provinceData = provinceRes.data;
     let programData = programRes.data;
+    let outputData = outputRes.data;
 
     satkerData = {
       id: Number(satkerId),
       ...satkerData,
       province: provinceData
-    }
+    };
     userData = {
       id: Number(userId),
       ...userData,
       satker: satkerData,
       namaSatker: satkerData.name
-    }
+    };
     programData = {
       id: Number(program),
       ...programData
+    };
+    outputData = {
+      id: Number(output),
+      year: null, //outputData.year
+      code: null, //outputData.code,
+      name: null, // outputData.name,
+      program: null, // {
+      //   id: programData.id,
+      //   name: programData.name,
+      //   code: programData.code,
+      //   year: programData.year
+      // }
     }
 
     await axios.post('http://localhost/api/kegiatans', {
@@ -348,6 +394,7 @@ app.post('/operator/surveys', async (req, res) => {
       user: userData,
       satker: satkerData,
       program: programData,
+      output: outputData,
       startDate,
       endDate,
       createdOn: now,
@@ -387,6 +434,7 @@ app.get('/operator/surveys/update/:id', async (req, res) => {
     res.render('layout', {
       title: 'Update Kegiatan | SMS',
       page: 'pages/operator/updateKegiatan',
+      activePage: 'surveys',
       id,
       kegiatan // kirim data kegiatan ke halaman
     });
@@ -413,6 +461,9 @@ app.get('/superadmin/roles', async (req, res) => {
     }
 
     const response = await axios.get('http://localhost/roles', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -433,6 +484,7 @@ app.get('/superadmin/roles', async (req, res) => {
     res.render('layout', {
       title: 'Role | SMS',
       page: 'pages/superadmin/manajemenRole',
+      activePage: 'roles',
       roleDtos
     });
   } catch (error) {
@@ -443,7 +495,8 @@ app.get('/superadmin/roles', async (req, res) => {
 app.get('/superadmin/roles/add', (req, res) => {
   res.render('layout', {
     title: 'Role | SMS',
-    page: 'pages/superadmin/addRole'
+    page: 'pages/superadmin/addRole',
+    activePage: 'roles'
   });
 });
 app.post('/superadmin/roles', async (req, res) => {
@@ -501,8 +554,9 @@ app.get('/superadmin/roles/:code/users', async (req, res) => {
     });
     
     res.render('layout', {
-      title: 'Satker di Provinsi | SMS',
-      page: 'pages/superadmin/usersByRole', // ganti kalau mau halaman lain
+      title: 'Klasifikasi Role Pengguna| SMS',
+      page: 'pages/superadmin/usersByRole', 
+      activePage: 'roles',
       userDtos
     });
   } catch (error) {
@@ -516,10 +570,13 @@ app.get('/superadmin/satkers', async (req, res) => {
   try {
     const token = req.session.user ? req.session.user.accessToken : null;
     if (!token) {
-      return res.redirect('/login.html');
+      return res.redirect('/login');
     }
 
     const response = await axios.get('http://localhost/satkers', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -541,6 +598,7 @@ app.get('/superadmin/satkers', async (req, res) => {
     res.render('layout', {
       title: 'Satuan Kerja | SMS',
       page: 'pages/superadmin/manajemenSatker',
+      activePage: 'satkers',
       satkerDtos
     });
   } catch (error) {
@@ -551,8 +609,77 @@ app.get('/superadmin/satkers', async (req, res) => {
 app.get('/superadmin/satkers/add', (req, res) => {
   res.render('layout', {
     title: 'Satuan Kerja | SMS',
-    page: 'pages/superadmin/addSatker'
+    page: 'pages/superadmin/addSatker',
+    activePage: 'satkers'
   });
+});
+app.get('/superadmin/satkers/:id/update', async (req, res) => {
+  const { id } = req.params;
+  const token = req.session.user?.accessToken;
+
+  try {
+    const response = await axios.get(`http://localhost/satkers/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    let satker = response.data; // data kegiatan per ID
+    satker = {
+      id,
+      ...satker
+    }
+
+    res.render('layout', {
+      title: 'Update Kegiatan | SMS',
+      page: 'pages/superadmin/updateSatker',
+      activePage: 'satkers',
+      satker
+    });
+  } catch (error) {
+    console.error('Gagal ambil detail satker:', error.message);
+    res.send(500).status("Internal Server Error");
+  }
+});
+app.get('/superadmin/satkers/update', async (req, res) => {
+  const { id, createdOn,isProvince, name, code, address, number, email } = req.body;
+  const token = req.session.user?.accessToken;
+
+  const now = new Date().toISOString();
+  
+  try {
+    const response = await axios.patch(`http://localhost/satkers/${id}`, {
+      name: name,
+      code: code,
+      address: address,
+      number: number,
+      email: email,
+      createdOn: createdOn,
+      updatedOn: now,
+      isProvince: isProvince
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    let satker = response.data; // data kegiatan per ID
+    satker = {
+      id,
+      ...satker
+    }
+
+    res.render('layout', {
+      title: 'Update Kegiatan | SMS',
+      page: 'pages/superadmin/updateSatker',
+      activePage: 'satkers',
+      satker
+    });
+  } catch (error) {
+    console.error('Gagal ambil detail satker:', error.message);
+    res.send(500).status("Internal Server Error");
+  }
 });
 
 // Provinces
@@ -564,6 +691,9 @@ app.get('/superadmin/provinces', async (req, res) => {
     }
 
     const response = await axios.get('http://localhost/provinces', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -584,6 +714,7 @@ app.get('/superadmin/provinces', async (req, res) => {
     res.render('layout', {
       title: 'Provinsi | SMS',
       page: 'pages/superadmin/manajemenProvinsi',
+      activePage: 'provinces',
       provinceDtos
     });
   } catch (error) {
@@ -623,6 +754,7 @@ app.get('/superadmin/provinces/:code/satkers', async (req, res) => {
     res.render('layout', {
       title: 'Satker di Provinsi | SMS',
       page: 'pages/superadmin/satkersByProvince', // ganti kalau mau halaman lain
+      activePage: 'provinces',
       satkerDtos
     });
   } catch (error) {
@@ -641,6 +773,9 @@ app.get('/superadmin/programs', async (req, res) => {
     }
 
     const response = await axios.get('http://localhost/programs', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -662,6 +797,7 @@ app.get('/superadmin/programs', async (req, res) => {
     res.render('layout', {
       title: 'Program | SMS',
       page: 'pages/superadmin/manajemenProgram',
+      activePage: 'programs',
       programDtos
     });
   } catch (error) {
@@ -672,7 +808,8 @@ app.get('/superadmin/programs', async (req, res) => {
 app.get('/superadmin/programs/add', (req, res) => {
   res.render('layout', {
     title: 'Program | SMS',
-    page: 'pages/superadmin/addProgram'
+    page: 'pages/superadmin/addProgram',
+    activePage: 'programs'
   });
 });
 app.post('/superadmin/programs', async (req, res) => {
@@ -717,6 +854,9 @@ app.get('/superadmin/outputs', async (req, res) => {
     }
 
     const response = await axios.get('http://localhost/outputs', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -738,6 +878,7 @@ app.get('/superadmin/outputs', async (req, res) => {
     res.render('layout', {
       title: 'Output | SMS',
       page: 'pages/superadmin/manajemenOutput',
+      activePage: 'outputs',
       outputDtos
     });
   } catch (error) {
@@ -745,11 +886,45 @@ app.get('/superadmin/outputs', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-app.get('/superadmin/outputs/add', (req, res) => {
-  res.render('layout', {
-    title: 'Tambah Output | SMS',
-    page: 'pages/superadmin/addOutput'
-  });
+app.get('/superadmin/outputs/add', async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+    
+    const response = await axios.get('http://localhost/programs', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    let listPrograms = response.data._embedded.programs || [];
+
+    listPrograms = listPrograms.map(program => {
+      const href = program._links?.self?.href || '';
+      const idMatch = href.match(/\/programs\/(\d+)/);
+      const id = idMatch ? idMatch[1] : null;
+
+      return {
+        href, 
+        id,
+        ...program
+      };
+    });
+
+    res.render('layout', {
+      title: 'Tambah Output | SMS',
+      page: 'pages/superadmin/addOutput',
+      activePage: 'outputs',
+      listPrograms: listPrograms
+    });
+  } catch (error) {
+    console.error('Error ambil Programs:', error);
+    res.redirect(req.get('Referer'));
+  }
 });
 app.post('/superadmin/outputs', async (req, res) => {
   try {
@@ -759,13 +934,14 @@ app.post('/superadmin/outputs', async (req, res) => {
     }
 
     // Ambil data dari form
-    const { name, code, year } = req.body;
+    const { name, code, year, program } = req.body;
 
     // Siapkan request body
     const requestBody = {
       name,
       code,
-      year
+      year,
+      program
     };
 
     // Kirim ke API
@@ -795,6 +971,9 @@ app.get('/admin/users', async (req, res) => {
     }
 
     const response = await axios.get('http://localhost/users', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -816,6 +995,7 @@ app.get('/admin/users', async (req, res) => {
     res.render('layout', {
       title: 'Pengguna | SMS',
       page: 'pages/admin/manajemenPengguna',
+      activePage: 'users',
       userDtos
     });
   } catch (error) {
@@ -827,10 +1007,13 @@ app.get('/admin/users/add', async (req, res) => {
   try {
     const token = req.session.user ? req.session.user.accessToken : null;
     if (!token) {
-      return res.redirect('/login.html');
+      return res.redirect('/login');
     }
     
     const response = await axios.get('http://localhost/satkers', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -851,22 +1034,19 @@ app.get('/admin/users/add', async (req, res) => {
     res.render('layout', {
       title: 'Tambah Pengguna | SMS',
       page: 'pages/admin/addPengguna',
+      activePage: 'users',
       listSatkers: listSatkers
     });
   } catch (error) {
     console.error('Error ambil Satkers:', error);
-    res.render('layout', {
-      title: 'Tambah Pengguna | SMS',
-      page: 'pages/admin/addPengguna',
-      listSatkers: []
-    });
+    res.redirect(req.get('Referer'));
   }
 });
 app.post('/admin/users/save', async (req, res) => {
   try {
     const token = req.session.user ? req.session.user.accessToken : null;
     if (!token) {
-      return res.redirect('/login.html');
+      return res.redirect('/login');
     }
 
     const { first_name, last_name, nip, email, satker } = req.body;
@@ -946,6 +1126,7 @@ app.get('/admin/users/detail/:id', async (req, res) => {
     res.render('layout', {
       title: 'Detail Pengguna | SMS',
       page: 'pages/admin/detailPengguna',
+      activePage: 'users',
       user: userDto
     });
 
@@ -977,6 +1158,9 @@ app.get('/admin/users/:id/roles', async (req, res) => {
 
     // Ambil semua roles
     const allRolesResponse = await axios.get('http://localhost/roles', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
       headers: { Authorization: `Bearer ${token}` }
     });
     let roleDtos = allRolesResponse.data._embedded.roles || [];
@@ -1014,6 +1198,7 @@ app.get('/admin/users/:id/roles', async (req, res) => {
     res.render('layout', {
       title: 'Kelola Peran Pengguna | SMS',
       page: 'pages/admin/kelolaPeran',
+      activePage: 'users',
       userDto,
       roleDtos,
       userRoleDtos
@@ -1074,7 +1259,8 @@ app.post('/admin/users/:id/roles/remove', async (req, res) => {
 app.get('/faq', (req, res) => {
   res.render('layout', {
     title: 'FAQ | SMS',
-    page: 'pages/faq'
+    page: 'pages/faq',
+    activePage: 'faq'
   });
 });
 

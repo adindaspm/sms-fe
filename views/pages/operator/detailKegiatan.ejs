@@ -66,431 +66,1024 @@
             </div>
             
             <!-- Tab Tahap Content -->
-            <div class="hidden p-4 rounded-lg border border-primary dark:bg-gray-800" id="tahap" role="tabpanel" aria-labelledby="tahap-tab">
+            <div class="hidden p-4 rounded-lg border border-primary-100 dark:bg-gray-800" id="tahap" role="tabpanel" aria-labelledby="tahap-tab">
                 <div class="md:flex">
-                    <!-- Step Tabs -->
+                    <!-- Daftar Tab -->
                     <ul class="flex-column space-y space-y-4 text-sm font-medium text-fontdark dark:text-gray-400 md:me-4 mb-4 md:mb-0" id="subtahap-tab" data-tabs-toggle="#subtahap-tab-content" role="tablist">
-                        <!-- Static step tabs - will be replaced by data from API -->
-                        <li th:each="step, index : ${steps}" role="presentation">
-                            <button th:id="${step.tahap.toLowerCase() + '-tab'}" 
-                                    th:class="${'inline-flex items-center px-4 py-3 rounded-lg w-full ' + 
-                                    (step.isActive ? 'text-white bg-blue-700 active dark:bg-blue-600' : 
-                                    (step.isCompleted ? 'text-gray-900 bg-green-200 hover:bg-green-300' : 
-                                    'text-gray-400 cursor-not-allowed bg-primary-30 dark:text-fontdark'))}"
-                                    th:attr="data-tabs-target='#' + ${step.tahap.toLowerCase()}, 
-                                             aria-controls=${step.tahap.toLowerCase()},
-                                             aria-selected=${step.isActive},
-                                             disabled=${!step.isActive && !step.isCompleted}"
-                                    type="button" 
-                                    role="tab">
-                                <svg class="w-4 h-4 me-2" th:class="${step.isActive ? 'text-white' : 'text-gray-400 dark:text-fontdark'}" 
-                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <!-- Specify Needs Tab - Active -->
+                        <li role="presentation">
+                            <button type="button" class="inline-flex items-center px-4 py-3 text-white bg-blue-700 rounded-lg active w-full dark:bg-blue-600" id="specifyneeds-tab" data-tabs-target="#specifyneeds" role="tab" aria-controls="specifyneeds" aria-selected="true">
+                                <svg class="w-4 h-4 me-2 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
                                 </svg>
-                                <span th:text="${step.tahap.replace('_', ' ')}">Step</span>
-                                <span th:if="${step.isActive && step.progressPercentage > 0 && step.progressPercentage < 100}" 
-                                      class="text-xs italic ml-1" 
-                                      th:text="${'(' + step.progressPercentage + '%)'}"></span>
-                                <span th:if="${step.isCompleted}" class="text-xs italic ml-1">(Selesai)</span>
-                                <span th:if="${!step.isActive && !step.isCompleted}" class="text-xs italic ml-1">(Belum Dimulai)</span>
+                                Specify Needs
+                            </button>
+                        </li>
+                        
+                        <!-- Design Tab - Disabled until Specify Needs is completed -->
+                        <li role="presentation">
+                            <button type="button" class="inline-flex items-center px-4 py-3 text-gray-400 rounded-lg cursor-not-allowed bg-primary-30 w-full dark:bg-gray-800 dark:text-fontdark" id="design-tab" data-tabs-target="#design" role="tab" aria-controls="design" aria-selected="false" disabled>
+                                <svg class="w-4 h-4 me-2 text-gray-400 dark:text-fontdark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                                    <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"/>
+                                </svg>
+                                Design <span class="text-xs italic ml-1">(Belum Dimulai)</span>
+                            </button>
+                        </li>
+                        
+                        <!-- Build Tab - Disabled -->
+                        <li role="presentation">
+                            <button type="button" class="inline-flex items-center px-4 py-3 text-gray-400 rounded-lg cursor-not-allowed bg-primary-30 w-full dark:bg-gray-800 dark:text-fontdark" id="build-tab" data-tabs-target="#build" role="tab" aria-controls="build" aria-selected="false" disabled>
+                                <svg class="w-4 h-4 me-2 text-gray-400 dark:text-fontdark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M18 7.5h-.423l-.452-1.09.3-.3a1.5 1.5 0 0 0 0-2.121L16.01 2.575a1.5 1.5 0 0 0-2.121 0l-.3.3-1.089-.452V2A1.5 1.5 0 0 0 11 .5H9A1.5 1.5 0 0 0 7.5 2v.423l-1.09.452-.3-.3a1.5 1.5 0 0 0-2.121 0L2.576 3.99a1.5 1.5 0 0 0 0 2.121l.3.3L2.423 7.5H2A1.5 1.5 0 0 0 .5 9v2A1.5 1.5 0 0 0 2 12.5h.423l.452 1.09-.3.3a1.5 1.5 0 0 0 0 2.121l1.415 1.413a1.5 1.5 0 0 0 2.121 0l.3-.3 1.09.452V18A1.5 1.5 0 0 0 9 19.5h2a1.5 1.5 0 0 0 1.5-1.5v-.423l1.09-.452.3.3a1.5 1.5 0 0 0 2.121 0l1.415-1.414a1.5 1.5 0 0 0 0-2.121l-.3-.3.452-1.09H18a1.5 1.5 0 0 0 1.5-1.5V9A1.5 1.5 0 0 0 18 7.5Zm-8 6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
+                                </svg>
+                                Build <span class="text-xs italic ml-1">(Belum Dimulai)</span>
+                            </button>
+                        </li>
+                        
+                        <!-- Collect Tab - Disabled -->
+                        <li role="presentation">
+                            <button type="button" class="inline-flex items-center px-4 py-3 text-gray-400 rounded-lg cursor-not-allowed bg-primary-30 w-full dark:bg-gray-800 dark:text-fontdark" id="collect-tab" data-tabs-target="#collect" role="tab" aria-controls="collect" aria-selected="false" disabled>
+                                <svg class="w-4 h-4 me-2 text-gray-400 dark:text-fontdark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                                    <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                                </svg>
+                                Collect <span class="text-xs italic ml-1">(Belum Dimulai)</span>
+                            </button>
+                        </li>
+                        
+                        <!-- Process Tab - Disabled -->
+                        <li role="presentation">
+                            <button type="button" class="inline-flex items-center px-4 py-3 text-gray-400 rounded-lg cursor-not-allowed bg-primary-30 w-full dark:bg-gray-800 dark:text-fontdark" id="process-tab" data-tabs-target="#process" role="tab" aria-controls="process" aria-selected="false" disabled>
+                                <svg class="w-4 h-4 me-2 text-gray-400 dark:text-fontdark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                                    <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                                </svg>
+                                Process <span class="text-xs italic ml-1">(Belum Dimulai)</span>
+                            </button>
+                        </li>
+                        
+                        <!-- Analyse Tab - Disabled -->
+                        <li role="presentation">
+                            <button type="button" class="inline-flex items-center px-4 py-3 text-gray-400 rounded-lg cursor-not-allowed bg-primary-30 w-full dark:bg-gray-800 dark:text-fontdark" id="analyse-tab" data-tabs-target="#analyse" role="tab" aria-controls="analyse" aria-selected="false" disabled>
+                                <svg class="w-4 h-4 me-2 text-gray-400 dark:text-fontdark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                                    <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                                </svg>
+                                Analyse <span class="text-xs italic ml-1">(Belum Dimulai)</span>
+                            </button>
+                        </li>
+                        
+                        <!-- Disseminate Tab - Disabled -->
+                        <li role="presentation">
+                            <button type="button" class="inline-flex items-center px-4 py-3 text-gray-400 rounded-lg cursor-not-allowed bg-primary-30 w-full dark:bg-gray-800 dark:text-fontdark" id="disseminate-tab" data-tabs-target="#disseminate" role="tab" aria-controls="disseminate" aria-selected="false" disabled>
+                                <svg class="w-4 h-4 me-2 text-gray-400 dark:text-fontdark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                                    <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                                </svg>
+                                Disseminate <span class="text-xs italic ml-1">(Belum Dimulai)</span>
+                            </button>
+                        </li>
+                        
+                        <!-- Evaluate Tab - Disabled -->
+                        <li role="presentation">
+                            <button type="button" class="inline-flex items-center px-4 py-3 text-gray-400 rounded-lg cursor-not-allowed bg-primary-30 w-full dark:bg-gray-800 dark:text-fontdark" id="evaluate-tab" data-tabs-target="#evaluate" role="tab" aria-controls="evaluate" aria-selected="false" disabled>
+                                <svg class="w-4 h-4 me-2 text-gray-400 dark:text-fontdark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                                    <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                                </svg>
+                                Evaluate <span class="text-xs italic ml-1">(Belum Dimulai)</span>
                             </button>
                         </li>
                     </ul>
-
-                    <!-- Step Tab Content -->
+            
+                    <!-- WADAH KONTEN TAB -->
                     <div id="subtahap-tab-content" class="w-full">
-                        <!-- Step content for each step - will be populated dynamically -->
-                        <div th:each="step : ${steps}" 
-                             th:id="${step.tahap.toLowerCase()}" 
-                             th:class="${'p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full' + (step.isActive ? '' : ' hidden')}" 
-                             role="tabpanel" 
-                             th:attr="aria-labelledby=${step.tahap.toLowerCase() + '-tab'}">
+                        <!-- Konten Specify Needs -->
+                        <div class="p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full" id="specifyneeds" role="tabpanel" aria-labelledby="specifyneeds-tab">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Sub Tahap Specify Needs</h3>
                             
-                            <!-- Tab content header -->
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4" th:text="${'Daftar Sub Tahap ' + step.tahap.replace('_', ' ')}">Step Name</h3>
-                            
-                            <!-- Progress indicator -->
                             <div class="mb-6">
-                                <p class="text-sm font-medium text-gray-700 mb-2" th:text="${'Progress Tahap ' + step.tahap.replace('_', ' ') + ':'}">Progress:</p>
+                                <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Specify Needs:</p>
                                 <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
-                                    <div class="bg-blue-600 h-2.5 rounded-full" th:style="${'width: ' + step.progressPercentage + '%'}"></div>
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 33%"></div>
                                 </div>
                             </div>
                             
-                            <!-- Form for step's substeps -->
-                            <form th:id="${'substeps-form-' + step.id}" class="space-y-4 mb-6">
-                                <input type="hidden" name="tahapId" th:value="${step.id}">
-                                <input type="hidden" name="kegiatanId" th:value="${kegiatan.id}">
-                                
-                                <!-- Sample substeps - would be replaced by actual data -->
-                                <div th:if="${step.tahap == 'SPECIFY_NEEDS'}" class="flex items-center">
-                                    <input id="subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                            <!-- Checklist Sub Tahap -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center">
+                                    <input checked id="subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Identifikasi kebutuhan data</label>
                                 </div>
-                                <!-- Add more substeps based on step type -->
-                            </form>
+                                <div class="flex items-center">
+                                    <input checked id="subtahap-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="subtahap-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Perumusan strategi survei</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="subtahap-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="subtahap-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penentuan konten kuesioner</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="subtahap-4" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="subtahap-4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Analisis kebutuhan pengguna</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="subtahap-5" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="subtahap-5" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Rencana anggaran kegiatan</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="subtahap-6" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="subtahap-6" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penetapan tim pelaksana survei</label>
+                                </div>
+                            </div>
                             
-                            <!-- Action buttons -->
-                            <div class="mt-6 flex flex-wrap gap-4">
-                                <!-- Different buttons based on step type -->
-                                <th:block th:if="${step.tahap == 'SPECIFY_NEEDS'}">
-                                    <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                                        Input di iPlan
-                                        <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                        </svg>
-                                    </a>
-                                </th:block>
+                            <!-- Tombol Input di iPlan -->
+                            <div class="mt-6">
+                                <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Input di iPlan
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
                                 
-                                <th:block th:if="${step.tahap == 'DESIGN' || step.tahap == 'BUILD'}">
-                                    <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                                        Input di FASIH
-                                        <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                        </svg>
-                                    </a>
-                                </th:block>
-                                
-                                <!-- File upload for certain step types -->
-                                <th:block th:if="${step.tahap == 'COLLECT' || step.tahap == 'PROCESS' || step.tahap == 'ANALYZE' || step.tahap == 'DISSEMINATE' || step.tahap == 'EVALUATE'}">
-                                    <label th:for="${'upload-file-' + step.id}" class="cursor-pointer inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300">
-                                        <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                        </svg>
-                                        <span th:if="${step.tahap == 'COLLECT'}">Upload Data Survei</span>
-                                        <span th:if="${step.tahap == 'PROCESS'}">Upload Data Hasil Pengolahan</span>
-                                        <span th:if="${step.tahap == 'ANALYZE'}">Upload Data Hasil Analisis</span>
-                                        <span th:if="${step.tahap == 'DISSEMINATE'}">Upload File Publikasi</span>
-                                        <span th:if="${step.tahap == 'EVALUATE'}">Upload Laporan Evaluasi</span>
-                                    </label>
-                                    <input class="hidden" th:id="${'upload-file-' + step.id}" type="file" multiple th:attr="data-tahap-id=${step.id}"/>
-                                </th:block>
-                                
-                                <!-- Complete step button only for active steps -->
-                                <button th:if="${step.isActive && !step.isCompleted}" 
-                                        th:id="${'complete-' + step.tahap.toLowerCase()}" 
-                                        th:attr="data-tahap-id=${step.id}"
-                                        class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                    Selesaikan Tahap
+                                <button id="complete-specifyneeds" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Selesaikan Tahap Specify Needs
                                     <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
                                     </svg>
                                 </button>
                             </div>
+                        </div>
+                        
+                        <!-- Konten Design -->
+                        <div class="hidden p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full" id="design" role="tabpanel" aria-labelledby="design-tab">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Sub Tahap Design</h3>
                             
-                            <!-- Show uploaded files if present -->
-                            <div th:if="${step.uploadedFiles != null && !step.uploadedFiles.isEmpty()}" class="mt-6">
-                                <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-2">File yang telah diupload:</h4>
-                                <ul class="list-disc pl-5">
-                                    <li th:each="file : ${step.uploadedFiles}" class="text-sm text-gray-700">
-                                        <a th:href="${'/uploads/kegiatan/' + kegiatan.id + '/tahap/' + step.id + '/' + file}" 
-                                           target="_blank" class="text-blue-600 hover:underline" th:text="${file}">Filename</a>
-                                    </li>
-                                </ul>
+                            <div class="mb-6">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Design:</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Checklist Sub Tahap -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center">
+                                    <input id="design-subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="design-subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penyusunan kuesioner</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="design-subtahap-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="design-subtahap-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Perancangan metodologi survei</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="design-subtahap-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="design-subtahap-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penentuan kerangka sampel</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="design-subtahap-4" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="design-subtahap-4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pemilihan teknik pengumpulan data</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Tombol Input di FASIH -->
+                            <div class="mt-6">
+                                <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Input di FASIH
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
+                                
+                                <button id="complete-design" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Selesaikan Tahap Design
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize main tabs
-    const tabElements = document.querySelectorAll('[data-tabs-toggle]');
-    if (window.Flowbite && window.Flowbite.initTabs) {
-        window.Flowbite.initTabs(tabElements);
-    }
-    
-    // Load step data when Tahap tab is clicked
-    const tahapTab = document.getElementById('tahap-tab');
-    if (tahapTab) {
-        tahapTab.addEventListener('click', function() {
-            const kegiatanId = document.querySelector('input[name="kegiatanId"]')?.value || 1;
-            fetchStepData(kegiatanId);
-        });
-    }
-    
-    // Function to fetch step data from API
-    function fetchStepData(kegiatanId) {
-        fetch(`/api/debug/kegiatan/${kegiatanId}/steps`)
-            .then(response => response.json())
-            .then(steps => {
-                updateStepTabs(steps);
-                initializeStepEventHandlers(steps);
-            })
-            .catch(error => {
-                console.error('Error fetching step data:', error);
-            });
-    }
-    
-    // Function to update step tabs with data from API
-    function updateStepTabs(steps) {
-        // Sort steps by ID
-        steps.sort((a, b) => a.id - b.id);
-        
-        // Update the step tabs
-        const stepList = document.getElementById('subtahap-tab');
-        const stepContent = document.getElementById('subtahap-tab-content');
-        
-        // If the tabs are already pre-rendered by Thymeleaf, just update them
-        // Otherwise, this would create the tabs dynamically
-    }
-    
-    // Function to initialize event handlers for steps
-    function initializeStepEventHandlers(steps) {
-        // Add event handlers for completing steps
-        document.querySelectorAll('[id^="complete-"]').forEach(button => {
-            button.addEventListener('click', function() {
-                const tahapId = this.dataset.tahapId;
-                completeStep(tahapId);
-            });
-        });
-        
-        // Add event handlers for checkboxes to update progress
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const form = this.closest('form');
-                const tahapId = form.querySelector('input[name="tahapId"]').value;
-                updateSubsteps(tahapId, form);
-            });
-        });
-        
-        // Add event handlers for file uploads
-        document.querySelectorAll('input[type="file"]').forEach(fileInput => {
-            fileInput.addEventListener('change', function() {
-                if (this.files.length === 0) return;
-                const tahapId = this.dataset.tahapId;
-                uploadFile(tahapId, this.files[0]);
-            });
-        });
-    }
-    
-    // Function to complete a step
-    function completeStep(tahapId) {
-        const kegiatanId = document.querySelector('input[name="kegiatanId"]').value;
-        
-        // Confirm completion with the user
-        if (!confirm('Apakah Anda yakin ingin menyelesaikan tahap ini?')) {
-            return;
-        }
-        
-        // Send API request to complete step
-        fetch(`/operator/surveys/${kegiatanId}/tahap/${tahapId}/complete`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showNotification('Tahap berhasil diselesaikan', 'success');
-                
-                // Reload page to show updated UI
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                showNotification('Gagal menyelesaikan tahap: ' + data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error completing step:', error);
-            showNotification('Terjadi kesalahan saat menyelesaikan tahap', 'error');
-        });
-    }
-    
-    // Function to update substeps
-    function updateSubsteps(tahapId, form) {
-        const kegiatanId = form.querySelector('input[name="kegiatanId"]').value;
-        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-        const subSteps = [];
-        
-        checkboxes.forEach((cb, index) => {
-            subSteps.push({
-                label: cb.nextElementSibling.textContent.trim(),
-                completed: cb.checked
-            });
-        });
-        
-        // Send API request to update substeps
-        fetch(`/operator/surveys/${kegiatanId}/tahap/${tahapId}/substeps`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(subSteps)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // Update progress bar
-                const progressBar = document.querySelector(`#${data.tahap.toLowerCase()} .bg-blue-600`);
-                if (progressBar) {
-                    progressBar.style.width = `${data.progress}%`;
-                }
-                
-                showNotification('Sub-tahap berhasil diperbarui', 'success');
-            } else {
-                showNotification('Gagal memperbarui sub-tahap: ' + data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error updating sub-steps:', error);
-            showNotification('Terjadi kesalahan saat memperbarui sub-tahap', 'error');
-        });
-    }
-    
-    // Function to upload a file
-    function uploadFile(tahapId, file) {
-        const kegiatanId = document.querySelector('input[name="kegiatanId"]').value;
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        // Send API request to upload file
-        fetch(`/operator/surveys/${kegiatanId}/tahap/${tahapId}/upload`, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showNotification(`File ${data.originalFilename} berhasil diupload`, 'success');
-                
-                // Reload the page to show the new file
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                showNotification('Gagal mengupload file: ' + data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error uploading file:', error);
-            showNotification('Terjadi kesalahan saat mengupload file', 'error');
-        });
-    }
-    
-    // Function to switch between sub tabs
-    function switchToTab(tabId) {
-        // Hide all tab contents
-        document.querySelectorAll('#subtahap-tab-content > div[role="tabpanel"]').forEach(panel => {
-            panel.classList.add('hidden');
-        });
-        
-        // Show the selected tab content
-        const targetPanel = document.getElementById(tabId);
-        if (targetPanel) {
-            targetPanel.classList.remove('hidden');
-        }
-        
-        // Update active state on tab buttons
-        document.querySelectorAll('#subtahap-tab button[role="tab"]').forEach(tab => {
-            if (!tab.disabled) {
-                const isTargetTab = tab.getAttribute('data-tabs-target') === '#' + tabId || 
-                                   tab.getAttribute('data-tabs-target') === tabId;
-                
-                // Set appropriate ARIA attributes and styling
-                tab.setAttribute('aria-selected', isTargetTab ? 'true' : 'false');
-                
-                if (isTargetTab) {
-                    tab.classList.remove('text-gray-500', 'hover:text-gray-700', 'bg-primary-30');
-                    tab.classList.add('text-white', 'bg-blue-700', 'active');
-                } else {
-                    tab.classList.remove('text-white', 'bg-blue-700', 'active');
-                    tab.classList.add('text-gray-500', 'hover:text-gray-700', 'bg-primary-30');
-                }
-            }
-        });
-    }
-    
-    // Add click handlers to all tabs (only enabled ones will respond)
-    document.querySelectorAll('#subtahap-tab button[role="tab"]').forEach(tab => {
-        tab.addEventListener('click', function() {
-            if (!this.disabled) {
-                const target = this.getAttribute('data-tabs-target');
-                if (target) {
-                    switchToTab(target.replace('#', ''));
-                }
-            }
-        });
-    });
-    
-    // Helper function to show notifications
-    function showNotification(message, type) {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white ${type === 'success' ? 'bg-green-600' : 'bg-red-600'} shadow-lg z-50 transition-opacity duration-500`;
-        notification.style.opacity = '0';
-        notification.textContent = message;
-        
-        // Add to DOM
-        document.body.appendChild(notification);
-        
-        // Fade in
-        setTimeout(() => {
-            notification.style.opacity = '1';
-        }, 10);
-        
-        // Fade out after 3 seconds
-        setTimeout(() => {
-            notification.style.opacity = '0';
             
-            // Remove from DOM after fade out
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 500);
-        }, 3000);
-    }
-
-    // Check if we need to initialize tabs manually (fallback)
-    if (!window.Flowbite || !window.Flowbite.initTabs) {
-        console.warn("Flowbite tabs initialization not found, using manual tab handling");
-        
-        // Main tab initialization
-        document.querySelectorAll('#default-tab button[role="tab"]').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-tabs-target').replace('#', '');
-                
-                // Hide all main tab contents
-                document.querySelectorAll('#default-tab-content > div[role="tabpanel"]').forEach(panel => {
+                        <!-- Konten Build -->
+                        <div class="p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full" id="build" role="tabpanel" aria-labelledby="build-tab">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Sub Tahap Build</h3>
+                            
+                            <div class="mb-6">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Build:</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 33%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Checklist Sub Tahap -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center">
+                                    <input id="build-subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="build-subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pembuatan instrumen survei</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="build-subtahap-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="build-subtahap-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pengembangan aplikasi pengumpulan data</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="build-subtahap-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="build-subtahap-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pelatihan enumerator</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="build-subtahap-4" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="build-subtahap-4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Uji coba survei</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Tombol Input di FASIH -->
+                            <div class="mt-6">
+                                <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Input di FASIH
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
+                                
+                                <button id="complete-build" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Selesaikan Tahap Build
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+            
+                        <!-- Konten Collect -->
+                        <div class="hidden p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full" id="collect" role="tabpanel" aria-labelledby="collect-tab">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Sub Tahap Collect</h3>
+                            
+                            <div class="mb-6">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Collect:</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Checklist Sub Tahap -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center">
+                                    <input id="collect-subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="collect-subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pelaksanaan pengumpulan data</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="collect-subtahap-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="collect-subtahap-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Monitoring pengumpulan data</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="collect-subtahap-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="collect-subtahap-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Validasi data</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="collect-subtahap-4" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="collect-subtahap-4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Kompilasi data mentah</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Tombol Input di FASIH dan Upload File -->
+                            <div class="mt-6">
+                                <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Input di FASIH
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                    </svg>
+                                </a>
+                                
+                                <label for="upload-survey-data" class="ml-4 cursor-pointer inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    Upload Data Survei
+                                </label>
+                                <input class="hidden" id="upload-survey-data" type="file" multiple />
+                                
+                                <button id="complete-collect" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Selesaikan Tahap Collect
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Konten Process -->
+                        <div class="hidden p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full" id="process" role="tabpanel" aria-labelledby="process-tab">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Sub Tahap Process</h3>
+                            
+                            <div class="mb-6">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Process:</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Checklist Sub Tahap -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center">
+                                    <input id="process-subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="process-subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pembersihan data</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="process-subtahap-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="process-subtahap-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pemrosesan data mentah</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="process-subtahap-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="process-subtahap-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Konversi format data</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="process-subtahap-4" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="process-subtahap-4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Imputasi data</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Tombol Download dan Upload -->
+                            <div class="mt-6">
+                                <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-teal-700 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 19">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15h.01M4 12H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-3M9.5 1v10.93m4-3.93-4 4-4-4"/>
+                                    </svg>
+                                    Download Data Survei
+                                </a>
+                                
+                                <label for="upload-processed-data" class="ml-4 cursor-pointer inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    Upload Data Hasil Pengolahan
+                                </label>
+                                <input class="hidden" id="upload-processed-data" type="file" multiple />
+                                
+                                <button id="complete-process" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Selesaikan Tahap Process
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+            
+                        <!-- Konten Analyse -->
+                        <div class="hidden p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full" id="analyse" role="tabpanel" aria-labelledby="analyse-tab">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Sub Tahap Analyse</h3>
+                            
+                            <div class="mb-6">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Analyse:</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Checklist Sub Tahap -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center">
+                                    <input id="analyse-subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="analyse-subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Analisis statistik deskriptif</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="analyse-subtahap-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="analyse-subtahap-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Analisis korelasi</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="analyse-subtahap-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="analyse-subtahap-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Analisis inferensial</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="analyse-subtahap-4" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="analyse-subtahap-4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penyusunan tabulasi</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Tombol Download dan Upload -->
+                            <div class="mt-6">
+                                <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-teal-700 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 19">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15h.01M4 12H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-3M9.5 1v10.93m4-3.93-4 4-4-4"/>
+                                    </svg>
+                                    Download Data Hasil Pengolahan
+                                </a>
+            
+                                <label for="upload-analysis-data" class="ml-4 cursor-pointer inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    Upload Data Hasil Analisis
+                                </label>
+                                <input class="hidden" id="upload-analysis-data" type="file" multiple />
+                                
+                                <button id="complete-analyse" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Selesaikan Tahap Analyse
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+            
+                        <!-- Konten Disseminate -->
+                        <div class="hidden p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full" id="disseminate" role="tabpanel" aria-labelledby="disseminate-tab">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Sub Tahap Disseminate</h3>
+                            
+                            <div class="mb-6">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Disseminate:</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center">
+                                    <input id="disseminate-subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="disseminate-subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penyusunan draft publikasi</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="disseminate-subtahap-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="disseminate-subtahap-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penyusunan infografis</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="disseminate-subtahap-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="disseminate-subtahap-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Review publikasi</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="disseminate-subtahap-4" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="disseminate-subtahap-4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penyelenggaraan diseminasi</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Tombol Download dan Upload -->
+                            <div class="mt-6">
+                                <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-teal-700 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 19">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15h.01M4 12H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-3M9.5 1v10.93m4-3.93-4 4-4-4"/>
+                                    </svg>
+                                    Download Data Hasil Pengolahan
+                                </a>
+            
+                                <a href="#" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-teal-700 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 19">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15h.01M4 12H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-3M9.5 1v10.93m4-3.93-4 4-4-4"/>
+                                    </svg>
+                                    Download Data Hasil Analisis
+                                </a>
+            
+                                <label for="upload-publication" class="ml-4 cursor-pointer inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    Upload File Publikasi
+                                </label>
+                                <input class="hidden" id="upload-publication" type="file" multiple />
+                                
+                                <button id="complete-disseminate" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Selesaikan Tahap Disseminate
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+            
+                        <!-- Konten Evaluate -->
+                        <div class="hidden p-6 bg-primary-30 text-medium text-fontdark dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full" id="evaluate" role="tabpanel" aria-labelledby="evaluate-tab">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Sub Tahap Evaluate</h3>
+                            
+                            <div class="mb-6">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Evaluate:</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Checklist Sub Tahap -->
+                            <div class="space-y-4 mb-6">
+                                <div class="flex items-center">
+                                    <input id="evaluate-subtahap-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="evaluate-subtahap-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Evaluasi metodologi</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="evaluate-subtahap-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="evaluate-subtahap-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Evaluasi kualitas data</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="evaluate-subtahap-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="evaluate-subtahap-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Evaluasi pelaksanaan</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="evaluate-subtahap-4" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="evaluate-subtahap-4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Penyusunan rekomendasi</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Tombol Download dan Upload -->
+                            <div class="mt-6">
+            
+                                <label for="upload-evaluation" class="ml-4 cursor-pointer inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
+                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    Upload File Evaluasi
+                                </label>
+                                <input class="hidden" id="upload-evaluation" type="file" multiple />
+                                
+                                <button id="complete-evaluate" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Selesaikan Tahap Evaluasi
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
+            
+                                <button id="complete-survey" class="ml-4 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                    Survei Telah Selesai Dilaksanakan
+                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+            
+                <script>
+                function switchToTab(tabId) {
+                // Hide all tab contents
+                document.querySelectorAll('#subtahap-tab-content > div[role="tabpanel"]').forEach(panel => {
                     panel.classList.add('hidden');
                 });
                 
-                // Show target tab content
-                const targetPanel = document.getElementById(targetId);
-                if (targetPanel) {
-                    targetPanel.classList.remove('hidden');
-                }
+                // Show the selected tab content
+                document.getElementById(tabId).classList.remove('hidden');
                 
-                // Update active state on main tab buttons
-                document.querySelectorAll('#default-tab button[role="tab"]').forEach(btn => {
-                    btn.setAttribute('aria-selected', 'false');
-                    btn.classList.remove('border-blue-600', 'text-blue-600');
+                // Update active state on tab buttons
+                document.querySelectorAll('#subtahap-tab button[role="tab"]').forEach(tab => {
+                    tab.setAttribute('aria-selected', 'false');
+                    tab.classList.remove('active', 'bg-blue-700', 'text-white');
+                    tab.classList.add('text-gray-400', 'hover:text-gray-600');
                 });
                 
-                // Set active state on clicked button
-                this.setAttribute('aria-selected', 'true');
-                this.classList.add('border-blue-600', 'text-blue-600');
-                
-                // If Tahap tab was clicked, fetch step data
-                if (targetId === 'tahap') {
-                    const kegiatanId = document.querySelector('input[name="kegiatanId"]')?.value || 1;
-                    fetchStepData(kegiatanId);
-                }
+                // Set the clicked tab as active
+                const activeTab = document.getElementById(tabId + '-tab');
+                activeTab.setAttribute('aria-selected', 'true');
+                activeTab.classList.remove('text-gray-400', 'hover:text-gray-600');
+                activeTab.classList.add('active', 'bg-blue-700', 'text-white');
+            }
+            
+            // Add click event listeners to all tab buttons
+            document.querySelectorAll('#subtahap-tab button[role="tab"]:not([disabled])').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-tabs-target').replace('#', '');
+                    switchToTab(targetId);
+                });
             });
-        });
-        
-        // Initial active tab
-        const initialTab = document.querySelector('#default-tab button[aria-selected="true"]') || 
-                           document.querySelector('#default-tab button[role="tab"]');
-        if (initialTab) {
-            initialTab.click();
-        }
-    }
-});
-</script>
+            </script>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                // Initialize all Flowbite components
+                initFlowbite();
+                
+                // If the above doesn't work, we'll manually initialize tabs
+                if (typeof Tabs !== 'undefined') {
+                    const tabsElement = document.getElementById('subtahap-tab');
+                    const tabsObject = new Tabs(tabsElement);
+                }
+                
+                // Alternatively, create a manual tab switching system
+                function manuallyActivateTab(tabId) {
+                    // Hide all tab contents
+                    document.querySelectorAll('#subtahap-tab-content > div[role="tabpanel"]').forEach(panel => {
+                        panel.classList.add('hidden');
+                    });
+                    
+                    // Show the selected tab content
+                    const targetPanel = document.getElementById(tabId);
+                    if (targetPanel) {
+                        targetPanel.classList.remove('hidden');
+                    }
+                    
+                    // Update active state on tab buttons
+                    document.querySelectorAll('#subtahap-tab button[role="tab"]').forEach(tab => {
+                        const isTargetTab = tab.getAttribute('data-tabs-target') === '#' + tabId;
+                        
+                        // Remove active classes from all tabs
+                        tab.classList.remove('text-white', 'bg-blue-700');
+                        tab.classList.add('text-gray-400', 'bg-primary-30');
+                        tab.setAttribute('aria-selected', 'false');
+                        
+                        // Add active classes to the selected tab (if it's not disabled)
+                        if (isTargetTab && !tab.disabled) {
+                            tab.classList.remove('text-gray-400', 'bg-primary-30');
+                            tab.classList.add('text-white', 'bg-blue-700');
+                            tab.setAttribute('aria-selected', 'true');
+                        }
+                    });
+                }
+                
+                // Add click handlers to all tabs (enabled ones will work)
+                document.querySelectorAll('#subtahap-tab button[role="tab"]').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        if (!this.disabled) {
+                            const target = this.getAttribute('data-tabs-target');
+                            if (target) {
+                                manuallyActivateTab(target.replace('#', ''));
+                            }
+                        }
+                    });
+                });
+            });
+            </script>
+            
+            <script>
+            
+                document.addEventListener('DOMContentLoaded', function() {
+                // Specify Needs complete button
+                document.getElementById('complete-specifyneeds').addEventListener('click', function() {
+                    // Check if all subtasks are completed
+                    const checkboxes = document.querySelectorAll('#specifyneeds input[type="checkbox"]');
+                    let allChecked = true;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    
+                    if (!allChecked) {
+                        alert('Harap selesaikan semua sub tahap Specify Needs terlebih dahulu!');
+                        return;
+                    }
+                    
+                    // Enable the Design tab
+                    const designTab = document.getElementById('design-tab');
+                    designTab.classList.remove('text-gray-400', 'cursor-not-allowed', 'bg-primary-100');
+                    designTab.classList.add('text-fontdark', 'hover:bg-gray-100');
+                    designTab.disabled = false;
+                    
+                    // Update the text
+                    designTab.innerHTML = `
+                        <svg class="w-4 h-4 me-2 text-fontdark dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                            <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"/>
+                        </svg>
+                        Design
+                    `;
+                    
+                    // Simulate progress update
+                    document.querySelector('#specifyneeds .bg-blue-600').style.width = '100%';
+                    
+                    // // Optional: Ask the user if they want to navigate to the next tab
+                    // if (confirm('Tahap Specify Needs telah selesai. Apakah Anda ingin beralih ke tahap Design?')) {
+                    //     designTab.click();  // Use the native tab click behavior
+                    //     switchToTab('design');
+                    // }
+            
+                    // Switch to Build tab
+                    designTab.click();
+            
+                     // Manually switch to the Design tab
+                    switchToTab('design');
+                });
+                
+                // Design complete button
+                document.getElementById('complete-design').addEventListener('click', function() {
+                    const checkboxes = document.querySelectorAll('#design input[type="checkbox"]');
+                    let allChecked = true;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    
+                    if (!allChecked) {
+                        alert('Harap selesaikan semua sub tahap Design terlebih dahulu!');
+                        return;
+                    }
+                    
+                    // Enable the Build tab
+                    const buildTab = document.getElementById('build-tab');
+                    buildTab.classList.remove('text-gray-400', 'cursor-not-allowed', 'bg-primary-100');
+                    buildTab.classList.add('text-fontdark', 'hover:bg-gray-100');
+                    buildTab.disabled = false;
+                    
+                    // Update the text
+                    buildTab.innerHTML = `
+                        <svg class="w-4 h-4 me-2 text-fontdark dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M18 7.5h-.423l-.452-1.09.3-.3a1.5 1.5 0 0 0 0-2.121L16.01 2.575a1.5 1.5 0 0 0-2.121 0l-.3.3-1.089-.452V2A1.5 1.5 0 0 0 11 .5H9A1.5 1.5 0 0 0 7.5 2v.423l-1.09.452-.3-.3a1.5 1.5 0 0 0-2.121 0L2.576 3.99a1.5 1.5 0 0 0 0 2.121l.3.3L2.423 7.5H2A1.5 1.5 0 0 0 .5 9v2A1.5 1.5 0 0 0 2 12.5h.423l.452 1.09-.3.3a1.5 1.5 0 0 0 0 2.121l1.415 1.413a1.5 1.5 0 0 0 2.121 0l.3-.3 1.09.452V18A1.5 1.5 0 0 0 9 19.5h2a1.5 1.5 0 0 0 1.5-1.5v-.423l1.09-.452.3.3a1.5 1.5 0 0 0 2.121 0l1.415-1.414a1.5 1.5 0 0 0 0-2.121l-.3-.3.452-1.09H18a1.5 1.5 0 0 0 1.5-1.5V9A1.5 1.5 0 0 0 18 7.5Zm-8 6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
+                        </svg>
+                        Build
+                    `;
+                    
+                    // Simulate progress update
+                    document.querySelector('#design .bg-blue-600').style.width = '100%';
+                    
+                    // Switch to Build tab
+                    buildTab.click();
+            
+                     // Manually switch to the Design tab
+                    switchToTab('build');
+                });
+                
+                // Build complete button
+                document.getElementById('complete-build').addEventListener('click', function() {
+                    const checkboxes = document.querySelectorAll('#build input[type="checkbox"]');
+                    let allChecked = true;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    
+                    if (!allChecked) {
+                        alert('Harap selesaikan semua sub tahap Build terlebih dahulu!');
+                        return;
+                    }
+                    
+                    // Enable the Collect tab
+                    const collectTab = document.getElementById('collect-tab');
+                    collectTab.classList.remove('text-gray-400', 'cursor-not-allowed', 'bg-primary-100');
+                    collectTab.classList.add('text-fontdark', 'hover:bg-gray-100');
+                    collectTab.disabled = false;
+                    
+                    // Update the text
+                    collectTab.innerHTML = `
+                        <svg class="w-4 h-4 me-2 text-fontdark dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                            <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                        </svg>
+                        Collect
+                    `;
+                    
+                    // Simulate progress update
+                    document.querySelector('#build .bg-blue-600').style.width = '100%';
+                    
+                    // Switch to Collect tab
+                    collectTab.click();
+            
+                     // Manually switch to the Design tab
+                    switchToTab('collect');
+                });
+                
+                // Collect complete button
+                document.getElementById('complete-collect').addEventListener('click', function() {
+                    // Check if file is uploaded
+                    const fileUpload = document.getElementById('upload-survey-data');
+                    if (fileUpload.files.length === 0) {
+                        alert('Harap upload data hasil survei terlebih dahulu!');
+                        return;
+                    }
+                    
+                    const checkboxes = document.querySelectorAll('#collect input[type="checkbox"]');
+                    let allChecked = true;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    
+                    if (!allChecked) {
+                        alert('Harap selesaikan semua sub tahap Collect terlebih dahulu!');
+                        return;
+                    }
+                    
+                    // Enable the Process tab
+                    const processTab = document.getElementById('process-tab');
+                    processTab.classList.remove('text-gray-400', 'cursor-not-allowed', 'bg-primary-100');
+                    processTab.classList.add('text-fontdark', 'hover:bg-gray-100');
+                    processTab.disabled = false;
+                    
+                    // Update the text
+                    processTab.innerHTML = `
+                        <svg class="w-4 h-4 me-2 text-fontdark dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                            <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                        </svg>
+                        Process
+                    `;
+                    
+                    // Simulate progress update
+                    document.querySelector('#collect .bg-blue-600').style.width = '100%';
+                    
+                    // Switch to Process tab
+                    processTab.click();
+            
+                     // Manually switch to the Design tab
+                    switchToTab('process');
+                });
+                
+                // Process complete button
+                document.getElementById('complete-process').addEventListener('click', function() {
+                    // Check if file is uploaded
+                    const fileUpload = document.getElementById('upload-processed-data');
+                    if (fileUpload.files.length === 0) {
+                        alert('Harap upload data hasil pengolahan terlebih dahulu!');
+                        return;
+                    }
+                    
+                    const checkboxes = document.querySelectorAll('#process input[type="checkbox"]');
+                    let allChecked = true;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    
+                    if (!allChecked) {
+                        alert('Harap selesaikan semua sub tahap Process terlebih dahulu!');
+                        return;
+                    }
+                    
+                    // Enable the Analyse tab
+                    const analyseTab = document.getElementById('analyse-tab');
+                    analyseTab.classList.remove('text-gray-400', 'cursor-not-allowed', 'bg-primary-100');
+                    analyseTab.classList.add('text-fontdark', 'hover:bg-gray-100');
+                    analyseTab.disabled = false;
+                    
+                    // Update the text - PERBAIKAN: hanya mengubah ikon dan teks, bukan seluruh HTML
+                    analyseTab.innerHTML = `
+                        <svg class="w-4 h-4 me-2 text-fontdark dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                            <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                        </svg>
+                        Analyse
+                    `;
+                    
+                    // Simulate progress update
+                    document.querySelector('#process .bg-blue-600').style.width = '100%';
+                    
+                    // Switch to Analyse tab
+                    analyseTab.click();
+                    switchToTab('analyse');
+                });
+                
+                // Analyse complete button
+                document.getElementById('complete-analyse').addEventListener('click', function() {
+                    // Check if file is uploaded
+                    const fileUpload = document.getElementById('upload-analysis-data');
+                    if (fileUpload.files.length === 0) {
+                        alert('Harap upload tabulasi hasil analisis terlebih dahulu!');
+                        return;
+                    }
+                    
+                    const checkboxes = document.querySelectorAll('#analyse input[type="checkbox"]');
+                    let allChecked = true;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    
+                    if (!allChecked) {
+                        alert('Harap selesaikan semua sub tahap Analyse terlebih dahulu!');
+                        return;
+                    }
+                    
+                    // Enable the Disseminate tab
+                    const disseminateTab = document.getElementById('disseminate-tab');
+                    disseminateTab.classList.remove('text-gray-400', 'cursor-not-allowed', 'bg-primary-100');
+                    disseminateTab.classList.add('text-fontdark', 'hover:bg-gray-100');
+                    disseminateTab.disabled = false;
+                    
+                    // Update the text
+                    disseminateTab.innerHTML = `
+                        <svg class="w-4 h-4 me-2 text-fontdark dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                            <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                        </svg>
+                        Disseminate
+                    `;
+                    
+                    // Simulate progress update
+                    document.querySelector('#analyse .bg-blue-600').style.width = '100%';
+                    
+                    // Switch to Disseminate tab
+                    disseminateTab.click();
+                    switchToTab('disseminate');
+                });
+                
+                // Disseminate complete button
+                document.getElementById('complete-disseminate').addEventListener('click', function() {
+                    // Check if file is uploaded
+                    const fileUpload = document.getElementById('upload-publication');
+                    if (fileUpload.files.length === 0) {
+                        alert('Harap upload file publikasi terlebih dahulu!');
+                        return;
+                    }
+                    
+                    const checkboxes = document.querySelectorAll('#disseminate input[type="checkbox"]');
+                    let allChecked = true;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    
+                    if (!allChecked) {
+                        alert('Harap selesaikan semua sub tahap Disseminate terlebih dahulu!');
+                        return;
+                    }
+                    
+                    // Enable the Evaluate tab
+                    const evaluateTab = document.getElementById('evaluate-tab');
+                    evaluateTab.classList.remove('text-gray-400', 'cursor-not-allowed', 'bg-primary-100');
+                    evaluateTab.classList.add('text-fontdark', 'hover:bg-gray-100');
+                    evaluateTab.disabled = false;
+                    
+                    // Update the text
+                    evaluateTab.innerHTML = `
+                        <svg class="w-4 h-4 me-2 text-fontdark dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M7.824 5.937a1 1 0 0 0 .726-.312 2.042 2.042 0 0 1 2.835-.065 1 1 0 0 0 1.388-1.441 3.994 3.994 0 0 0-5.674.13 1 1 0 0 0 .725 1.688Z"/>
+                            <path d="M17 7A7 7 0 1 0 3 7a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1a1 1 0 0 0 1-1V7a5 5 0 1 1 10 0v7.083A2.92 2.92 0 0 1 12.083 17H12a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h1a1.993 1.993 0 0 0 1.722-1h.361a4.92 4.92 0 0 0 4.824-4H17a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3Z"/>
+                        </svg>
+                        Evaluate
+                    `;
+                    
+                    // Simulate progress update
+                    document.querySelector('#disseminate .bg-blue-600').style.width = '100%';
+                    
+                    // Switch to Evaluate tab
+                    evaluateTab.click();
+                    switchToTab('evaluate');
+                });
+                
+                // Evaluate complete button
+                document.getElementById('complete-evaluate').addEventListener('click', function() {
+                    // Check if file is uploaded
+                    const fileUpload = document.getElementById('upload-evaluation');
+                    if (fileUpload.files.length === 0) {
+                        alert('Harap upload file hasil evaluasi terlebih dahulu!');
+                        return;
+                    }
+                    
+                    const checkboxes = document.querySelectorAll('#evaluate input[type="checkbox"]');
+                    let allChecked = true;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (!checkbox.checked) {
+                            allChecked = false;
+                        }
+                    });
+                    
+                    if (!allChecked) {
+                        alert('Harap selesaikan semua sub tahap Evaluate terlebih dahulu!');
+                        return;
+                    }
+                    
+                    // Simulate progress update
+                    document.querySelector('#evaluate .bg-blue-600').style.width = '100%';
+                    
+                    // Enable the "Survei Telah Selesai" button
+                    document.getElementById('complete-survey').classList.remove('hidden');
+                    alert('Semua tahap telah selesai. Anda dapat menandai survei sebagai selesai dilaksanakan.');
+                });
+                
+                // Complete Survey button
+                document.getElementById('complete-survey').addEventListener('click', function() {
+                    if (confirm('Apakah Anda yakin ingin menandai survei ini sebagai selesai dilaksanakan?')) {
+                        alert('Survei berhasil ditandai sebagai selesai!');
+                        
+                        // Update overall progress to 100%
+                        const progressBar = document.querySelector('#umum .bg-blue-600');
+                        progressBar.style.width = '100%';
+                        progressBar.textContent = '100%';
+                    }
+                });
+                
+                // Add event listeners to checkboxes to update progress
+                function updateProgress(tabId) {
+                    const checkboxes = document.querySelectorAll(`#${tabId} input[type="checkbox"]`);
+                    const totalCheckboxes = checkboxes.length;
+                    let checkedCount = 0;
+                    
+                    checkboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            checkedCount++;
+                        }
+                    });
+                    
+                    const progressPercentage = Math.round((checkedCount / totalCheckboxes) * 100);
+                    document.querySelector(`#${tabId} .bg-blue-600`).style.width = `${progressPercentage}%`;
+                }
+                
+                // Add change event listeners to all checkboxes
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const tabId = this.closest('[role="tabpanel"]').id;
+                        updateProgress(tabId);
+                    });
+                });
+                
+                // Initialize progress bars
+                const tabIds = ['specifyneeds', 'design', 'build', 'collect', 'process', 'analyse', 'disseminate', 'evaluate'];
+                tabIds.forEach(id => updateProgress(id));
+                
+                // Hide the "Survei Telah Selesai" button initially
+                document.getElementById('complete-survey').classList.add('hidden');
+            });
+            </script>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

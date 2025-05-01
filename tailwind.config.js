@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './index.html',
     './views/**/*.{js,ts,jsx,tsx,html,ejs}',
     './public/**/*.{html,js,ejs}',
+    "./node_modules/flowbite/**/*.js"
   ],
   theme: {
     extend: {
@@ -29,6 +31,12 @@ module.exports = {
       },
     },
   },
+  safelist: [
+    // class-class penting yang mungkin dipakai oleh simple-datatables
+    // 'dataTable-wrapper', 'dataTable-top', 'dataTable-bottom',
+    // 'dataTable-container', 'dataTable-table', 'dataTable-sorter',
+    // 'dataTable-pagination', 'dataTable-input', 'dataTable-search'
+  ],
   plugins: [],
 }
 
