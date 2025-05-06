@@ -183,7 +183,7 @@ app.get('/operator/surveys', async (req, res) => {
     const namaUserLogin = req.session.user ? req.session.user.namaUser : null;
 
     if (!token || !namaUserLogin) {
-      return res.redirect('/login.html');
+      return res.redirect('/login');
     }
 
     const response = await axios.get('http://localhost/kegiatans', {
@@ -334,73 +334,67 @@ app.post('/operator/surveys', async (req, res) => {
     const now = new Date().toISOString();
 
     // Ambil detail lengkap user, satker, dan program
-    const [userRes, satkerRes, provinceRes, programRes, outputRes] = await Promise.all([
-      axios.get(`http://localhost/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }),
-      axios.get(`http://localhost/satkers/${satkerId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }),
-      axios.get(`http://localhost/satkers/${satkerId}/province`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }),
-      axios.get(`http://localhost/programs/${program}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }),
-      axios.get(`http://localhost/outputs/${output}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }),
-    ]);
+    // const [userRes, satkerRes, provinceRes, programRes, outputRes] = await Promise.all([
+    //   axios.get(`http://localhost/users/${userId}`, {
+    //     headers: { Authorization: `Bearer ${token}` }
+    //   }),
+    //   axios.get(`http://localhost/satkers/${satkerId}`, {
+    //     headers: { Authorization: `Bearer ${token}` }
+    //   }),
+    //   axios.get(`http://localhost/satkers/${satkerId}/province`, {
+    //     headers: { Authorization: `Bearer ${token}` }
+    //   }),
+    //   axios.get(`http://localhost/programs/${program}`, {
+    //     headers: { Authorization: `Bearer ${token}` }
+    //   }),
+    //   axios.get(`http://localhost/outputs/${output}`, {
+    //     headers: { Authorization: `Bearer ${token}` }
+    //   }),
+    // ]);
 
-    let userData = userRes.data;
-    let satkerData = satkerRes.data;
-    const provinceData = provinceRes.data;
-    let programData = programRes.data;
-    let outputData = outputRes.data;
+    // let userData = userRes.data;
+    // let satkerData = satkerRes.data;
+    // const provinceData = provinceRes.data;
+    // let programData = programRes.data;
+    // let outputData = outputRes.data;
 
-    satkerData = {
-      id: Number(satkerId),
-      ...satkerData,
-      province: provinceData
-    };
-    userData = {
-      id: Number(userId),
-      ...userData,
-      satker: satkerData,
-      namaSatker: satkerData.name
-    };
-    programData = {
-      id: Number(program),
-      ...programData
-    };
-    outputData = {
-      id: Number(output),
-      year: null, //outputData.year
-      code: null, //outputData.code,
-      name: null, // outputData.name,
-      program: null, // {
+    // satkerData = {
+    //   id: Number(satkerId),
+    //   ...satkerData,
+    //   province: provinceData
+    // };
+    // userData = {
+    //   id: Number(userId),
+    //   ...userData,
+    //   satker: satkerData,
+    //   namaSatker: satkerData.name
+    // };
+    // programData = {
+    //   id: Number(program),
+    //   ...programData
+    // };
+    // outputData = {
+    //   id: Number(output),
+      // year: null, //outputData.year
+      // code: null, //outputData.code,
+      // name: null, // outputData.name,
+      // program: null, // {
       //   id: programData.id,
       //   name: programData.name,
       //   code: programData.code,
       //   year: programData.year
       // }
-    }
+    // }
 
     await axios.post('http://localhost/api/kegiatans', {
-      id: null,
       name,
       code,
-      budget: null,
-      user: userData,
-      satker: satkerData,
-      program: programData,
-      output: outputData,
+      user: {id:Number(userId)},
+      output: {id:Number(output)},
       startDate,
       endDate,
       createdOn: now,
       updatedOn: null,
-      namaUser: userData.name,
-      namaSatker: satkerData.name
     }, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -457,7 +451,7 @@ app.get('/superadmin/roles', async (req, res) => {
   try {
     const token = req.session.user ? req.session.user.accessToken : null;
     if (!token) {
-      return res.redirect('/login.html');
+      return res.redirect('/login');
     }
 
     const response = await axios.get('http://localhost/roles', {
@@ -769,7 +763,7 @@ app.get('/superadmin/programs', async (req, res) => {
   try {
     const token = req.session.user ? req.session.user.accessToken : null;
     if (!token) {
-      return res.redirect('/login.html');
+      return res.redirect('/login');
     }
 
     const response = await axios.get('http://localhost/programs', {
@@ -967,7 +961,7 @@ app.get('/admin/users', async (req, res) => {
   try {
     const token = req.session.user ? req.session.user.accessToken : null;
     if (!token) {
-      return res.redirect('/login.html');
+      return res.redirect('/login');
     }
 
     const response = await axios.get('http://localhost/users', {
