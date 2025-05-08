@@ -333,59 +333,6 @@ app.post('/operator/surveys', async (req, res) => {
     const tahun = dayjs(startDate).format('YYYY');    
     const now = new Date().toISOString();
 
-    // Ambil detail lengkap user, satker, dan program
-    // const [userRes, satkerRes, provinceRes, programRes, outputRes] = await Promise.all([
-    //   axios.get(`http://localhost/users/${userId}`, {
-    //     headers: { Authorization: `Bearer ${token}` }
-    //   }),
-    //   axios.get(`http://localhost/satkers/${satkerId}`, {
-    //     headers: { Authorization: `Bearer ${token}` }
-    //   }),
-    //   axios.get(`http://localhost/satkers/${satkerId}/province`, {
-    //     headers: { Authorization: `Bearer ${token}` }
-    //   }),
-    //   axios.get(`http://localhost/programs/${program}`, {
-    //     headers: { Authorization: `Bearer ${token}` }
-    //   }),
-    //   axios.get(`http://localhost/outputs/${output}`, {
-    //     headers: { Authorization: `Bearer ${token}` }
-    //   }),
-    // ]);
-
-    // let userData = userRes.data;
-    // let satkerData = satkerRes.data;
-    // const provinceData = provinceRes.data;
-    // let programData = programRes.data;
-    // let outputData = outputRes.data;
-
-    // satkerData = {
-    //   id: Number(satkerId),
-    //   ...satkerData,
-    //   province: provinceData
-    // };
-    // userData = {
-    //   id: Number(userId),
-    //   ...userData,
-    //   satker: satkerData,
-    //   namaSatker: satkerData.name
-    // };
-    // programData = {
-    //   id: Number(program),
-    //   ...programData
-    // };
-    // outputData = {
-    //   id: Number(output),
-      // year: null, //outputData.year
-      // code: null, //outputData.code,
-      // name: null, // outputData.name,
-      // program: null, // {
-      //   id: programData.id,
-      //   name: programData.name,
-      //   code: programData.code,
-      //   year: programData.year
-      // }
-    // }
-
     await axios.post('http://localhost/api/kegiatans', {
       name,
       code,
@@ -402,17 +349,18 @@ app.post('/operator/surveys', async (req, res) => {
       }
     });
 
+    req.session.successMessage = 'Berhasil menambah kegiatan.';
     res.redirect('/operator/surveys');
   } catch (error) {
     console.error('Error saat tambah kegiatan:', error.response?.data || error.message);
 
-    // Kirim error lewat query string (bisa juga pake express-flash kalau mau)
-    // res.redirect('/operator/surveys/add?error=Gagal%20menyimpan%20kegiatan.');
-    res.status(500).send('Internal Server Error');
+    req.session.errorMessage = 'Gagal menambah kegiatan.';
+  res.redirect('/operator/surveys/add');
+    // res.status(500).send('Internal Server Error');
 
   }
 });
-app.get('/operator/surveys/update/:id', async (req, res) => {
+app.get('/operator/surveys/:id/update', async (req, res) => {
   const { id } = req.params;
   const token = req.session.user?.accessToken;
 
@@ -424,17 +372,64 @@ app.get('/operator/surveys/update/:id', async (req, res) => {
     });
 
     const kegiatan = response.data; // data kegiatan per ID
+    const programsResponse = await axios.get('http://localhost/programs', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const outputsResponse = await axios.get('http://localhost/outputs', {
+      params: {
+        size: 10000 // ganti sesuai dengan jumlah maksimum data
+      },
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    let programDtos = programsResponse.data._embedded.programs || [];
+    let outputDtos = outputsResponse.data._embedded.outputs || [];
+
+    programDtos = programDtos.map(program => {
+      const href = program._links?.self?.href || '';
+      const idMatch = href.match(/\/programs\/(\d+)/);
+      const id = idMatch ? idMatch[1] : null;
+
+      return {
+        href, 
+        id,
+        year: program.year,
+        code: program.code,
+        name: program.name
+      };
+    });
+    outputDtos = outputDtos.map(output => {
+      const href = output._links?.self?.href || '';
+      const idMatch = href.match(/\/outputs\/(\d+)/);
+      const id = idMatch ? idMatch[1] : null;
+
+      return {
+        href, 
+        id,
+        ...output
+      };
+    });
+
+    // Cari ID Satker berdasarkan nama
+    // const satkerId = await getSatkerIdByName(satkerName, token);
 
     res.render('layout', {
       title: 'Update Kegiatan | SMS',
       page: 'pages/operator/updateKegiatan',
       activePage: 'surveys',
       id,
+      programDtos,
+      outputDtos,
       kegiatan // kirim data kegiatan ke halaman
     });
   } catch (error) {
     console.error('Gagal ambil detail kegiatan:', error.message);
-    res.redirect('/dashboard'); // fallback kalo error
+    req.session.errorMessage = 'Gagal ambil data kegiatan';
+    res.redirect('/'); // fallback kalo error
+    // res.status(500).send('Internal Server Error');
+
   }
 });
 
@@ -442,7 +437,8 @@ app.get('/operator/surveys/update/:id', async (req, res) => {
 app.get('/user/detail', (req, res) => {
   res.render('layout', {
     title: 'Profil | SMS',
-    page: 'pages/detailProfil'
+    page: 'pages/detailProfil',
+    activePage: null,
   });
 });
 
@@ -516,7 +512,7 @@ app.post('/superadmin/roles', async (req, res) => {
 
     // Gagal -> simpan pesan error
     req.session.errorMessage = 'Gagal menambahkan role.';
-    res.redirect('back'); // Balik ke form role
+    res.redirect('superadmin/roles'); // Balik ke form role
   }
 });
 app.get('/superadmin/roles/:code/users', async (req, res) => {
@@ -835,7 +831,7 @@ app.post('/superadmin/programs', async (req, res) => {
     console.error('Gagal menyimpan program:', error.response ? error.response.data : error.message);
     
     req.session.errorMessage = 'Gagal menambahkan program.';
-    res.redirect('back'); // balik ke halaman form
+    res.redirect('superadmin/programs'); // balik ke halaman form
   }
 });
 
@@ -949,10 +945,10 @@ app.post('/superadmin/outputs', async (req, res) => {
   } catch (error) {
     console.error('Gagal menyimpan output:', error.response ? error.response.data : error.message);
     
-    // req.session.errorMessage = 'Gagal menambahkan output.';
-    // res.redirect('back'); // balik ke halaman form
+    req.session.errorMessage = 'Gagal menambahkan output.';
+    res.redirect('supradmin/outputs/add'); // balik ke halaman form
     
-    res.status(500).send('Internal Server Error');
+    // res.status(500).send('Internal Server Error');
   }
 });
 
@@ -995,6 +991,9 @@ app.get('/admin/users', async (req, res) => {
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).send('Internal Server Error');
+    
+    req.session.errorMessage = 'Gagal mengambil data pengguna.';
+    res.redirect('/');
   }
 });
 app.get('/admin/users/add', async (req, res) => {
@@ -1024,7 +1023,7 @@ app.get('/admin/users/add', async (req, res) => {
         ...satker
       };
     });
-
+    
     res.render('layout', {
       title: 'Tambah Pengguna | SMS',
       page: 'pages/admin/addPengguna',
@@ -1069,9 +1068,9 @@ app.post('/admin/users/save', async (req, res) => {
   } catch (error) {
     console.error('Error simpan pengguna:', error?.response?.data || error.message);
     
-    res.status(500).send('Internal Server Error');
-    // req.session.errorMessage = 'Gagal menambahkan pengguna.';
-    // res.redirect('/admin/users/add');
+    // res.status(500).send('Internal Server Error');
+    req.session.errorMessage = 'Gagal menambahkan pengguna.';
+    res.redirect('/admin/users/add');
   }
 });
 app.get('/admin/users/detail/:id', async (req, res) => {
@@ -1219,10 +1218,13 @@ app.post('/admin/users/:id/roles/assign', async (req, res) => {
       }
     );
 
+    req.session.successMessage = 'Berhasil menambah role pengguna.';
     res.redirect(`/admin/users/${userId}/roles`);
   } catch (error) {
     console.error('Error assigning role:', error);
-    res.status(500).send('Internal Server Error');
+    // res.status(500).send('Internal Server Error');
+    req.session.errorMessage = 'Gagal menambahkan role pengguna.';
+    res.redirect(`/admin/users/${userId}/roles`);
   }
 });
 app.post('/admin/users/:id/roles/remove', async (req, res) => {
@@ -1241,11 +1243,13 @@ app.post('/admin/users/:id/roles/remove', async (req, res) => {
         'Content-Type': 'application/json'
       }
     });
-
+    req.session.successMessage = 'Berhasil menghapus role pengguna.';
     res.redirect(`/admin/users/${userId}/roles`);
   } catch (error) {
     console.error('Error removing role:', error);
-    res.status(500).send('Internal Server Error');
+    // res.status(500).send('Internal Server Error');
+    req.session.errorMessage = 'Gagal menghapus role pengguna.';
+    res.redirect(`/admin/users/${userId}/roles`);
   }
 });
 
