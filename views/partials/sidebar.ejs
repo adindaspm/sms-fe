@@ -17,6 +17,7 @@
             </a>
         </li>
         </ul>
+        <% if (loggedInUser && loggedInUser.roles.includes('ROLE_OPERATOR')) { %>
         <ul class="font-medium border-t py-2">
         <li>
             <a href="/operator/surveys" class="flex items-center p-2 rounded-lg group
@@ -29,6 +30,8 @@
             </a>
         </li>
         </ul>
+        <% } %>
+        <% if (loggedInUser && loggedInUser.roles.includes('ROLE_SUPERADMIN')) { %>
         <ul class="font-medium border-t py-2">
         <button type="button" class="flex items-center w-full p-2 text-base text-fontdark transition duration-75 rounded-lg group hover:bg-primary-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
             <svg class="flex-shrink-0 w-5 h-5 text-icondark transition duration-75 dark:text-gray-400 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
@@ -72,6 +75,8 @@
             </li>
         </ul>
         </ul>
+        <% } %>
+        <% if (loggedInUser && loggedInUser.roles.includes('ROLE_ADMIN')) { %>
         <ul class="font-medium border-t py-2">
         <li>
             <a href="/admin/users" class="flex items-center p-2 rounded-lg group
@@ -83,6 +88,7 @@
             </a>
         </li>
         </ul>
+        <% } %>
         <!-- <ul class="font-medium border-t py-2">
         <li>
             <a th:href="@{/pengaduan}" class="flex items-center p-2 text-fontdark rounded-lg dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700 group">
