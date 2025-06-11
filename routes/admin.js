@@ -1,9 +1,12 @@
 const express = require('express');
 const axios = require('axios');
+const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const { apiBaseUrl } = require('../config');
+const { getAllUsers, getUserById, getRolesByUser } = require('../services/userService');
+const { getAllSatkers } = require('../services/satkerService');
+const { getAllRoles } = require('../services/roleService');
 
-// Users
 router.get('/admin/users', async (req, res) => {
   try {
     const token = req.session.user ? req.session.user.accessToken : null;
@@ -11,27 +14,7 @@ router.get('/admin/users', async (req, res) => {
       return res.redirect('/login');
     }
 
-    const response = await axios.get(`${apiBaseUrl}/users`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    let userDtos = response.data._embedded.users || [];
-
-    userDtos = userDtos.map(user => {
-      const href = user._links?.self?.href || '';
-      const idMatch = href.match(/\/users\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        email: user.email,
-        name: user.name,
-        roleName: user.roleName
-      };
-    });
+    const userDtos = await getAllUsers(token);
 
     res.render('layout', {
       title: 'Pengguna | SMS',
@@ -54,40 +37,35 @@ router.get('/admin/users/add', async (req, res) => {
       return res.redirect('/login');
     }
     
-    const response = await axios.get(`${apiBaseUrl}/satkers`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    let listSatkers = response.data._embedded.satkers || [];
-
-    listSatkers = listSatkers.map(satker => {
-      const href = satker._links?.self?.href || '';
-      const idMatch = href.match(/\/satkers\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        ...satker
-      };
-    });
+    const satkerDtos = await getAllSatkers(token);
     
     res.render('layout', {
       title: 'Tambah Pengguna | SMS',
       page: 'pages/admin/addPengguna',
       activePage: 'users',
-      listSatkers: listSatkers
+      listSatkers: satkerDtos
     });
   } catch (error) {
     console.error('Error ambil Satkers:', error);
     res.redirect(req.get('Referer'));
   }
 });
-router.post('/admin/users/save', async (req, res) => {
+router.post('/admin/users/save', [
+  body('first_name').notEmpty().withMessage('Nama depan wajib diisi'),
+  body('last_name').notEmpty().withMessage('Nama belakang wajib diisi'),
+  body('nip').isNumeric().withMessage('NIP harus berupa angka'),
+  body('email').isEmail().withMessage('Email tidak valid'),
+  body('satker').notEmpty().withMessage('Satuan Kerja wajib dipilih'),
+], async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.render('admin/users/form', {
+        errors: errors.array(),
+        old: req.body,
+      });
+    }
+
     const token = req.session.user ? req.session.user.accessToken : null;
     if (!token) {
       return res.redirect('/login');
@@ -133,23 +111,8 @@ router.get('/admin/users/detail/:id', async (req, res) => {
 
     const userId = req.params.id;
 
-    // Panggil API /users/{id}
-    const response = await axios.get(`${apiBaseUrl}/users/${userId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    const userData = response.data;
-
-    // Ambil roles user
-    const rolesResponse = await axios.get(`${apiBaseUrl}/users/${userId}/roles`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    let userRoles = rolesResponse.data._embedded?.roles || [];
+    const userData = await getUserById(userId, token);
+    let userRoles = await getRolesByUser(userId, token);
 
     // Map roles
     userRoles = userRoles.map(role => {
@@ -188,56 +151,9 @@ router.get('/admin/users/:id/roles', async (req, res) => {
     }
 
     const userId = req.params.id;
-
-    // Ambil data user
-    const userResponse = await axios.get(`${apiBaseUrl}/users/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    let userDto = userResponse.data;
-
-    userDto = {
-      id: userId,
-      ...userDto
-    };
-
-    // Ambil semua roles
-    const allRolesResponse = await axios.get(`${apiBaseUrl}/roles`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    let roleDtos = allRolesResponse.data._embedded.roles || [];
-
-    roleDtos = roleDtos.map(role => {
-      const href = role._links?.self?.href || '';
-      const idMatch = href.match(/\/roles\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        code: role.code,
-        name: role.name
-      };
-    });
-
-    // Ambil roles milik user ini
-    const userRolesResponse = await axios.get(`${apiBaseUrl}/users/${userId}/roles`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    let userRoleDtos = userRolesResponse.data._embedded.roles || [];
-
-    userRoleDtos = userRoleDtos.map(role => {
-      const href = role._links?.self?.href || '';
-      const idMatch = href.match(/\/roles\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        code: role.code,
-        name: role.name
-      };
-    });
+    const userDto = await getUserById(userId, token);
+    const roleDtos = await getAllRoles(token);
+    const userRoleDtos = await getRolesByUser(userId, token);
 
     res.render('layout', {
       title: 'Kelola Peran Pengguna | SMS',

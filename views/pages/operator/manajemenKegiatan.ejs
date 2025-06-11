@@ -13,7 +13,7 @@
         <table class="mt-6" id="export-table">
             <thead>
                 <tr class="bg-primary bg-opacity-50 text-fontdark">
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Id
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -21,7 +21,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Nama Aktivitas
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -29,7 +29,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Satuan Kerja
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -37,7 +37,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Penanggung Jawab
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -45,7 +45,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Aksi
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -59,10 +59,10 @@
                 <% kegiatans.forEach(function(kegiatan) { %>
                   <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= kegiatan.id %></td>
-                    <td><%= kegiatan.name %></td>
-                    <td><%= kegiatan.namaSatker %></td>
-                    <td><%= kegiatan.namaUser %></td>
-                    <td>
+                    <td class="dark:text-white"><%= kegiatan.name %></td>
+                    <td class="dark:text-white"><%= kegiatan.namaSatker %></td>
+                    <td class="dark:text-white"><%= kegiatan.namaUser %></td>
+                    <td class="dark:text-white">
                       <div class="flex justify-center">
                         <a href="/operator/surveys/detail/<%= kegiatan.id %>" class="px-0.5">
                           <button class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700">Detail</button>

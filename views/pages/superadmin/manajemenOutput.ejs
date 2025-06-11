@@ -10,7 +10,7 @@
         <table class="mt-6" id="search-sort-table">
             <thead>
                 <tr>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             ID
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -18,7 +18,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Tahun
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -26,7 +26,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Kode
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Nama
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -57,15 +57,15 @@
                     <% outputDtos.forEach(function(outputDto) { %>
                       <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                         <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= outputDto.id %></td>
-                        <td><%= outputDto.year %></td>
-                        <td><%= outputDto.code %></td>
-                        <td><%= outputDto.name %></td>
+                        <td class="dark:text-white"><%= outputDto.year %></td>
+                        <td class="dark:text-white"><%= outputDto.code %></td>
+                        <td class="dark:text-white"><%= outputDto.name %></td>
                         <!-- <td></td> -->
                       </tr>
                     <% }); %>
                   <% } else { %>
                     <tr>
-                      <td colspan="5" class="text-center">Data tidak tersedia</td>
+                      <td colspan="5" class="text-center dark:text-white">Data tidak tersedia</td>
                     </tr>
                   <% } %>
             </tbody>

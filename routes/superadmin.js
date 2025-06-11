@@ -2,6 +2,11 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 const { apiBaseUrl } = require('../config');
+const { getAllRoles, getUsersByRole } = require('../services/roleService');
+const { getAllSatkers, getSatkerById } = require('../services/satkerService');
+const { getAllPrograms } = require('../services/programService');
+const { getAllProvinces, getSatkersByProvince } = require('../services/provinceService');
+const { getAllOutputs } = require('../services/outputService');
 
 // Roles
 router.get('/superadmin/roles', async (req, res) => {
@@ -11,26 +16,7 @@ router.get('/superadmin/roles', async (req, res) => {
       return res.redirect('/login');
     }
 
-    const response = await axios.get(`${apiBaseUrl}/roles`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    let roleDtos = response.data._embedded.roles || [];
-
-    // Ambil ID dari href
-    roleDtos = roleDtos.map(role => {
-      const href = role._links?.self?.href || '';
-      const idMatch = href.match(/\/roles\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        name: role.name
-      };
-    });
+    const roleDtos = await getAllRoles(token);
 
     res.render('layout', {
       title: 'Role | SMS',
@@ -85,24 +71,7 @@ router.get('/superadmin/roles/:code/users', async (req, res) => {
 
     const { code } = req.params;
 
-    const response = await axios.get(`${apiBaseUrl}/roles/${code}/users`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    let userDtos = response.data._embedded.users || [];
-
-    userDtos = userDtos.map(user => {
-      const href = user._links?.self?.href || '';
-      const idMatch = href.match(/\/users\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        name: user.name,
-        email: user.email,
-        satker: user.namaSatker
-      };
-    });
+    const userDtos = await getUsersByRole(code, token);
     
     res.render('layout', {
       title: 'Klasifikasi Role Pengguna| SMS',
@@ -124,27 +93,7 @@ router.get('/superadmin/satkers', async (req, res) => {
       return res.redirect('/login');
     }
 
-    const response = await axios.get(`${apiBaseUrl}/satkers`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    let satkerDtos = response.data._embedded.satkers || [];
-
-    satkerDtos = satkerDtos.map(satker => {
-      const href = satker._links?.self?.href || '';
-      const idMatch = href.match(/\/satkers\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        code: satker.code,
-        name: satker.name,
-        address: satker.address
-      };
-    });
+    const satkerDtos = await getAllSatkers(token);
 
     res.render('layout', {
       title: 'Satuan Kerja | SMS',
@@ -169,17 +118,7 @@ router.get('/superadmin/satkers/:id/update', async (req, res) => {
   const token = req.session.user?.accessToken;
 
   try {
-    const response = await axios.get(`${apiBaseUrl}/satkers/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    let satker = response.data; // data kegiatan per ID
-    satker = {
-      id,
-      ...satker
-    }
+    const satker = await getSatkerById(id, token);
 
     res.render('layout', {
       title: 'Update Kegiatan | SMS',
@@ -241,26 +180,7 @@ router.get('/superadmin/provinces', async (req, res) => {
       return res.redirect('/login');
     }
 
-    const response = await axios.get(`${apiBaseUrl}/provinces`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    let provinceDtos = response.data._embedded.provinces || [];
-
-    provinceDtos = provinceDtos.map(province => {
-      const href = province._links?.self?.href || '';
-      const idMatch = href.match(/\/provinces\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        code: province.code,
-        name: province.name
-      };
-    });
+    const provinceDtos = await getAllProvinces(token);
 
     res.render('layout', {
       title: 'Provinsi | SMS',
@@ -282,25 +202,7 @@ router.get('/superadmin/provinces/:code/satkers', async (req, res) => {
 
     const { code } = req.params;
 
-    // Kirim request ke API /provinces/{id}/listSatkers
-    const response = await axios.get(`${apiBaseUrl}/provinces/${code}/listSatkers`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    let satkerDtos = response.data._embedded.satkers || [];
-
-    satkerDtos = satkerDtos.map(satker => {
-      const href = satker._links?.self?.href || '';
-      const idMatch = href.match(/\/satkers\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        code: satker.code,
-        name: satker.name,
-        email: satker.email
-      };
-    });
+    const satkerDtos = await getSatkersByProvince(code, token);
     
     res.render('layout', {
       title: 'Satker di Provinsi | SMS',
@@ -323,27 +225,7 @@ router.get('/superadmin/programs', async (req, res) => {
       return res.redirect('/login');
     }
 
-    const response = await axios.get(`${apiBaseUrl}/programs`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    let programDtos = response.data._embedded.programs || [];
-
-    programDtos = programDtos.map(program => {
-      const href = program._links?.self?.href || '';
-      const idMatch = href.match(/\/programs\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        year: program.year,
-        code: program.code,
-        name: program.name
-      };
-    });
+    const programDtos = await getAllPrograms(token);
 
     res.render('layout', {
       title: 'Program | SMS',
@@ -404,27 +286,7 @@ router.get('/superadmin/outputs', async (req, res) => {
       return res.redirect('/login');
     }
 
-    const response = await axios.get(`${apiBaseUrl}/outputs`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    let outputDtos = response.data._embedded.outputs || [];
-
-    outputDtos = outputDtos.map(output => {
-      const href = output._links?.self?.href || '';
-      const idMatch = href.match(/\/outputs\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        year: output.year,
-        code: output.code,
-        name: output.name
-      };
-    });
+    const outputDtos = await getAllOutputs(token);
 
     res.render('layout', {
       title: 'Output | SMS',
@@ -444,33 +306,13 @@ router.get('/superadmin/outputs/add', async (req, res) => {
       return res.redirect('/login');
     }
     
-    const response = await axios.get(`${apiBaseUrl}/programs`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    let listPrograms = response.data._embedded.programs || [];
-
-    listPrograms = listPrograms.map(program => {
-      const href = program._links?.self?.href || '';
-      const idMatch = href.match(/\/programs\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        href, 
-        id,
-        ...program
-      };
-    });
+    const programDtos = await getAllPrograms(token);
 
     res.render('layout', {
       title: 'Tambah Output | SMS',
       page: 'pages/superadmin/addOutput',
       activePage: 'outputs',
-      listPrograms: listPrograms
+      listPrograms: programDtos
     });
   } catch (error) {
     console.error('Error ambil Programs:', error);

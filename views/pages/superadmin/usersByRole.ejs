@@ -10,7 +10,7 @@
         <table class="mt-6" id="search-sort-table">
             <thead>
                 <tr>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             ID
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -18,7 +18,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Nama Lengkap
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -26,7 +26,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Email
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Satuan Kerja
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -49,14 +49,14 @@
                     <% userDtos.forEach(function(user) { %>
                       <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                         <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= user.id %></td>
-                        <td><%= user.name %></td>
-                        <td><%= user.email || '-' %></td> <!-- Kalau email gaada, tampilkan '-' -->
-                        <td><%= user.satker %></td>
+                        <td class="dark:text-white"><%= user.name %></td>
+                        <td class="dark:text-white"><%= user.email || '-' %></td> <!-- Kalau email gaada, tampilkan '-' -->
+                        <td class="dark:text-white"><%= user.satker %></td>
                       </tr>
                     <% }); %>
                   <% } else { %>
                     <tr>
-                      <td colspan="4" class="text-center py-4">Tidak ada user ditemukan.</td>
+                      <td colspan="4" class="text-center py-4 dark:text-white">Tidak ada user ditemukan.</td>
                     </tr>
                   <% } %>
             </tbody>

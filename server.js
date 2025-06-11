@@ -1,69 +1,31 @@
 const express = require('express');
 const session = require('express-session');
 const axios = require('axios');
-const app = express();
 const path = require('path');
+const { body, validationResult } = require('express-validator');
+
+const app = express();
 const port = 3000;
+
 const dayjs = require('dayjs');
 
-// Function
-function parseIdFromLink(href) {
-  if (!href) return null;
-  const match = href.match(/\/(\d+)(\?.*)?$/); // ambil angka di akhir URL
-  return match ? match[1] : null;
-}
+const { authMiddleware } = require('./middleware/authMiddleware');
+const { loginAndSave } = require('./services/authService');
+const { getUserByEmail } = require('./services/userService');
 
-function checkRole(allowedRoles) {
-  return (req, res, next) => {
-    const user = req.session.user;
-
-    if (!user || !user.roles || !allowedRoles.some(role => user.roles.includes(role))) {
-      return res.status(403).send('Akses ditolak: tidak memiliki izin.');
-    }
-
-    next(); // lanjut ke route handler
-  };
-}
-
-async function getSatkerIdByName(query, token) {
-  try {
-    const sanitizedName = query.replace(/^Badan Pusat Statistik\s*/, '');
-    const response = await axios.get(`http://localhost/satkers/search/searchSatker?query=${sanitizedName}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    let satkers = response.data._embedded.satkers;
-    satkers = satkers.map(satker => {
-      const href = satker._links?.self?.href || '';
-      const idMatch = href.match(/\/satkers\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        href, 
-        id,
-        ...satker
-      };
-    });
-    if (satkers.length > 0) {
-      // Kembaliin ID satker pertama yang ditemukan (kamu bisa sesuaikan logika kalau mau lebih spesifik)
-      return satkers[0].id;
-    } else {
-      throw new Error('Satker tidak ditemukan');
-    }
-  } catch (error) {
-    console.error('Error mencari Satker:', error.message);
-    throw error;
-  }
-}
+// Route files
+const adminRoutes = require('./routes/admin');
+const superadminRoutes = require('./routes/superadmin');
+const operatorRoutes = require('./routes/operator');
 
 // Set view engine EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Setup session
+// Session config
 app.use(session({
   secret: 'sms',
   resave: false,
@@ -71,40 +33,12 @@ app.use(session({
   cookie: { secure: false } // Kalau HTTPS, set ke true
 }));
 
-// Middleware parsing JSON
+// Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware check role
-app.use((req, res, next) => {
-  const user = req.session.user;
-  const url = req.path;
-
-  if (url.startsWith('/log')) {
-    return next();
-  }
-
-  if (!user) {
-    return res.redirect('/login');
-  }
-
-  if (url.startsWith('/superadmin') && !user.roles.includes('ROLE_SUPERADMIN')) {
-    req.session.errorMessage = '403: Anda tidak memiliki akses ke halaman superadmin.';
-    return res.redirect(req.get('Referer') || '/');
-  }
-
-  if (url.startsWith('/admin') && !user.roles.includes('ROLE_ADMIN')) {
-    req.session.errorMessage = '403: Anda tidak memiliki akses ke halaman admin.';
-    return res.redirect(req.get('Referer') || '/');
-  }
-
-  if (url.startsWith('/operator') && !user.roles.includes('ROLE_OPERATOR')) {
-    req.session.errorMessage = '403: Anda tidak memiliki akses ke halaman operator.';
-    return res.redirect(req.get('Referer') || '/');
-  }
-
-  next();
-});
+// Authentication and role-check middleware
+app.use(authMiddleware);
 
 // Apply middleware ke semua route untuk cek autentikasi login
 app.use((req, res, next) => {
@@ -140,15 +74,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// Function login ke API
-async function loginAndSave(email, password) {
-  const response = await axios.post('http://localhost/login', {
-    email: email,
-    password: password
-  });
-  return response.data;
-}
-
 // Route untuk login user
 app.post('/login-user', async (req, res) => {
   const { email, password } = req.body;
@@ -156,29 +81,11 @@ app.post('/login-user', async (req, res) => {
   try {
     const loginResponse = await loginAndSave(email, password);
     const accessToken = loginResponse.accessToken;
-
-    // Habis login, ambil data user (ambil name)
-    const userResponse = await axios.get(`http://localhost/users/search/findByEmail?email=${email}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    const userData = userResponse.data; // Response yang isinya name, email, dst.
-
-    // Ambil ID dari href
-    let userId = null;
-    const href = userData._links?.self?.href || userData._links?.additionalProp1?.href;
-    if (href) {
-      const idMatch = href.match(/\/users\/(\d+)/); // ambil angka setelah /users/
-      if (idMatch) {
-        userId = idMatch[1];
-      }
-    }
+    const userData = await getUserByEmail(email, accessToken);
 
     // Simpan semuanya ke session
     req.session.user = {
-      idUser: userId,
+      idUser: userData.id,
       email: loginResponse.email,
       accessToken: accessToken,
       roles: loginResponse.roles,
@@ -196,7 +103,7 @@ app.post('/login-user', async (req, res) => {
   }
 });
 
-// Route untuk cek session user
+// Cek session user
 app.get('/me', (req, res) => {
   if (req.session.user) {
     res.json({ loggedIn: true, user: req.session.user });
@@ -205,7 +112,7 @@ app.get('/me', (req, res) => {
   }
 });
 
-// Route untuk logout
+// Logout
 app.post('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {
@@ -215,18 +122,10 @@ app.post('/logout', (req, res) => {
   });
 });
 
-// Login
+// Login Page
 app.get('/login', (req, res) => {
   res.render('pages/login', { title: 'Login | SMS' });
 });
-
-const adminRoutes = require('./routes/admin');
-const superadminRoutes = require('./routes/superadmin');
-const operatorRoutes = require('./routes/operator');
-
-app.use(adminRoutes);
-app.use(superadminRoutes);
-app.use(operatorRoutes);
 
 // Profil
 app.get('/user/detail', (req, res) => {
@@ -246,7 +145,12 @@ app.get('/faq', (req, res) => {
   });
 });
 
-// Listen server
+// Modular routes
+app.use(adminRoutes);
+app.use(superadminRoutes);
+app.use(operatorRoutes);
+
+// Start server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

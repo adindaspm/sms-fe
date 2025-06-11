@@ -15,6 +15,15 @@
    
   <script src="/js/flowbite.min.js"></script>
   <script src="/js/datatable.js"></script>
+  <script src="/js/darklightmode.js" ></script>
+  <script>
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+  </script>
   <% if (successMessage) { %>
     <!-- Modal Sukses -->
     <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">

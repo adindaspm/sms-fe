@@ -10,7 +10,7 @@
         <table class="mt-6" id="search-sort-table">
             <thead>
                 <tr>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Id
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -18,7 +18,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Nama Lengkap
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -26,7 +26,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Email
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Peran
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -42,7 +42,7 @@
                             </svg>
                         </span>
                     </th>
-                    <th>
+                    <th class="dark:text-white">
                         <span class="flex items-center">
                             Aksi
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -57,14 +57,14 @@
                   <% userDtos.forEach(function(userDto) { %>
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                       <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= userDto.id %></td>
-                      <td><%= userDto.name %></td>
-                      <td><%= userDto.email %></td>
-                      <td>
+                      <td class="dark:text-white"><%= userDto.name %></td>
+                      <td class="dark:text-white"><%= userDto.email %></td>
+                      <td class="dark:text-white">
                         <a href="/admin/users/<%= userDto.id %>/roles">
                             <button class="text-white bg-yellow-600 hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Kelola Peran</button>
                         </a>
                       </td>
-                      <td>
+                      <td class="dark:text-white">
                         <div class="flex space-x-2">
                             <a href="/admin/users/detail/<%= userDto.id %>">
                                 <button class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700">Detail</button>
@@ -75,7 +75,7 @@
                   <% }); %>
                 <% } else { %>
                   <tr>
-                    <td colspan="4" class="text-center">Data tidak tersedia</td>
+                    <td colspan="4" class="text-center dark:text-white">Data tidak tersedia</td>
                   </tr>
                 <% } %>
             </tbody>              

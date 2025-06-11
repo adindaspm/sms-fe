@@ -2,6 +2,10 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 const { apiBaseUrl } = require('../config');
+const { getSatkerIdByName } = require('../utils/helpers');
+const { getAllKegiatans, getKegiatanById } = require('../services/kegiatanService');
+const { getAllPrograms } = require('../services/programService');
+const { getAllOutputs } = require('../services/outputService');
 
 // Surveys
 router.get('/operator/surveys', async (req, res) => {
@@ -13,33 +17,9 @@ router.get('/operator/surveys', async (req, res) => {
       return res.redirect('/login');
     }
 
-    const response = await axios.get(`${apiBaseUrl}/kegiatans`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    const kegiatans = await getAllKegiatans(token);
 
-    let kegiatanDtos = response.data._embedded.kegiatans;
-
-    // Filter kegiatan yang namaUser-nya sama dengan user yang login
-    kegiatanDtos = kegiatanDtos.filter(kegiatan => kegiatan.namaUser === namaUserLogin);
-
-    const kegiatans = kegiatanDtos.map((kegiatan) => {
-      const href = kegiatan._links?.self?.href || '';
-      const idMatch = href.match(/\/kegiatans\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        name: kegiatan.name,
-        namaUser: kegiatan.namaUser,
-        namaSatker: kegiatan.namaSatker,
-      };
-    });
-    // Kirim data ke halaman dengan 'kegiatanDtos'
+    // Kirim data ke halaman dengan 'kegiatans'
     res.render('layout', {
       title: 'Kegiatan | SMS',
       page: 'pages/operator/manajemenKegiatan',
@@ -54,45 +34,8 @@ router.get('/operator/surveys', async (req, res) => {
 router.get('/operator/surveys/add', async (req, res) => {
   try {
     const token = req.session.user?.accessToken;
-    const programsResponse = await axios.get(`${apiBaseUrl}/programs`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const outputsResponse = await axios.get(`${apiBaseUrl}/outputs`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    let programDtos = programsResponse.data._embedded.programs || [];
-    let outputDtos = outputsResponse.data._embedded.outputs || [];
-
-    programDtos = programDtos.map(program => {
-      const href = program._links?.self?.href || '';
-      const idMatch = href.match(/\/programs\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        href, 
-        id,
-        year: program.year,
-        code: program.code,
-        name: program.name
-      };
-    });
-    outputDtos = outputDtos.map(output => {
-      const href = output._links?.self?.href || '';
-      const idMatch = href.match(/\/outputs\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        href, 
-        id,
-        ...output
-      };
-    });
+    const programDtos = await getAllPrograms(token);
+    const outputDtos = await getAllOutputs(token);
 
     const userId = req.session.user ? req.session.user.idUser : null;
     const userName = req.session.user ? req.session.user.namaUser : null;
@@ -122,20 +65,14 @@ router.get('/operator/surveys/detail/:id', async (req, res) => {
   const token = req.session.user?.accessToken;
 
   try {
-    const response = await axios.get(`${apiBaseUrl}/kegiatans/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    const kegiatan = response.data; // data kegiatan per ID
+    const kegiatan = await getKegiatanById(id, token);
 
     res.render('layout', {
       title: 'Detail Kegiatan | SMS',
       page: 'pages/operator/detailKegiatan',
       activePage: 'surveys',
       id,
-      kegiatan // kirim data kegiatan ke halaman
+      kegiatan
     });
   } catch (error) {
     console.error('Gagal ambil detail kegiatan:', error.message);
@@ -182,7 +119,7 @@ router.post('/operator/surveys', async (req, res) => {
     console.error('Error saat tambah kegiatan:', error.response?.data || error.message);
 
     req.session.errorMessage = 'Gagal menambah kegiatan.';
-  res.redirect('/operator/surveys/add');
+    res.redirect('/operator/surveys/add');
     // res.status(500).send('Internal Server Error');
 
   }
@@ -192,64 +129,17 @@ router.get('/operator/surveys/:id/update', async (req, res) => {
   const token = req.session.user?.accessToken;
 
   try {
-    const response = await axios.get(`${apiBaseUrl}/kegiatans/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    const kegiatan = response.data; // data kegiatan per ID
-    const programsResponse = await axios.get(`${apiBaseUrl}/programs`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const outputsResponse = await axios.get(`${apiBaseUrl}/outputs`, {
-      params: {
-        size: 10000 // ganti sesuai dengan jumlah maksimum data
-      },
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    let programDtos = programsResponse.data._embedded.programs || [];
-    let outputDtos = outputsResponse.data._embedded.outputs || [];
-
-    programDtos = programDtos.map(program => {
-      const href = program._links?.self?.href || '';
-      const idMatch = href.match(/\/programs\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        href, 
-        id,
-        year: program.year,
-        code: program.code,
-        name: program.name
-      };
-    });
-    outputDtos = outputDtos.map(output => {
-      const href = output._links?.self?.href || '';
-      const idMatch = href.match(/\/outputs\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        href, 
-        id,
-        ...output
-      };
-    });
-
-    // Cari ID Satker berdasarkan nama
-    // const satkerId = await getSatkerIdByName(satkerName, token);
+    const kegiatan = await getKegiatanById(id, token);
+    const programDtos = await getAllPrograms(token);
+    const outputDtos = await getAllOutputs(token);
 
     res.render('layout', {
       title: 'Update Kegiatan | SMS',
       page: 'pages/operator/updateKegiatan',
       activePage: 'surveys',
-      id,
       programDtos,
       outputDtos,
-      kegiatan // kirim data kegiatan ke halaman
+      kegiatan
     });
   } catch (error) {
     console.error('Gagal ambil detail kegiatan:', error.message);
@@ -261,24 +151,16 @@ router.get('/operator/surveys/:id/update', async (req, res) => {
 });
 
 router.get('/operator/cobasurveys/detail/1', async (req, res) => {
-  const { id } = req.params;
   const token = req.session.user?.accessToken;
 
   try {
-    const response = await axios.get(`${apiBaseUrl}/kegiatans/1`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    const kegiatan = response.data; // data kegiatan per ID
+    const kegiatan = await getKegiatanById(1, token);
 
     res.render('layout', {
       title: 'Detail Kegiatan | SMS',
       page: 'pages/operator/kegiatan/detailKegiatanAuto',
       activePage: 'surveys',
-      id,
-      kegiatan // kirim data kegiatan ke halaman
+      kegiatan
     });
   } catch (error) {
     console.error('Gagal ambil detail kegiatan:', error.message);
