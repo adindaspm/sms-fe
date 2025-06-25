@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build:css": "tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --minify",
+    "build": "tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --minify",
     "watch": "tailwindcss --watch -i ./public/css/styles.css -o ./public/css/output.css",
     "start": "node server.js"
   },

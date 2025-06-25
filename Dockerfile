@@ -1,26 +1,24 @@
 FROM node:alpine3.19 AS build
 
 WORKDIR /app
-RUN npm install -g pnpm
 
 COPY package.json .
-COPY pnpm-lock.yaml .
-RUN pnpm install
+COPY package-lock.json .  # gunakan lock file untuk npm
+RUN npm install
 
 COPY . .
 
-RUN pnpm run build
+RUN npm run build
 
 FROM node:alpine3.19 AS deploy
 
 WORKDIR /app
-RUN npm install -g pnpm
 
 COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 COPY --from=build /app/package.json .
-COPY --from=build /app/pnpm-lock.yaml .
+COPY --from=build /app/package-lock.json .  # pastikan ini juga disalin
 
-RUN pnpm install --prod
+RUN npm install --omit=dev  # hanya install dependencies production
 
-CMD ["pnpm", "run", "start"]
+CMD ["npm", "run", "start"]
