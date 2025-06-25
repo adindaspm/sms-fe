@@ -3,7 +3,7 @@ FROM node:alpine3.19 AS build
 WORKDIR /app
 
 COPY package.json .
-COPY package-lock.json .  # gunakan lock file untuk npm
+COPY package-lock.json .
 RUN npm install
 
 COPY . .
@@ -14,11 +14,18 @@ FROM node:alpine3.19 AS deploy
 
 WORKDIR /app
 
-COPY --from=build /app/.next ./.next
+COPY package.json .
+COPY package-lock.json .
+RUN npm install --omit=dev
+
 COPY --from=build /app/public ./public
-COPY --from=build /app/package.json .
-COPY --from=build /app/package-lock.json .  # pastikan ini juga disalin
+COPY --from=build /app/views ./views
+COPY --from=build /app/routes ./routes
+COPY --from=build /app/services ./services
+COPY --from=build /app/utils ./utils
+COPY --from=build /app/middleware ./middleware
+COPY --from=build /app/server.js .
+COPY --from=build /app/config.js .
 
-RUN npm install --omit=dev  # hanya install dependencies production
-
-CMD ["npm", "run", "start"]
+EXPOSE 3000
+CMD ["npm", "start"]

@@ -1,0 +1,21 @@
+# Folder dependency lokal, akan diinstall ulang di dalam container
+node_modules
+package-lock.yaml
+
+# File environment lokal
+.env
+
+# File editor/IDE
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Git files
+.git
+.gitignore
+
+# Docker sendiri
+Dockerfile
+docker-compose.yml
+.dockerignore
