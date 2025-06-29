@@ -14,8 +14,10 @@ async function getAllPrograms(token) {
 
   const programDtos = (response.data._embedded.programs || []).map(program => {
     const idMatch = program._links?.self?.href?.match(/\/(\d+)/);
+    const href = program._links?.self?.href;
     return {
       id: idMatch?.[1] || null,
+      href,
       ...program
     };
   });

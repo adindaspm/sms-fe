@@ -30,19 +30,48 @@ async function getSatkerById(id, token) {
   if (cached) return cached;
 
   const response = await axios.get(`${apiBaseUrl}/satkers/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  });
+
+  let satker = response.data;
+
+  // Ambil juga province
+  const province = await getProvinceBySatkerId(id, token);
+
+  satker = {
+    id,
+    ...satker,
+    province
+  };
+
+  await setCache(cacheKey, satker, 60);
+  return satker;
+}
+
+
+async function getProvinceBySatkerId(satkerId, token) {
+  try {
+    const response = await axios.get(`${apiBaseUrl}/satkers/${satkerId}/province`, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
       }
     });
 
-    let satker = response.data; // data kegiatan per ID
-    satker = {
-      id,
-      ...satker
-    }
+    // Ambil field name dan code saja dari responsenya
+    const { name, code, _links } = response.data;
 
-  await setCache(cacheKey, satker, 60); // TTL 60 detik
-  return satker;
+    const href = _links?.self?.href || '';
+    const matches = href.match(/\/provinces\/(\d+)/); // ambil angka setelah "/provinces/"
+    const id = matches ? parseInt(matches[1]) : null;
+
+    return { id, name, code };
+  } catch (err) {
+    console.error(`Gagal ambil province untuk satkerId ${satkerId}:`, err.message);
+    return null; // supaya tidak crash kalau gagal
+  }
 }
 
 module.exports = { getAllSatkers, getSatkerById };

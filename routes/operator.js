@@ -5,7 +5,12 @@ const { apiBaseUrl } = require('../config');
 const { getSatkerIdByName } = require('../utils/helpers');
 const { getAllKegiatans, getKegiatanById } = require('../services/kegiatanService');
 const { getAllPrograms } = require('../services/programService');
-const { getAllOutputs } = require('../services/outputService');
+const { getAllSatkers } = require('../services/satkerService');
+const { getAllOutputs, getOutputsByProgramId } = require('../services/outputService');
+const { validateKegiatan } = require('../validators/kegiatanValidator');
+const handleValidation = require('../middleware/handleValidation');
+const { delCache } = require('../utils/cacheService');
+const dayjs = require('dayjs');
 
 // Surveys
 router.get('/operator/surveys', async (req, res) => {
@@ -35,8 +40,6 @@ router.get('/operator/surveys/add', async (req, res) => {
   try {
     const token = req.session.user?.accessToken;
     const programDtos = await getAllPrograms(token);
-    const outputDtos = await getAllOutputs(token);
-
     const userId = req.session.user ? req.session.user.idUser : null;
     const userName = req.session.user ? req.session.user.namaUser : null;
     const satkerName = req.session.user ? req.session.user.namaSatker : null;
@@ -49,15 +52,29 @@ router.get('/operator/surveys/add', async (req, res) => {
       page: 'pages/operator/addKegiatan', 
       activePage: 'surveys',
       programDtos,
-      outputDtos,
       userName,
       userId,
       satkerName,
-      satkerId
+      satkerId,
+      old: null,
+      errors: null
     });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
+  }
+});
+// Ambil listOutputs dari suatu program
+router.get('/operator/programs/:id/outputs', async (req, res) => {
+  try {
+    const token = req.session.user?.accessToken;
+    const programId = req.params.id;
+
+    const outputs = await getOutputsByProgramId(programId, token);
+    res.json(outputs);
+  } catch (err) {
+    console.error('Gagal ambil output:', err.message);
+    res.status(500).json({ message: 'Gagal ambil output' });
   }
 });
 router.get('/operator/surveys/detail/:id', async (req, res) => {
@@ -79,7 +96,30 @@ router.get('/operator/surveys/detail/:id', async (req, res) => {
     res.redirect('/'); // fallback kalo error
   }
 });
-router.post('/operator/surveys', async (req, res) => {
+router.post('/operator/surveys', validateKegiatan, handleValidation('layout', async (req) => {
+  const token = req.session.user?.accessToken;
+  const userId = req.session.user ? req.session.user.idUser : null;
+  const userName = req.session.user ? req.session.user.namaUser : null;
+  const satkerName = req.session.user ? req.session.user.namaSatker : null;
+  const satkerId = await getSatkerIdByName(satkerName, token);
+
+  const [listSatkers, programDtos] = await Promise.all([
+    getAllSatkers(token),
+    getAllPrograms(token)
+  ]);
+  return { 
+      title: 'Tambah Kegiatan | SMS',
+      page: 'pages/operator/addKegiatan', 
+      activePage: 'surveys',
+      listSatkers, 
+      programDtos,
+      userId,
+      userName,
+      satkerId,
+      satkerName 
+    };
+}),
+ async (req, res) => {
   try {
     const token = req.session.user?.accessToken;
 
@@ -113,6 +153,7 @@ router.post('/operator/surveys', async (req, res) => {
       }
     });
 
+    delCache('all_kegiatans');
     req.session.successMessage = 'Berhasil menambah kegiatan.';
     res.redirect('/operator/surveys');
   } catch (error) {
@@ -131,15 +172,15 @@ router.get('/operator/surveys/:id/update', async (req, res) => {
   try {
     const kegiatan = await getKegiatanById(id, token);
     const programDtos = await getAllPrograms(token);
-    const outputDtos = await getAllOutputs(token);
 
     res.render('layout', {
       title: 'Update Kegiatan | SMS',
       page: 'pages/operator/updateKegiatan',
       activePage: 'surveys',
       programDtos,
-      outputDtos,
-      kegiatan
+      kegiatan,
+      old: null,
+      errors: null
     });
   } catch (error) {
     console.error('Gagal ambil detail kegiatan:', error.message);

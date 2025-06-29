@@ -7,30 +7,53 @@
         <form class="w-full mx-auto" role="form" method="post" action="/admin/users/save">
             <div class="w-full p-6 bg-primary-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="first_name" id="first_name" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " required />
+                    <input type="text" name="first_name" id="first_name" value="<%= old?.first_name || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
                     <label for="first_name" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Depan</label>
-                    <!-- <p th:if="${#fields.hasErrors('firstName')}" class="text-danger" th:errors="*{firstName}"></p> -->
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'first_name'); %>
+                        <% if (err) { %>
+                            <p class="text-red-500 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="last_name" id="last_name" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " required />
+                    <input type="text" name="last_name" id="last_name" value="<%= old?.last_name || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
                     <label for="last_name" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Belakang</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === '_last_name'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                     <!-- <p th:if="${#fields.hasErrors('lastName')}" class="text-danger" th:errors="*{lastName}"></p> -->
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="nip" id="nip" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " required />
+                    <input type="text" name="nip" id="nip" value="<%= old?.nip || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
                     <label for="nip" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">NIP</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'nip'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                     <!-- <p th:if="${#fields.hasErrors('nip')}" class="text-danger" th:errors="*{nip}"></p> -->
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="email" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " required />
+                    <input type="email" name="email" id="email" value="<%= old?.email || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
                     <label for="email" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
-                    <!-- <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p> -->
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'email'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <select name="satker" id="satker" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" required>
-                        <option class="bg-primary-100 text-white" value="">Pilih Satuan Kerja</option>
-                        <% listSatkers.forEach(satker => { %>
-                          <option class="bg-primary-100 text-white" value="<%= encodeURIComponent(JSON.stringify(satker)) %>"><%= satker.name %></option>
+                    <select name="satker" id="satker" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
+                        <option value="" class="bg-primary-100">Pilih Satker</option>
+                        <% listSatkers.forEach(s => { 
+                            const isSelected = old?.satker && JSON.parse(decodeURIComponent(old.satker)).id === s.id; %>
+                            <option value="<%= encodeURIComponent(JSON.stringify(s)) %>" <%= isSelected ? 'selected' : '' %>><%= s.name %></option>
                         <% }) %>
                       </select>                      
                     <label for="satker" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Satuan Kerja</label>

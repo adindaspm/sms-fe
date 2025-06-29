@@ -9,42 +9,50 @@
               
               <!-- Nama Aktivitas -->
               <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="name" id="floating_nama_kegiatan" required 
+                <input type="text" name="name" id="nama_kegiatan" value="<%= old?.name || '' %>" 
                   class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white focus:outline-none focus:ring-0 peer" 
                   placeholder=" ">
-                <label for="floating_nama_kegiatan" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Aktivitas</label>
+                <label for="nama_kegiatan" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Aktivitas</label>
+                <% if (errors) { 
+                        const err = errors.find(e => e.path === 'name'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
           
               <!-- Program -->
               <div class="relative z-0 w-full mb-5 group">
-                <select name="program" id="floating_program" required 
-                  class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white focus:outline-none focus:ring-0 peer">
-                  <option value="" class="bg-primary-100">Pilih Program</option>
+                <select id="program" name="program" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" data-old-program="<%= old?.program %>">
+                  <option value="" class="bg-primary-100 text-white">Pilih Program</option>
                   <% programDtos.forEach(program => { %>
-                    <option value="<%= program.id %>" class="bg-primary-100"><%= program.name %></option>
+                    <option value="<%= program.id %>" class="bg-primary-100 text-white" <%= String(old?.program) === String(program.id) ? 'selected' : '' %>>
+                      <%= program.name %></option>
                   <% }); %>
                 </select>
-                <label for="floating_program" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Program</label>
+                <label for="program" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Program</label>
               </div>
 
               <!-- Output -->
               <div class="relative z-0 w-full mb-5 group">
-                <select name="output" id="floating_output" required 
-                  class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white focus:outline-none focus:ring-0 peer">
-                  <option value="" class="bg-primary-100">Pilih Output</option>
-                  <% outputDtos.forEach(output => { %>
-                    <option value="<%= output.id %>" class="bg-primary-100"><%= output.name %></option>
-                  <% }); %>
+                <select id="output" name="output" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" data-old-output="<%= old?.output %>">
+                  <option value="" class="bg-primary-100 text-white" >Pilih Output</option>
                 </select>
-                <label for="floating_output" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Output</label>
+                <label for="output" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Output</label>
               </div>
-          
+
               <!-- Kode -->
               <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="code" id="floating_kode" required 
+                <input type="text" name="code" id="kode" value="<%= old?.code || '' %>"  
                   class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white focus:outline-none focus:ring-0 peer" 
                   placeholder=" ">
-                  <label for="floating_kode" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Kode</label>
+                  <label for="kode" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Kode</label>
+                  <% if (errors) { 
+                        const err = errors.find(e => e.path === 'code'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
           
               <!-- Tanggal -->
@@ -59,8 +67,7 @@
                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <input id="date-start" name="startDate" type="date" th:field="*{startDate}" class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal Mulai">
-                    <p th:if="${#fields.hasErrors('startDate')}" class="text-danger" th:errors="*{startDate}"></p> 
+                    <input id="date-start" name="startDate" type="date" value="<%= old?.startDate || '' %>" class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal Mulai">
                     </div>
                     <span class="mx-4 text-white text-sm">sampai</span>
                     <div class="relative">
@@ -69,10 +76,21 @@
                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <input id="date-end" name="endDate" type="date" th:field="*{endDate}" class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal Selesai">
-                    <p th:if="${#fields.hasErrors('endDate')}" class="text-danger" th:errors="*{endDate}"></p> 
+                    <input id="date-end" name="endDate" type="date" value="<%= old?.endDate || '' %>" class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal Selesai">
                     </div>
                 </div>
+                <% if (errors) { 
+                        const err = errors.find(e => e.path === 'startDate'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                <% } %>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'endDate'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                <% } %>
               </div>
           
               <!-- Satuan Kerja -->
@@ -80,7 +98,13 @@
                 <input type="text" name="satkerName" value="<%= satkerName %>" readonly 
                   class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white focus:outline-none focus:ring-0 peer">
                 <input type="hidden" name="satkerId" value="<%= satkerId %>">
-                <label for="floating_satker" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Satuan Kerja</label>
+                <label for="satker" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Satuan Kerja</label>
+                <% if (errors) { 
+                        const err = errors.find(e => e.path === 'satker'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
           
               <!-- Penanggung Jawab -->
@@ -88,7 +112,13 @@
                 <input type="text" name="userName" value="<%= userName %>" readonly 
                   class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white focus:outline-none focus:ring-0 peer">
                 <input type="hidden" name="userId" value="<%= userId %>">
-                <label for="floating_pj" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Penanggung Jawab</label>
+                <label for="pj" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Penanggung Jawab</label>
+                <% if (errors) { 
+                        const err = errors.find(e => e.path === 'pj'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
           
             </div>
@@ -102,4 +132,5 @@
     </div>
 </div>
 
+<script src="/js/kegiatanForm.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>

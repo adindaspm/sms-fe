@@ -6,29 +6,71 @@
         <form class="w-full mx-auto" role="form" method="post" action="/superadmin/satkers" th:object="${satkerDto}">
             <div class="w-full p-6 bg-primary-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="floating_satker_name" id="floating_satker_name" th:field="*{name}" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " required />
-                    <label for="floating_satker_name" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama</label>
-                    <!-- <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></p>                     -->
+                    <input type="text" name="name" id="satker_name" value="<%= old?.name || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
+                    <label for="satker_name" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'name'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="floating_satker_code" id="floating_satker_code" th:field="*{code}" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " required />
-                    <label for="floating_satker_code" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Kode</label>
-                    <!-- <p th:if="${#fields.hasErrors('code')}" class="text-danger" th:errors="*{code}"></p>    -->
+                    <input type="text" name="code" id="satker_code" value="<%= old?.code || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
+                    <label for="satker_code" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Kode</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'code'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="floating_satker_address" id="floating_satker_address" th:field="*{address}" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " />
-                    <label for="floating_satker_address" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Alamat</label>
-                    <!-- <p th:if="${#fields.hasErrors('address')}" class="text-danger" th:errors="*{address}"></p>    -->
+                    <input type="text" name="address" id="satker_address" value="<%= old?.address || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " />
+                    <label for="satker_address" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Alamat</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'address'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="floating_satker_number" id="floating_satker_number" th:field="*{number}" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " />
-                    <label for="floating_satker_number" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nomor Telepon/Faksimile</label>
-                    <!-- <p th:if="${#fields.hasErrors('number')}" class="text-danger" th:errors="*{number}"></p>    -->
+                    <input type="text" name="number" id="satker_number" value="<%= old?.number || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " />
+                    <label for="satker_number" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nomor Telepon/Faksimile</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'number'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="floating_satker_email" id="floating_satker_email" th:field="*{email}" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " />
-                    <label for="floating_satker_email" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
-                    <!-- <p th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}"></p>    -->
+                    <input type="text" name="email" id="satker_email" value="<%= old?.email || '' %>" class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" " />
+                    <label for="satker_email" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'email'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <select name="province" id="province"  
+                    class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white focus:outline-none focus:ring-0 peer">
+                        <option value="" class="bg-primary-100">Pilih Provinsi</option>
+                        <% provinceDtos.forEach(p => { 
+                            const isSelected = old?.province && JSON.parse(decodeURIComponent(old.province)).id === p.id; %>
+                            <option class="bg-primary-100" value="<%= encodeURIComponent(JSON.stringify(p)) %>" <%= isSelected ? 'selected' : '' %>><%= p.name %></option>
+                        <% }) %>
+                    </select>
+                    <label for="province" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Provinsi</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'province'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
                 </div>
             </div>
             <div class="flex justify-between">
