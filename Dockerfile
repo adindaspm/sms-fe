@@ -9,7 +9,6 @@ RUN npm install
 COPY . .
 
 RUN npm run build
-RUN ls -R /app/public
 
 FROM node:alpine3.19 AS deploy
 
