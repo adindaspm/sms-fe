@@ -1,6 +1,7 @@
 const axios = require('axios');
 const { getCache, setCache } = require('../utils/cacheService');
 const { apiBaseUrl } = require('../config');
+const { getProvinceBySatkerId } = require('../services/satkerService');
 
 async function getAllUsers(token) {
   const cacheKey = 'all_users';
@@ -34,12 +35,25 @@ async function getUserById(id, token){
   });
   let userDto = userResponse.data;
 
+  const satker = await getSatkerByUserId(id, token);
+  const province = await getProvinceBySatkerId(satker.id, token);
+  let direktorat;
+  if (province.code == '00' ){
+    direktorat = await getDirektoratByUserId(id, token);
+  }
   userDto = {
     id: id,
-    ...userDto
+    name: userDto.name,
+    email: userDto.email,
+    isActive: userDto.isActive,
+    nip: userDto.nip,
+    ...userDto,
+    satker,
+    province,
+    direktorat
   };
-  
-  await setCache(cacheKey, userDto, 60); // TTL 60 detik
+
+  await setCache(cacheKey, userDto, 60*60); // TTL 60 detik
   return userDto;
 }
 
@@ -48,7 +62,7 @@ async function getUserByEmail(email, token){
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const userResponse = await axios.get(`http://localhost/users/search/findByEmail?email=${email}`, {
+  const userResponse = await axios.get(`${apiBaseUrl}/users/search/findByEmail?email=${email}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -92,6 +106,68 @@ async function getRolesByUser(id, token){
   
   await setCache(cacheKey, userRoleDtos, 60); // TTL 60 detik
   return userRoleDtos;
+}
+
+async function getSatkerByUserId(userId, token) {
+  try {
+    const cacheKey = `satkerByUser_${userId}`;
+    const cached = await getCache(cacheKey);
+    if (cached) return cached;
+
+    const response = await axios.get(`${apiBaseUrl}/users/${userId}/satker`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    });
+
+    // Ambil field name dan code saja dari responsenya
+    const { name, code, address, number, email, _links } = response.data;
+
+    const href = _links?.self?.href || '';
+    const matches = href.match(/\/satkers\/(\d+)/);
+    const id = matches ? parseInt(matches[1]) : null;
+
+    const province = await getProvinceBySatkerId(id, token);
+
+    const satker = { id, name, address, number, email, code, province };
+
+    await setCache(cacheKey, satker, 60*60);
+    return satker;
+  } catch (err) {
+    console.error(`Gagal ambil satker untuk pengguna ${userId}:`, err.message);
+    return null; // supaya tidak crash kalau gagal
+  }
+}
+
+async function getDirektoratByUserId(userId, token) {
+  try {
+    const cacheKey = `direktoratByUser_${userId}`;
+    const cached = await getCache(cacheKey);
+    if (cached) return cached;
+    
+    const response = await axios.get(`${apiBaseUrl}/users/${userId}/direktorat`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    });
+
+    // Ambil field name dan code saja dari responsenya
+    const { code, name, _links } = response.data;
+
+    const href = _links?.self?.href || '';
+    const matches = href.match(/\/direktorats\/(\d+)/);
+    const id = matches ? parseInt(matches[1]) : null;
+
+    const direktorat = { id, code, name };
+
+    await setCache(cacheKey, direktorat, 60*60);
+    return direktorat;
+  } catch (err) {
+    console.error(`Gagal ambil direktorat untuk pengguna ${userId}:`, err.message);
+    return null; // supaya tidak crash kalau gagal
+  }
 }
 
 module.exports = { getAllUsers, getRolesByUser, getUserById, getUserByEmail };

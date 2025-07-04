@@ -1,7 +1,8 @@
 const axios = require('axios');
+const { apiBaseUrl } = require('../config');
 
 async function loginAndSave(email, password) {
-  const response = await axios.post('http://localhost/login', {
+  const response = await axios.post(`${apiBaseUrl}/login`, {
     email,
     password
   });

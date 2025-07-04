@@ -33,59 +33,50 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <% const subtahapLabels = ['Analisis statistik deskriptif', 'Analisis korelasi', 'Analisis inferensial']; %>
+                                        <% const tahap6 = kegiatan.statusTahap?.tahap6 || {}; %>
+                                        <% const subtahapKeys = Object.keys(tahap6); %>
+
+                                        <% subtahapKeys.forEach((key, index) => { 
+                                        const current = tahap6[key]; // true/false/null
+                                        const prev = index > 0 ? tahap[subtahapKeys[index - 1]] : null;
+
+                                        let status = 'Belum Dimulai';
+                                        let color = 'text-gray-500';
+
+                                        if (current === true) {
+                                        status = 'Selesai';
+                                        color = 'text-green-600';
+                                        } else if (prev === true && current === false) {
+                                        status = 'Dalam Progress';
+                                        color = 'text-yellow-500';
+                                        } else if (prev === false || prev === null || prev === undefined) {
+                                        status = 'Belum Dimulai';
+                                        color = 'text-gray-500';
+                                        }
+
+                                        const label = subtahapLabels[index] || `Subtahap ${index + 1}`;
+                                        %>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Analisis statistik deskriptif
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <%= label %>
+                                        </th>
+                                        <td class="px-6 py-4">
+                                        dd/mm/yyyy <!-- Ganti dengan start date jika ada -->
+                                        </td>
+                                        <td class="px-6 py-4">
+                                        dd/mm/yyyy <!-- Ganti dengan end date jika ada -->
+                                        </td>
+                                        <td class="px-6 py-4">
+                                        <span class="<%= color %> font-semibold"><%= status %></span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                        </td>
                                         </tr>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Analisis korelasi
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white dark:bg-gray-800">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Analisis inferensial
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                        <% }) %>
+                                        </tbody>
+                    </table>
                             </div>
                             
                             <!-- Tombol Download dan Upload -->

@@ -12,15 +12,20 @@ async function getAllSatkers(token) {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const satkerDtos = (response.data._embedded.satkers || []).map(satker => {
+  const satkerDtos = await Promise.all((response.data._embedded.satkers || []).map(async satker => {
     const idMatch = satker._links?.self?.href?.match(/\/(\d+)/);
-    return {
-      id: idMatch?.[1] || null,
-      ...satker
-    };
-  });
+    const id = idMatch?.[1] || null;
 
-  await setCache(cacheKey, satkerDtos, 60); // TTL 60 detik
+    return {
+      id,
+      ...satker,
+      province: {
+        code: satker.code.substring (0,2)
+      }
+    };
+  }));
+  
+  await setCache(cacheKey, satkerDtos, 60 * 60); // TTL 60 menit
   return satkerDtos;
 }
 
@@ -50,9 +55,12 @@ async function getSatkerById(id, token) {
   return satker;
 }
 
-
 async function getProvinceBySatkerId(satkerId, token) {
   try {
+    const cacheKey = `provinceBySatker_${satkerId}`;
+    const cached = await getCache(cacheKey);
+    if (cached) return cached;
+
     const response = await axios.get(`${apiBaseUrl}/satkers/${satkerId}/province`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -67,11 +75,14 @@ async function getProvinceBySatkerId(satkerId, token) {
     const matches = href.match(/\/provinces\/(\d+)/); // ambil angka setelah "/provinces/"
     const id = matches ? parseInt(matches[1]) : null;
 
-    return { id, name, code };
+    const province = { id, name, code };
+
+    await setCache(cacheKey, province, 60*60);
+    return province;
   } catch (err) {
     console.error(`Gagal ambil province untuk satkerId ${satkerId}:`, err.message);
     return null; // supaya tidak crash kalau gagal
   }
 }
 
-module.exports = { getAllSatkers, getSatkerById };
+module.exports = { getAllSatkers, getSatkerById, getProvinceBySatkerId };

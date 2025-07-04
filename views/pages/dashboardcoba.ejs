@@ -1,0 +1,129 @@
+<div class="p-6">
+  <!-- Filter Section -->
+  <div class="flex flex-wrap items-center gap-4 mb-6">
+    <select class="p-2 border rounded" name="year">
+      <% years.forEach(y => { %>
+        <option value="<%= y %>" <%= y === selectedYear ? 'selected' : '' %>><%= y %></option>
+      <% }) %>
+    </select>
+    <select class="p-2 border rounded" name="satker">
+      <option value="">Semua Satker</option>
+      <% satkers.forEach(s => { %>
+        <option value="<%= s.id %>" <%= s.id === selectedSatker ? 'selected' : '' %>><%= s.name %></option>
+      <% }) %>
+    </select>
+    <select class="p-2 border rounded" name="program">
+      <option value="">Semua Program</option>
+      <% programs.forEach(p => { %>
+        <option value="<%= p.id %>" <%= p.id === selectedProgram ? 'selected' : '' %>><%= p.name %></option>
+      <% }) %>
+    </select>
+    <button class="px-4 py-2 bg-blue-600 text-white rounded">Terapkan</button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-2xl p-4 shadow">
+      <h2 class="text-gray-600 text-sm">Total Survei</h2>
+      <p class="text-2xl font-bold"><%= totalSurvei %></p>
+    </div>
+    <div class="bg-white rounded-2xl p-4 shadow">
+      <h2 class="text-gray-600 text-sm">Dalam Proses</h2>
+      <p class="text-2xl font-bold text-yellow-500"><%= surveiProses %></p>
+    </div>
+    <div class="bg-white rounded-2xl p-4 shadow">
+      <h2 class="text-gray-600 text-sm">Selesai</h2>
+      <p class="text-2xl font-bold text-green-500"><%= surveiSelesai %></p>
+    </div>
+    <div class="bg-white rounded-2xl p-4 shadow">
+      <h2 class="text-gray-600 text-sm">Terlambat</h2>
+      <p class="text-2xl font-bold text-red-500"><%= surveiTerlambat %></p>
+    </div>
+  </div>
+
+  <!-- Chart Progress Fase -->
+  <div class="bg-white rounded-2xl p-4 shadow mb-6">
+    <h2 class="text-lg font-semibold mb-2">Distribusi Survei per Fase</h2>
+    <canvas id="faseChart" height="100"></canvas>
+  </div>
+
+  <!-- Detail Survei -->
+  <div class="bg-white rounded-2xl p-4 shadow mb-6">
+    <h2 class="text-lg font-semibold mb-2">Progress Survei</h2>
+    <div class="space-y-4">
+      <% listSurvei.forEach(survei => { %>
+        <div>
+          <h3 class="font-semibold"><%= survei.nama %></h3>
+          <p class="text-sm text-gray-500">Status: <%= survei.status %> | Satker: <%= survei.satker %></p>
+          <div class="w-full bg-gray-200 rounded h-2 mt-1">
+            <div class="bg-blue-500 h-2 rounded" style="width: <%= survei.progress %>%"></div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Dokumen Fase 7 dan 8 -->
+  <div class="bg-white rounded-2xl p-4 shadow mb-6">
+    <h2 class="text-lg font-semibold mb-2">Upload Dokumen Dissemination & Evaluation</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto text-sm text-left">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2">Nama Survei</th>
+            <th class="p-2">Fase</th>
+            <th class="p-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% dokumenList.forEach(doc => { %>
+            <tr>
+              <td class="p-2"><%= doc.namaSurvei %></td>
+              <td class="p-2"><%= doc.fase %></td>
+              <td class="p-2">
+                <% if (doc.status === 'OK') { %>
+                  <span class="text-green-600">✅</span>
+                <% } else { %>
+                  <span class="text-red-600">❌</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Aktivitas Terbaru -->
+  <div class="bg-white rounded-2xl p-4 shadow">
+    <h2 class="text-lg font-semibold mb-2">Aktivitas Terbaru</h2>
+    <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1">
+      <% activityLogs.forEach(log => { %>
+        <li><%= log.tanggal %>: <%= log.keterangan %></li>
+      <% }) %>
+    </ul>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('faseChart').getContext('2d');
+  const faseChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: <%- JSON.stringify(faseLabels) %>,
+      datasets: [{
+        label: 'Jumlah Survei',
+        data: <%- JSON.stringify(faseData) %>,
+        backgroundColor: 'rgba(59, 130, 246, 0.7)'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>

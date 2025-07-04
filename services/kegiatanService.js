@@ -12,13 +12,18 @@ async function getAllKegiatans(token) {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const kegiatanDtos = (response.data._embedded.kegiatans || []).map(kegiatan => {
-    const idMatch = kegiatan._links?.self?.href?.match(/\/(\d+)/);
-    return {
-      id: idMatch?.[1] || null,
-      ...kegiatan
-    };
-  });
+  const kegiatanDtos = await Promise.all(
+    (response.data._embedded.kegiatans || []).map(async (kegiatan) => {
+      const idMatch = kegiatan._links?.self?.href?.match(/\/(\d+)/);
+      const id = idMatch?.[1] || null;
+      const statusTahap = await getStatusTahapByKegiatanId(id, token);
+      return {
+        id,
+        ...kegiatan,
+        statusTahap
+      };
+    })
+  );
 
   await setCache(cacheKey, kegiatanDtos, 60); // TTL 60 detik
   return kegiatanDtos;
@@ -46,4 +51,20 @@ async function getKegiatanById(id, token){
   return kegiatan;
 }
 
-module.exports = { getAllKegiatans, getKegiatanById };
+async function getStatusTahapByKegiatanId(kegiatanId, token) {
+  const cacheKey = `statusTahapByKegiatan_${kegiatanId}`;
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+
+  const response = await axios.get(`${apiBaseUrl}/api/tahap/${kegiatanId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const statusTahap = response.data;
+  await setCache(cacheKey, statusTahap, 60); // TTL 60 detik
+  return statusTahap;
+}
+
+module.exports = { getAllKegiatans, getKegiatanById, getStatusTahapByKegiatanId };

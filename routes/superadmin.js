@@ -203,42 +203,55 @@ router.get('/superadmin/satkers/:id/update', async (req, res) => {
     res.send(500).status("Internal Server Error");
   }
 });
-router.get('/superadmin/satkers/update', async (req, res) => {
-  const { id, createdOn,isProvince, name, code, address, number, email } = req.body;
-  const token = req.session.user?.accessToken;
-
-  const now = new Date().toISOString();
-  
-  try {
-    const response = await axios.patch(`${apiBaseUrl}/satkers/${id}`, {
-      name: name,
-      code: code,
-      address: address,
-      number: number,
-      email: email,
-      isProvince: isProvince
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    let satker = response.data; // data kegiatan per ID
-    satker = {
-      id,
-      ...satker
-    }
-
-    res.render('layout', {
+router.post('/superadmin/satkers/:id/update', validateSatker, handleValidation('layout', async (req) => {
+    const token = req.session.user?.accessToken;
+    const provinceDtos = await getAllProvinces(token);
+    const { id } = req.params;
+    const satker = await getSatkerById(id,token);
+    return{
       title: 'Update Kegiatan | SMS',
       page: 'pages/superadmin/updateSatker',
       activePage: 'satkers',
-      satker
+      satker,
+      provinceDtos
+    }
+  }),
+  async (req, res) => {
+  try {
+    const token = req.session.user?.accessToken;
+    if (!token) return res.redirect('/login');
+
+    const { id } = req.params;
+    const { name, code, address, number, email, province } = req.body;
+
+    const isProvince = code.slice(-2) === '00';
+    const provinceCode = code.substring(0, 2);
+    
+    const payload = {
+      name,
+      code,
+      address: address || '',
+      number: number || '',
+      email,
+      province: province.id,
+      isProvince
+    };
+
+    await axios.patch(`${apiBaseUrl}/api/satkers/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
+
+    delCache('all_satkers');
+    delCache(`satker_${id}`);
+
+    req.session.successMessage = 'Satuan Kerja berhasil diperbarui.';
+    res.redirect('/superadmin/satkers');
   } catch (error) {
-    console.error('Gagal ambil detail satker:', error.message);
-    res.send(500).status("Internal Server Error");
+    console.error('Gagal memperbarui satker:', error?.response?.data || error.message);
+    req.session.errorMessage = 'Gagal memperbarui satuan kerja.';
+    res.redirect(req.get('Referer'));
   }
 });
 

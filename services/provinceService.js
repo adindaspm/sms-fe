@@ -7,17 +7,25 @@ async function getAllProvinces(token) {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/provinces`, {
+  // const response = await axios.get(`${apiBaseUrl}/provinces`, {
+  //   params: { size: 10000 },
+  //   headers: { Authorization: `Bearer ${token}` }
+  // });
+
+  // const provinceDtos = (response.data._embedded.provinces || []).map(province => {
+  //   const idMatch = province._links?.self?.href?.match(/\/(\d+)/);
+  //   return {
+  //     id: idMatch?.[1] || null,
+  //     ...province
+  //   };
+  // });
+  const response = await axios.get(`${apiBaseUrl}/api/provinces`, {
     params: { size: 10000 },
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const provinceDtos = (response.data._embedded.provinces || []).map(province => {
-    const idMatch = province._links?.self?.href?.match(/\/(\d+)/);
-    return {
-      id: idMatch?.[1] || null,
-      ...province
-    };
+  const provinceDtos = (response.data || []).map(province => {
+    return province;
   });
 
   await setCache(cacheKey, provinceDtos, 60); // TTL 60 detik

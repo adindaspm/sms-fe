@@ -9,6 +9,9 @@ const { getAllRoles } = require('../services/roleService');
 const { validateUser } = require('../validators/userValidator');
 const handleValidation = require('../middleware/handleValidation');
 const { delCache } = require('../utils/cacheService');
+const { getAllProvinces } = require('../services/provinceService');
+const { getAllDeputis } = require('../services/deputiService');
+const { getAllDirektorats } = require('../services/direktoratService');
 
 
 router.get('/admin/users', async (req, res) => {
@@ -41,13 +44,19 @@ router.get('/admin/users/add', async (req, res) => {
       return res.redirect('/login');
     }
     
+    const provinceDtos = await getAllProvinces(token);
     const satkerDtos = await getAllSatkers(token);
+    const deputiDtos = await getAllDeputis(token);
+    const direktoratDtos = await getAllDirektorats(token);
     
     res.render('layout', {
       title: 'Tambah Pengguna | SMS',
       page: 'pages/admin/addPengguna',
       activePage: 'users',
+      listProvinces: provinceDtos,
       listSatkers: satkerDtos,
+      listDeputis: deputiDtos,
+      listDirektorats: direktoratDtos,
       old: null,
       errors: null
     });
@@ -59,11 +68,17 @@ router.get('/admin/users/add', async (req, res) => {
 router.post('/admin/users/save', validateUser, handleValidation('layout', async (req) => {
     const token = req.session.user ? req.session.user.accessToken : null;
     const listSatkers = await getAllSatkers(token);
+    const listProvinces = await getAllProvinces(token);
+    const listDeputis = await getAllDeputis(token);
+    const listDirektorats = await getAllDirektorats(token);
     return{
       title: 'Tambah Pengguna | SMS',
       page: 'pages/admin/addPengguna',
       activePage: 'users',
-      listSatkers
+      listSatkers,
+      listProvinces,
+      listDeputis,
+      listDirektorats
     };
   }),
   async (req, res) => {
@@ -73,22 +88,11 @@ router.post('/admin/users/save', validateUser, handleValidation('layout', async 
       return res.redirect('/login');
     }
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const listSatkers = await getAllSatkers(token); 
-      return res.render('layout', {
-        title: 'Tambah Pengguna | SMS',
-        page: 'pages/admin/addPengguna',
-        activePage: 'users',
-        errors: errors.array(),
-        old: req.body,
-        listSatkers
-      });
-    }
-
-    const { first_name, last_name, nip, email, satker } = req.body;
+    const { first_name, last_name, nip, email, satker, direktorat } = req.body;
     const parsedSatker = JSON.parse(decodeURIComponent(satker)); // <- parse kembali ke object
+    const parsedDirektorat = JSON.parse(decodeURIComponent(direktorat)); // <- parse kembali ke object
 
+    const isActive = true;
     // Gabung nama depan + nama belakang jadi fullName
     // const fullName = `${first_name} ${last_name}`;
     const payload = {
@@ -97,7 +101,9 @@ router.post('/admin/users/save', validateUser, handleValidation('layout', async 
       nip: nip,
       email: email,
       password: nip, // Default password = NIP
-      satker: parsedSatker
+      satker: parsedSatker,
+      direktorat: parsedDirektorat,
+      isActive
     };
     
     await axios.post(`${apiBaseUrl}/api/users`, payload, {
@@ -117,6 +123,70 @@ router.post('/admin/users/save', validateUser, handleValidation('layout', async 
     // res.status(500).send('Internal Server Error');
     req.session.errorMessage = 'Gagal menambahkan pengguna.';
     res.redirect(req.get('Referer'));
+  }
+});
+router.post('/admin/users/:id/activate', async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    const { id } = req.params;
+    
+    const payload = {
+      isActive: true
+    };
+    
+    await axios.patch(`${apiBaseUrl}/api/users/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    await delCache(`user_${id}`);
+    await delCache(`all_users`);
+
+    req.session.successMessage = 'Pengguna berhasil diaktifkan.';
+    res.redirect('/admin/users');
+  } catch (error) {
+    console.error('Error mengaktifkan pengguna:', error?.response?.data || error.message);
+    
+    // res.status(500).send('Internal Server Error');
+    req.session.errorMessage = 'Gagal mengaktifkan pengguna.';
+    res.redirect('/admin/users');
+  }
+});
+router.post('/admin/users/:id/deactivate', async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    const { id } = req.params;
+    
+    const payload = {
+      isActive: false
+    };
+    
+    await axios.patch(`${apiBaseUrl}/api/users/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    await delCache(`user_${id}`);
+    await delCache(`all_users`);
+
+    req.session.successMessage = 'Pengguna berhasil dinonaktifkan.';
+    res.redirect('/admin/users');
+  } catch (error) {
+    console.error('Error menonaktifkan pengguna:', error?.response?.data || error.message);
+    
+    // res.status(500).send('Internal Server Error');
+    req.session.errorMessage = 'Gagal menonaktifkan pengguna.';
+    res.redirect('/admin/users');
   }
 });
 router.get('/admin/users/detail/:id', async (req, res) => {
@@ -141,23 +211,15 @@ router.get('/admin/users/detail/:id', async (req, res) => {
     // Buat DTO untuk dikirim ke view
     const userDto = {
       id: userId,
-      name: userData.name,
-      email: userData.email,
-      satker: userData.namaSatker,
+      ...userData,
       roles: userRoles
     };
 
-    res.render('layout', {
-      title: 'Detail Pengguna | SMS',
-      page: 'pages/admin/detailPengguna',
-      activePage: 'users',
-      user: userDto
-    });
-
+    res.json(userDto);
   } catch (error) {
     console.error('Error mengambil detail user:', error.response ? error.response.data : error.message);
     req.session.errorMessage = 'Gagal mengambil data user.';
-    res.redirect('/admin/users'); // Balik ke halaman list user kalau gagal
+    // res.redirect('/admin/users'); // Balik ke halaman list user kalau gagal
   }
 });
 router.get('/admin/users/:id/roles', async (req, res) => {
@@ -239,6 +301,95 @@ router.post('/admin/users/:id/roles/remove', async (req, res) => {
     // res.status(500).send('Internal Server Error');
     req.session.errorMessage = 'Gagal menghapus role pengguna.';
     res.redirect(`/admin/users/${userId}/roles`);
+  }
+});
+router.get('/admin/users/:id/update', async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+    const { id } = req.params;
+    
+    const provinceDtos = await getAllProvinces(token);
+    const satkerDtos = await getAllSatkers(token);
+    const deputiDtos = await getAllDeputis(token);
+    const direktoratDtos = await getAllDirektorats(token);
+    
+    const user = await getUserById(id, token);
+
+    res.render('layout', {
+      title: 'Perbarui Data Pengguna | SMS',
+      page: 'pages/admin/updatePengguna',
+      activePage: 'users',
+      listProvinces: provinceDtos,
+      listSatkers: satkerDtos,
+      listDeputis: deputiDtos,
+      listDirektorats: direktoratDtos,
+      user,
+      old: null,
+      errors: null
+    });
+  } catch (error) {
+    console.error('Error ambil Satkers:', error);
+    res.redirect(req.get('Referer'));
+  }
+});
+router.post('/admin/users/:id/update', validateUser, handleValidation('layout', async (req) => {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    const { id } = req.params;
+    const user = await getUserById(id, token);
+    const listSatkers = await getAllSatkers(token);
+    const listProvinces = await getAllProvinces(token);
+    const listDeputis = await getAllDeputis(token);
+    const listDirektorats = await getAllDirektorats(token);
+    return{
+      title: 'Perbarui Data Pengguna | SMS',
+      page: 'pages/admin/updatePengguna',
+      activePage: 'users',
+      listSatkers,
+      listProvinces,
+      listDeputis,
+      listDirektorats,
+      user
+    };
+  }),
+  async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    const { id } = req.params;
+    const { name, nip, email, satker } = req.body;
+    const parsedSatker = JSON.parse(decodeURIComponent(satker)); // <- parse kembali ke object
+
+    const payload = {
+      name,
+      nip: nip,
+      email: email,
+      satker: parsedSatker
+    };
+    
+    await axios.patch(`${apiBaseUrl}/api/users/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    await delCache('all_users');
+    await delCache(`user_${id}`);
+
+    req.session.successMessage = 'Pengguna berhasil diperbarui.';
+    res.redirect('/admin/users');
+  } catch (error) {
+    console.error('Error memperbarui data pengguna:', error?.response?.data || error.message);
+    
+    // res.status(500).send('Internal Server Error');
+    req.session.errorMessage = 'Gagal memperbarui data pengguna.';
+    res.redirect(req.get('Referer'));
   }
 });
 

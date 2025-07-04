@@ -18,6 +18,8 @@ const { getUserByEmail } = require('./services/userService');
 const adminRoutes = require('./routes/admin');
 const superadminRoutes = require('./routes/superadmin');
 const operatorRoutes = require('./routes/operator');
+const { getAllSatkers } = require('./services/satkerService');
+const { getAllPrograms } = require('./services/programService');
 
 // Set view engine EJS
 app.set('view engine', 'ejs');
@@ -145,6 +147,36 @@ app.get('/faq', (req, res) => {
     activePage: 'faq'
   });
 });
+
+app.get('/dashboardcoba', async (req, res) => {
+  const token = req.session.user?.accessToken;
+  res.render('layout', {
+    title: 'Dashboard | SMS',
+    page: 'pages/dashboardcoba',
+    activePage: 'dashboard',
+    years: [2023, 2024, 2025],
+    selectedYear: 2025,
+    satkers: await getAllSatkers(token),
+    selectedSatker: null,
+    programs: await getAllPrograms(token),
+    selectedProgram: null,
+    totalSurvei: 42,
+    surveiProses: 23,
+    surveiSelesai: 12,
+    surveiTerlambat: 7,
+    faseLabels: ['Specify Needs', 'Design', 'Build', 'Collect', 'Process', 'Analyse', 'Disseminate', 'Evaluate'],
+    faseData: [10, 12, 15, 18, 13, 8, 5, 3],
+    listSurvei: [
+      { nama: 'Survei A', progress: 60, status: 'Sedang Analisis', satker: 'BPS Sumbar' }
+    ],
+    dokumenList: [
+      { namaSurvei: 'Survei A', fase: 'Disseminate', status: 'OK' }
+    ],
+    activityLogs: [
+      { tanggal: '29 Juni', keterangan: 'Survei A update ke fase 5 oleh BPS Jakarta Barat' }
+    ]
+  });
+})
 
 // Modular routes
 app.use(adminRoutes);
