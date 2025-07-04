@@ -26,6 +26,7 @@ COPY --from=build /app/utils ./utils
 COPY --from=build /app/middleware ./middleware
 COPY --from=build /app/server.js .
 COPY --from=build /app/config.js .
+COPY --from=build /app/validators ./validators
 
 EXPOSE 3000
 CMD ["npm", "run", "start"]
