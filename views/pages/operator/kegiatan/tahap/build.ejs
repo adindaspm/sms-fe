@@ -6,7 +6,7 @@
                             <div class="mb-6">
                                 <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Build:</p>
                                 <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
-                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 33%"></div>
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: <%= kegiatan.statusTahap.tahap3Percentage %>%"></div>
                                 </div>
                             </div>
                             
@@ -33,74 +33,57 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <% const subtahapLabels = ['Pembuatan instrumen survei', 'Pengembangan aplikasi pengumpulan data', 'Pelatihan enumerator', 'Uji coba survei']; %>
+                                        <% const tahap3 = kegiatan.statusTahap?.tahap3 || {}; %>
+                                        <% const subtahapKeys = Object.keys(tahap3); %>
+
+                                        <% subtahapKeys.forEach((key, index) => { 
+                                            if (index === 0 || index === subtahapKeys.length - 1) return;
+
+                                            const current = tahap3[key]; // true/false/null
+                                            const prev = index === 1 ? true : tahap3[subtahapKeys[index - 1]];
+
+                                            let status = 'Belum Dimulai';
+                                            let color = 'text-gray-500';
+
+                                            if (current === true) {
+                                                status = 'Selesai';
+                                                color = 'text-green-600';
+                                            } else if (prev === true && current === false) {
+                                                status = 'Dalam Progress';
+                                                color = 'text-yellow-500';
+                                            } else if (prev === false || prev === null || prev === undefined) {
+                                                status = 'Belum Dimulai';
+                                                color = 'text-gray-500';
+                                            }
+
+                                            const label = subtahapLabels[index - 1] || `Subtahap ${index + 1}`;
+                                        %>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Pembuatan instrumen survei
+                                                <%= label %>
                                             </th>
                                             <td class="px-6 py-4">
-                                                dd/mm/yyyy
+                                                dd/mm/yyyy <!-- Ganti dengan start date jika ada -->
                                             </td>
                                             <td class="px-6 py-4">
-                                                dd/mm/yyyy
+                                                dd/mm/yyyy <!-- Ganti dengan end date jika ada -->
                                             </td>
                                             <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
+                                                <span class="<%= color %> font-semibold"><%= status %></span>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                                <button
+                                                    type="button"
+                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700"
+                                                    data-modal-target="popup-modal"
+                                                    data-modal-toggle="popup-modal"
+                                                    data-url="/operator/tahap/<%= kegiatan.id %>/3/<%= index %>">
+                                                    Tandai Selesai
+                                                </button>
                                             </td>
                                         </tr>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Pengembangan aplikasi pengumpulan data
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white dark:bg-gray-800">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Pelatihan enumerator
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white dark:bg-gray-800">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Uji coba survei
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
-                                        </tr>
+                                        <% }) %>
                                     </tbody>
                                 </table>
                             </div>

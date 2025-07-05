@@ -6,7 +6,7 @@
                             <div class="mb-6">
                                 <p class="text-sm font-medium text-gray-700 mb-2">Progress Tahap Process:</p>
                                 <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
-                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: <%= kegiatan.statusTahap.tahap5Percentage %>%"></div>
                                 </div>
                             </div>
                             
@@ -33,74 +33,57 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <% const subtahapLabels = ['Pembersihan data', 'Pemrosesan data mentah', 'Konversi format data', 'Imputasi data']; %>
+                                        <% const tahap5 = kegiatan.statusTahap?.tahap5 || {}; %>
+                                        <% const subtahapKeys = Object.keys(tahap5); %>
+
+                                        <% subtahapKeys.forEach((key, index) => { 
+                                            if (index === 0 || index === subtahapKeys.length - 1) return;
+
+                                            const current = tahap5[key]; // true/false/null
+                                            const prev = index === 1 ? true : tahap5[subtahapKeys[index - 1]];
+
+                                            let status = 'Belum Dimulai';
+                                            let color = 'text-gray-500';
+
+                                            if (current === true) {
+                                                status = 'Selesai';
+                                                color = 'text-green-600';
+                                            } else if (prev === true && current === false) {
+                                                status = 'Dalam Progress';
+                                                color = 'text-yellow-500';
+                                            } else if (prev === false || prev === null || prev === undefined) {
+                                                status = 'Belum Dimulai';
+                                                color = 'text-gray-500';
+                                            }
+
+                                            const label = subtahapLabels[index - 1] || `Subtahap ${index + 1}`;
+                                        %>
                                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Pembersihan data
+                                                <%= label %>
                                             </th>
                                             <td class="px-6 py-4">
-                                                dd/mm/yyyy
+                                                dd/mm/yyyy <!-- Ganti dengan start date jika ada -->
                                             </td>
                                             <td class="px-6 py-4">
-                                                dd/mm/yyyy
+                                                dd/mm/yyyy <!-- Ganti dengan end date jika ada -->
                                             </td>
                                             <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
+                                                <span class="<%= color %> font-semibold"><%= status %></span>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                                <button
+                                                    type="button"
+                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700"
+                                                    data-modal-target="popup-modal"
+                                                    data-modal-toggle="popup-modal"
+                                                    data-url="/operator/tahap/<%= kegiatan.id %>/5/<%= index %>">
+                                                    Tandai Selesai
+                                                </button>
                                             </td>
                                         </tr>
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Pemrosesan data mentah
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white dark:bg-gray-800">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Konversi format data
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-white dark:bg-gray-800">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                Imputasi data
-                                            </th>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                dd/mm/yyyy
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                Belum Dimulai/Terlambat/Dalam Progress/Selesai
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                            </td>
-                                        </tr>
+                                        <% }) %>
                                     </tbody>
                                 </table>
                             </div>
@@ -113,15 +96,6 @@
                                     </svg>
                                     Download Data Survei
                                 </a>
-                                
-                                <label for="upload-processed-data" class="ml-4 cursor-pointer inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
-                                    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                    </svg>
-                                    Upload Data Hasil Pengolahan
-                                </label>
-                                <input class="hidden" id="upload-processed-data" type="file" multiple />
-                                
                                 <button id="complete-process" class="ml-4 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                     Selesaikan Tahap Process
                                     <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">

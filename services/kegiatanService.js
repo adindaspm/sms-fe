@@ -16,11 +16,9 @@ async function getAllKegiatans(token) {
     (response.data._embedded.kegiatans || []).map(async (kegiatan) => {
       const idMatch = kegiatan._links?.self?.href?.match(/\/(\d+)/);
       const id = idMatch?.[1] || null;
-      const statusTahap = await getStatusTahapByKegiatanId(id, token);
       return {
         id,
-        ...kegiatan,
-        statusTahap
+        ...kegiatan
       };
     })
   );
@@ -41,10 +39,12 @@ async function getKegiatanById(id, token){
     });
 
   let kegiatan = response.data; // data kegiatan per ID
-  
+  const statusTahap = await getStatusTahapByKegiatanId(id,token);
+
   kegiatan = {
     id: id,
-    ...kegiatan
+    ...kegiatan,
+    statusTahap
   };
 
   await setCache(cacheKey, kegiatan, 60); // TTL 60 detik

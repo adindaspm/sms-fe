@@ -77,18 +77,16 @@ router.get('/operator/programs/:id/outputs', async (req, res) => {
     res.status(500).json({ message: 'Gagal ambil output' });
   }
 });
-router.get('/operator/surveys/detail/:id', async (req, res) => {
-  const { id } = req.params;
+router.get('/operator/surveys/detail/1', async (req, res) => {
   const token = req.session.user?.accessToken;
 
   try {
-    const kegiatan = await getKegiatanById(id, token);
+    const kegiatan = await getKegiatanById(1, token);
 
     res.render('layout', {
       title: 'Detail Kegiatan | SMS',
-      page: 'pages/operator/detailKegiatan',
+      page: 'pages/operator/kegiatan/detailKegiatanAuto',
       activePage: 'surveys',
-      id,
       kegiatan
     });
   } catch (error) {
@@ -172,6 +170,7 @@ router.get('/operator/surveys/:id/update', async (req, res) => {
   try {
     const kegiatan = await getKegiatanById(id, token);
     const programDtos = await getAllPrograms(token);
+    const outputDtos = await getAllOutputs(token);
 
     res.render('layout', {
       title: 'Update Kegiatan | SMS',
@@ -190,23 +189,35 @@ router.get('/operator/surveys/:id/update', async (req, res) => {
 
   }
 });
-
-router.get('/operator/cobasurveys/detail/1', async (req, res) => {
-  const token = req.session.user?.accessToken;
-
+router.post('/operator/tahap/:idKegiatan/:idTahap/:idSubTahap', async (req, res) => {
   try {
-    const kegiatan = await getKegiatanById(1, token);
+    const token = req.session.user?.accessToken;
 
-    res.render('layout', {
-      title: 'Detail Kegiatan | SMS',
-      page: 'pages/operator/kegiatan/detailKegiatanAuto',
-      activePage: 'surveys',
-      kegiatan
+    const { idKegiatan, idTahap, idSubTahap } = req.params;
+
+    await axios.post(`${apiBaseUrl}/api/tahap/${idKegiatan}/${idTahap}/${idSubTahap}`, true, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
     });
+
+    delCache('all_kegiatans');
+    delCache(`kegiatan_${idKegiatan}`);
+    delCache(`statusTahapByKegiatan_${idKegiatan}`);
+    req.session.successMessage = 'Berhasil memperbarui status.';
+    res.redirect(`/operator/surveys/detail/${idKegiatan}`);
   } catch (error) {
-    console.error('Gagal ambil detail kegiatan:', error.message);
-    res.redirect('/'); // fallback kalo error
+    const { idKegiatan } = req.params;
+    
+    console.error('Error saat memperbarui status:', error.response?.data || error.message);
+
+    req.session.errorMessage = 'Gagal memperbarui status.';
+    res.redirect(`/operator/surveys/detail/${idKegiatan}`);
+    // res.status(500).send('Internal Server Error');
+
   }
 });
+
 
 module.exports = router;

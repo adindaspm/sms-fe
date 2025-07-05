@@ -69,11 +69,35 @@
     </div>
   </main>
 
+  <form id="confirm-form" method="POST" class="hidden"></form>
+
   <!-- Footer
   <%- include('partials/footer') %> -->
 
+  <div id="popup-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+      <h3 class="text-lg font-normal text-gray-800 mb-4">Yakin ingin melanjutkan ke tahap ini?</h3>
+      <div class="flex justify-end gap-3">
+        <button
+          id="confirm-redirect"
+          type="button"
+          data-modal-hide="popup-modal"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Ya, Lanjut
+        </button>
+        <button
+          data-modal-hide="popup-modal"
+          type="button"
+          class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
+          Batal
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="/js/simple-datatables.js"></script>
+  <script src="/js/pop-up.js"></script>
   <script src="/js/piechart.js"></script>
   <script src="/js/pie-chart-statis.js"></script>
   <script src="/js/column-chart-statis.js"></script>

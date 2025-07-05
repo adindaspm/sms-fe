@@ -7,10 +7,14 @@ const { getAllSatkers, getSatkerById } = require('../services/satkerService');
 const { getAllPrograms } = require('../services/programService');
 const { getAllProvinces, getSatkersByProvince } = require('../services/provinceService');
 const { getAllOutputs } = require('../services/outputService');
+const { getAllDeputis } = require('../services/deputiService');
+const { getAllDirektorats } = require('../services/direktoratService');
 const { validateRole } = require('../validators/roleValidator');
 const { validateProgram } = require('../validators/programValidator');
 const { validateOutput } = require('../validators/outputValidator');
 const { validateSatker } = require('../validators/satkerValidator');
+const { validateDeputi } = require('../validators/deputiValidator');
+const { validateDirektorat } = require('../validators/direktoratValidator');
 const handleValidation = require('../middleware/handleValidation');
 const { delCache } = require('../utils/cacheService');
 
@@ -453,6 +457,177 @@ router.post('/superadmin/outputs', validateOutput, handleValidation('layout', as
     
     req.session.errorMessage = 'Gagal menambahkan output.';
     res.redirect('outputs/add'); // balik ke halaman form
+    
+    // res.status(500).send('Internal Server Error');
+  }
+});
+
+// Deputis
+router.get('/superadmin/deputis', async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    const deputiDtos = await getAllDeputis(token);
+
+    res.render('layout', {
+      title: 'Deputi | SMS',
+      page: 'pages/superadmin/manajemenDeputi',
+      activePage: 'deputis',
+      deputiDtos
+    });
+  } catch (error) {
+    console.error('Error fetching deputis:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+router.get('/superadmin/deputis/add', async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    res.render('layout', {
+      title: 'Tambah Deputi | SMS',
+      page: 'pages/superadmin/addDeputi',
+      activePage: 'deputis',
+      old: null,
+      errors: null
+    });
+  } catch (error) {
+    res.redirect(req.get('Referer'));
+  }
+});
+router.post('/superadmin/deputis', validateDeputi, handleValidation('layout', async (req) => {
+    const token = req.session.user?.accessToken;
+    return{
+      title: 'Tambah Deputi | SMS',
+      page: 'pages/superadmin/addDeputi',
+      activePage: 'deputis'
+    }
+  }), 
+  async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    // Ambil data dari form
+    const { name, code } = req.body;
+
+    // Siapkan request body
+    const requestBody = {
+      name,
+      code
+    };
+    // Kirim ke API
+    await axios.post(`${apiBaseUrl}/api/deputis`, requestBody, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    delCache(`all_deputis`);
+
+    req.session.successMessage = 'Deputi berhasil ditambahkan.';
+    res.redirect('/superadmin/deputis');
+  } catch (error) {
+    console.error('Gagal menyimpan deputi:', error.response ? error.response.data : error.message);
+    
+    req.session.errorMessage = 'Gagal menambahkan deputi.';
+    res.redirect('deputis/add'); // balik ke halaman form
+    
+    // res.status(500).send('Internal Server Error');
+  }
+});
+
+// Direktorats
+router.get('/superadmin/direktorats', async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    const direktoratDtos = await getAllDirektorats(token);
+
+    res.render('layout', {
+      title: 'Direktorat | SMS',
+      page: 'pages/superadmin/manajemenDirektorat',
+      activePage: 'direktorats',
+      direktoratDtos
+    });
+  } catch (error) {
+    console.error('Error fetching direktorats:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+router.get('/superadmin/direktorats/add', async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+    
+    const deputiDtos = await getAllDeputis(token);
+
+    res.render('layout', {
+      title: 'Tambah Direktorat | SMS',
+      page: 'pages/superadmin/addDirektorat',
+      activePage: 'direktorats',
+      listDeputis: deputiDtos,
+      old: null,
+      errors: null
+    });
+  } catch (error) {
+    console.error('Error ambil Deputis:', error);
+    res.redirect(req.get('Referer'));
+  }
+});
+router.post('/superadmin/direktorats', validateDirektorat, handleValidation('layout', async (req) => {
+    const token = req.session.user?.accessToken;
+    const deputiDtos = await getAllDeputis(token);
+    return{
+      title: 'Tambah Direktorat | SMS',
+      page: 'pages/superadmin/addDirektorat',
+      activePage: 'direktorats',
+      listDeputis: deputiDtos
+    }
+  }), 
+  async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    // Ambil data dari form
+    const { name, code, deputi } = req.body;
+
+    const parsedDeputi = JSON.parse(decodeURIComponent(deputi)); // <- parse kembali ke object
+
+    // Siapkan request body
+    const requestBody = {
+      name,
+      code,
+      deputi: parsedDeputi
+    };
+    // Kirim ke API
+    await axios.post(`${apiBaseUrl}/api/direktorats`, requestBody, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    delCache(`all_direktorats`);
+
+    req.session.successMessage = 'Direktorat berhasil ditambahkan.';
+    res.redirect('direktorats');
+  } catch (error) {
+    console.error('Gagal menyimpan direktorat:', error.response ? error.response.data : error.message);
+    
+    req.session.errorMessage = 'Gagal menambahkan direktorat.';
+    res.redirect('direktorats/add'); // balik ke halaman form
     
     // res.status(500).send('Internal Server Error');
   }

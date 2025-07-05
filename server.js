@@ -4,6 +4,7 @@ const session = require('express-session');
 const axios = require('axios');
 const path = require('path');
 const { body, validationResult } = require('express-validator');
+const { apiBaseUrl } = require('./config');
 
 const app = express();
 const port = 3000;
@@ -20,6 +21,8 @@ const superadminRoutes = require('./routes/superadmin');
 const operatorRoutes = require('./routes/operator');
 const { getAllSatkers } = require('./services/satkerService');
 const { getAllPrograms } = require('./services/programService');
+const { validatePass } = require('./validators/passValidator');
+const handleValidation = require('./middleware/handleValidation');
 
 // Set view engine EJS
 app.set('view engine', 'ejs');
@@ -131,7 +134,7 @@ app.get('/login', (req, res) => {
 });
 
 // Profil
-app.get('/user/detail', (req, res) => {
+app.get('/profil', (req, res) => {
   res.render('layout', {
     title: 'Profil | SMS',
     page: 'pages/detailProfil',
@@ -146,6 +149,66 @@ app.get('/faq', (req, res) => {
     page: 'pages/faq',
     activePage: 'faq'
   });
+});
+
+// Ubah Password
+app.get('/changePass', (req, res) => {
+
+  res.render('layout', {
+    title: 'Ubah Password | SMS',
+    page: 'pages/ubahPassword',
+    activePage: '',
+    old: null, 
+    errors: null
+  });
+});
+app.post('/changePass', validatePass, handleValidation('layout', async (req) => {
+    return{
+      title: 'Ubah Password | SMS',
+      page: 'pages/ubahPassword',
+      activePage: ''
+    };
+  }),
+  async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    const { passlama, passbaru, confirmPass } = req.body;
+    
+    const payload = {
+      oldPassword : passlama,
+      newPassword : passbaru
+    };
+    
+    await axios.post(`${apiBaseUrl}/api/auth/change-password`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    req.session.successMessage = 'Berhasil mengganti password.';
+    res.redirect('/profil');
+  } catch (error) {
+    console.error('Error mengganti password:', error?.response?.data || error.message);
+
+    if (error?.response?.status === 400) {
+      // Render langsung halaman dengan error dan old data
+      res.render('layout', {
+        title: 'Ubah Password | SMS',
+        page: 'pages/ubahPassword',
+        activePage: '',
+        errors: [{ msg: 'Password lama salah.', path: 'passlama' }],
+        old: req.body
+      });
+    } else {
+      req.session.errorMessage = 'Gagal memperbarui password.';
+      res.redirect('/profil');
+    }
+  }
 });
 
 app.get('/dashboardcoba', async (req, res) => {

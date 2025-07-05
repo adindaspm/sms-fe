@@ -362,14 +362,16 @@ router.post('/admin/users/:id/update', validateUser, handleValidation('layout', 
     }
 
     const { id } = req.params;
-    const { name, nip, email, satker } = req.body;
+    const { name, nip, email, satker, direktorat } = req.body;
     const parsedSatker = JSON.parse(decodeURIComponent(satker)); // <- parse kembali ke object
+    const parsedDirektorat = JSON.parse(decodeURIComponent(direktorat)); // <- parse kembali ke object
 
     const payload = {
       name,
       nip: nip,
       email: email,
-      satker: parsedSatker
+      satker: parsedSatker,
+      direktorat: parsedDirektorat
     };
     
     await axios.patch(`${apiBaseUrl}/api/users/${id}`, payload, {
@@ -381,6 +383,8 @@ router.post('/admin/users/:id/update', validateUser, handleValidation('layout', 
 
     await delCache('all_users');
     await delCache(`user_${id}`);
+    await delCache(`satkerByUser_${id}`);
+    await delCache(`direktoratByUser_${id}`);
 
     req.session.successMessage = 'Pengguna berhasil diperbarui.';
     res.redirect('/admin/users');
