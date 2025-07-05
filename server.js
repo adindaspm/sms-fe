@@ -196,6 +196,8 @@ app.post('/changePass', validatePass, handleValidation('layout', async (req) => 
     console.error('Error mengganti password:', error?.response?.data || error.message);
 
     if (error?.response?.status === 400) {
+      req.session.errorMessage = 'Password lama yang dimaksudkan salah.';
+
       // Render langsung halaman dengan error dan old data
       res.render('layout', {
         title: 'Ubah Password | SMS',
