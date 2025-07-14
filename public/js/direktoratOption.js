@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function filterDirektoratsByDeputi(deputiCode) {
     const options = direktoratSelect.querySelectorAll('option');
-console.log(deputiCode);
+
     options.forEach(option => {
       const optionDeputi = option.getAttribute('data-deputi');
 

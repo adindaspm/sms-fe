@@ -1,7 +1,7 @@
 async function showUserDetailModal(userId) {
     try {
       // Ambil detail user
-      const userRes = await fetch(`/admin/users/detail/${userId}`);
+      const userRes = await fetch(`/users/detail/${userId}`);
       const user = await userRes.json();
 
       // Tampilkan ke modal
@@ -17,10 +17,11 @@ console.log(user);
         btn.innerText = 'Nonaktifkan pengguna';
         btn.onclick = async() => {
           try {
-            const res = await fetch(`/admin/users/${user.id}/deactivate`, {
+            const res = await fetch(`/users/${user.id}/deactivate`, {
               method: 'POST'
             });
             if (res.ok) {
+              console.log(res);
               alert('Pengguna dinonaktifkan');
               location.reload(); // refresh untuk ambil status baru
             } else {
@@ -35,10 +36,11 @@ console.log(user);
         btn.innerText = 'Aktifkan pengguna';
         btn.onclick = async() =>  {
           try {
-            const res = await fetch(`/admin/users/${user.id}/activate`, {
+            const res = await fetch(`/users/${user.id}/activate`, {
               method: 'POST'
             });
             if (res.ok) {
+              console.log(res);
               alert('Pengguna diaktifkan');
               location.reload();
             } else {

@@ -1,0 +1,132 @@
+       <div class="m-6">
+            <h1 class="text-3xl text-font font-extrabold dark:text-white" ><%= kegiatan.name %></h1>
+            <h2 class="text-xl text-font font-normal dark:text-white mb-6" ><%= kegiatan.namaUser %></h2>
+        </div>
+
+        <!-- Main Tabs -->
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+                <li class="me-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="umum-tab" data-tabs-target="#umum" type="button" role="tab" aria-controls="umum" aria-selected="false">Umum</button>
+                </li>
+                <li class="me-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-white dark:hover:text-gray-300" id="tahap-tab" data-tabs-target="#tahap" type="button" role="tab" aria-controls="tahap" aria-selected="false">Tahap</button>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Main Tab Content -->
+        <div id="default-tab-content">
+            <!-- Tab Umum Content -->
+            <div class="hidden p-4 rounded-lg bg-primary-30 dark:bg-gray-800" id="umum" role="tabpanel" aria-labelledby="umum-tab">
+                <form class="w-full mx-auto">
+                    <!-- Umum form fields -->
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" id="id_kegiatan" value="<%= kegiatan.id %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled/>
+                        <label for="id_kegiatan" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Id Kegiatan</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" id="nama_kegiatan" value="<%= kegiatan.name %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                        <label for="nama_kegiatan" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Aktivitas</label>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" id="program_kegiatan" value="<%= kegiatan.namaProgram %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                        <label for="program_kegiatan" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Kegiatan</label>
+                    </div>
+                    <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-5 group">
+                            <input type="text" name="tanggal_mulai" id="tanggal_mulai" value="<%= new Date(kegiatan.startDate).toLocaleDateString() %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                            <label for="tanggal_mulai" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tanggal Mulai</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-5 group">
+                            <input type="text" name="tanggal_selesai" id="tanggal_selesai" value="<%= new Date(kegiatan.endDate).toLocaleDateString() %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                            <label for="tanggal_selesai" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tanggal Selesai</label>
+                        </div>
+                    </div>
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" name="satker" id="satker" value="<%= kegiatan.namaSatker %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                        <label for="satker" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Satuan Kerja</label>
+                    </div>   
+                    <div class="relative z-0 w-full mb-5 group">
+                        <input type="text" name="pj" id="pj" value="<%= kegiatan.namaUser %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " disabled />
+                        <label for="pj" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Penanggung Jawab</label>
+                    </div>                    
+                    <!-- Progress Bar -->
+                    <div class="relative z-0 w-full mb-5 group">
+                        <div class="pt-2 5">
+                            <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                                <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style="width: 45%"> 45%</div>
+                            </div>
+                        </div>
+                        <label class="absolute text-sm text-fontdark dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Status</label>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Tab Tahap Content -->
+            <div class="hidden p-4 rounded-lg border border-primary-100 dark:bg-gray-800" id="tahap" role="tabpanel" aria-labelledby="tahap-tab">
+                <div class="md:flex">
+                    <!-- Daftar Tab -->
+                    <ul class="flex-column space-y space-y-4 text-sm font-medium text-fontdark dark:text-gray-400 md:me-4 mb-4 md:mb-0" id="subtahap-tab" data-tabs-toggle="#subtahap-tab-content" role="tablist" data-tabs-active-classes="text-white bg-primary-100 dark:bg-gray-500" data-tabs-inactive-classes="text-fontdark bg-primary-30 hover:bg-primary-100 dark:bg-gray-300 dark:hover:bg-gray-500">
+                        <% const tahap = kegiatan.statusTahap; %>
+
+                        <!-- Specify Needs Tab - Selalu aktif -->
+                        <li role="presentation">
+                            <button type="button"
+                                class="inline-flex items-center px-4 py-3 text-white bg-primary-100 rounded-lg w-full dark:bg-gray-500"
+                                id="specifyneeds-tab"
+                                data-tabs-target="#specifyneeds"
+                                role="tab"
+                                aria-controls="specifyneeds"
+                                aria-selected="true">
+                                Specify Needs
+                            </button>
+                        </li>
+
+                        <!-- Template Untuk Tahap 2 s/d 8 -->
+                        <%
+                        const tahapLabels = ['Design', 'Build', 'Collect', 'Process', 'Analyse', 'Disseminate', 'Evaluate'];
+                        for (let i = 0; i < tahapLabels.length; i++) {
+                            const index = i + 2; // karena tahap2Percentage sampai tahap8Percentage
+                            const currPercentage = tahap[`tahap${index}Percentage`];
+                            const prevPercentage = tahap[`tahap${index - 1}Percentage`];
+
+                            const isDisabled = currPercentage === 0 && prevPercentage !== 100;
+                            const label = tahapLabels[i];
+                            const id = label.toLowerCase();
+                        %>
+                        <li role="presentation">
+                            <button type="button"
+                                class="inline-flex items-center px-4 py-3 rounded-lg w-full <%= isDisabled ? 'cursor-not-allowed' : '' %>"
+                                id="<%= id %>-tab"
+                                data-tabs-target="#<%= id %>"
+                                role="tab"
+                                aria-controls="<%= id %>"
+                                aria-selected="false"
+                                <%= isDisabled ? 'disabled' : '' %>>
+                                <%= label %>
+                                <% if (isDisabled) { %>
+                                <span class="text-xs italic ml-1">(Belum Dimulai)</span>
+                                <% } %>
+                            </button>
+                        </li>
+                        <% } %>
+
+                    </ul>
+            
+                    <!-- WADAH KONTEN TAB -->
+                    <div id="subtahap-tab-content" class="w-full">
+                        
+                        <%- include('tahap/specifyNeeds', locals) %>
+                        
+                        <%- include('tahap/design', locals) %>
+                        <%- include('tahap/build', locals) %>
+                        <%- include('tahap/collect', locals) %>
+                        <%- include('tahap/process', locals) %>
+                        <%- include('tahap/analyse', locals) %>
+                        <%- include('tahap/disseminate', locals) %>
+                        <%- include('tahap/evaluate', locals) %>
+                    </div>
+                </div>
+            </div>
+        </div>

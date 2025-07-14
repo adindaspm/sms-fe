@@ -85,4 +85,35 @@ async function getProvinceBySatkerId(satkerId, token) {
   }
 }
 
-module.exports = { getAllSatkers, getSatkerById, getProvinceBySatkerId };
+async function getSatkerIdByName(query, token) {
+  try {
+    const sanitizedName = query.replace(/^Badan Pusat Statistik\s*/, '');
+    const response = await axios.get(`http://localhost/satkers/search/searchSatker?query=${sanitizedName}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    let satkers = response.data._embedded.satkers;
+    satkers = satkers.map(satker => {
+      const href = satker._links?.self?.href || '';
+      const idMatch = href.match(/\/satkers\/(\d+)/);
+      const id = idMatch ? idMatch[1] : null;
+
+      return {
+        href,
+        id,
+        ...satker
+      };
+    });
+
+    if (satkers.length > 0) {
+      return satkers[0].id;
+    } else {
+      throw new Error('Satker tidak ditemukan');
+    }
+  } catch (error) {
+    console.error('Error mencari Satker:', error.message);
+    throw error;
+  }
+}
+
+module.exports = { getAllSatkers, getSatkerById, getProvinceBySatkerId, getSatkerIdByName };

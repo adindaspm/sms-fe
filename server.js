@@ -11,18 +11,30 @@ const port = 3000;
 
 const dayjs = require('dayjs');
 
-const { authMiddleware } = require('./middleware/authMiddleware');
+const { authMiddleware, checkRole } = require('./middleware/authMiddleware');
 const { loginAndSave } = require('./services/authService');
 const { getUserByEmail } = require('./services/userService');
 
 // Route files
-const adminRoutes = require('./routes/admin');
-const superadminRoutes = require('./routes/superadmin');
-const operatorRoutes = require('./routes/operator');
+const authRoutes = require('./routes/authRoutes');
+const deputiRoutes = require('./routes/deputiRoutes');
+const direktoratRoutes = require('./routes/direktoratRoutes');
+const kegiatanRoutes = require('./routes/kegiatanRoutes');
+const outputRoutes = require('./routes/outputRoutes');
+const programRoutes = require('./routes/programRoutes');
+const provinceRoutes = require('./routes/provinceRoutes');
+const roleRoutes = require('./routes/roleRoutes');
+const satkerRoutes = require('./routes/satkerRoutes');
+const userRoutes = require('./routes/userRoutes');
+// const adminRoutes = require('./routes/admin');
+// const superadminRoutes = require('./routes/superadmin');
+// const operatorRoutes = require('./routes/operator');
 const { getAllSatkers } = require('./services/satkerService');
 const { getAllPrograms } = require('./services/programService');
 const { validatePass } = require('./validators/passValidator');
 const handleValidation = require('./middleware/handleValidation');
+const { getAllKegiatans } = require('./services/kegiatanService');
+const { getAllDirektorats } = require('./services/direktoratService');
 
 // Set view engine EJS
 app.set('view engine', 'ejs');
@@ -81,33 +93,33 @@ app.get('/', (req, res) => {
 });
 
 // Route untuk login user
-app.post('/login-user', async (req, res) => {
-  const { email, password } = req.body;
+// app.post('/login-user', async (req, res) => {
+//   const { email, password } = req.body;
 
-  try {
-    const loginResponse = await loginAndSave(email, password);
-    const accessToken = loginResponse.accessToken;
-    const userData = await getUserByEmail(email, accessToken);
+//   try {
+//     const loginResponse = await loginAndSave(email, password);
+//     const accessToken = loginResponse.accessToken;
+//     const userData = await getUserByEmail(email, accessToken);
 
-    // Simpan semuanya ke session
-    req.session.user = {
-      idUser: userData.id,
-      email: loginResponse.email,
-      accessToken: accessToken,
-      roles: loginResponse.roles,
-      namaUser: userData.name,       // <-- nama user dari /users
-      namaSatker: userData.namaSatker,
-    };
+//     // Simpan semuanya ke session
+//     req.session.user = {
+//       idUser: userData.id,
+//       email: loginResponse.email,
+//       accessToken: accessToken,
+//       roles: loginResponse.roles,
+//       namaUser: userData.name,       // <-- nama user dari /users
+//       namaSatker: userData.namaSatker,
+//     };
 
-    // Kalau sukses, langsung redirect ke /
-    res.redirect('/');
+//     // Kalau sukses, langsung redirect ke /
+//     res.redirect('/');
 
-  } catch (error) {
-    console.error('Login failed:', error.response ? error.response.data : error.message);
+//   } catch (error) {
+//     console.error('Login failed:', error.response ? error.response.data : error.message);
     
-    res.redirect('/login?error=true');
-  }
-});
+//     res.redirect('/login?error=true');
+//   }
+// });
 
 // Cek session user
 app.get('/me', (req, res) => {
@@ -118,20 +130,20 @@ app.get('/me', (req, res) => {
   }
 });
 
-// Logout
-app.post('/logout', (req, res) => {
-  req.session.destroy(err => {
-    if (err) {
-      return res.status(500).json({ message: 'Logout failed' });
-    }
-    res.redirect('/login?logout=success');
-  });
-});
+// // Logout
+// app.post('/logout', (req, res) => {
+//   req.session.destroy(err => {
+//     if (err) {
+//       return res.status(500).json({ message: 'Logout failed' });
+//     }
+//     res.redirect('/login?logout=success');
+//   });
+// });
 
-// Login Page
-app.get('/login', (req, res) => {
-  res.render('pages/login', { title: 'Login | SMS' });
-});
+// // Login Page
+// app.get('/login', (req, res) => {
+//   res.render('pages/login', { title: 'Login | SMS' });
+// });
 
 // Profil
 app.get('/profil', (req, res) => {
@@ -215,6 +227,52 @@ app.post('/changePass', validatePass, handleValidation('layout', async (req) => 
 
 app.get('/dashboardcoba', async (req, res) => {
   const token = req.session.user?.accessToken;
+  const kegiatanDtos = await getAllKegiatans(token);
+  const totalSurvei = kegiatanDtos.length;
+  const isCompleted = (percentage) => percentage === 100;
+  const surveiDalamProgres = kegiatanDtos.filter(k => {
+    const status = k.statusTahap || {};
+    return !(
+      isCompleted(status.tahap1Percentage) &&
+      isCompleted(status.tahap2Percentage) &&
+      isCompleted(status.tahap3Percentage) &&
+      isCompleted(status.tahap4Percentage) &&
+      isCompleted(status.tahap5Percentage) &&
+      isCompleted(status.tahap6Percentage) &&
+      isCompleted(status.tahap7Percentage) &&
+      isCompleted(status.tahap8Percentage)
+    );
+  }).length;
+  const surveiSelesai = kegiatanDtos.length - surveiDalamProgres;
+  const today = new Date();
+  const surveiTerlambat = kegiatanDtos.filter(k => {
+    const selesai = (
+      isCompleted(k.statusTahap?.tahap8Percentage)
+    );
+    const endDate = new Date(k.endDate);
+    return !selesai && endDate < today;
+  }).length;
+  const getCurrentTahap = (statusTahap) => {
+    if (!statusTahap) return null;
+    for (let i = 1; i <= 8; i++) {
+      if (!isCompleted(statusTahap[`tahap${i}Percentage`])) {
+        return `tahap${i}`;
+      }
+    }
+    return "Selesai";
+  };
+
+  const faseMap = {};
+  kegiatanDtos.forEach(k => {
+    const fase = getCurrentTahap(k.statusTahap) || "Tidak Diketahui";
+    faseMap[fase] = (faseMap[fase] || 0) + 1;
+  });
+  const deputiMap = {};
+  kegiatanDtos.forEach(k => {
+    const deputi = k.namaDeputiPJ || "Tidak Diketahui";
+    deputiMap[deputi] = (deputiMap[deputi] || 0) + 1;
+  });
+
   res.render('layout', {
     title: 'Dashboard | SMS',
     page: 'pages/dashboardcoba',
@@ -225,15 +283,17 @@ app.get('/dashboardcoba', async (req, res) => {
     selectedSatker: null,
     programs: await getAllPrograms(token),
     selectedProgram: null,
-    totalSurvei: 42,
-    surveiProses: 23,
-    surveiSelesai: 12,
-    surveiTerlambat: 7,
-    faseLabels: ['Specify Needs', 'Design', 'Build', 'Collect', 'Process', 'Analyse', 'Disseminate', 'Evaluate'],
+    direktorats: await getAllDirektorats(token),
+    selectedDirektorat: '',
+    totalSurvei: totalSurvei,
+    surveiProses: surveiDalamProgres,
+    surveiSelesai: surveiSelesai,
+    surveiTerlambat: surveiTerlambat,
+    faseLabels: ['Specify Needs', 'Design', 'Build', 'Collect', 'Process', 'Analyse', 'Disseminate', 'Evaluate', 'Selesai'],
     faseData: [10, 12, 15, 18, 13, 8, 5, 3],
-    listSurvei: [
-      { nama: 'Survei A', progress: 60, status: 'Sedang Analisis', satker: 'BPS Sumbar' }
-    ],
+    faseMap,
+    deputiMap,
+    listSurvei: kegiatanDtos,
     dokumenList: [
       { namaSurvei: 'Survei A', fase: 'Disseminate', status: 'OK' }
     ],
@@ -244,11 +304,21 @@ app.get('/dashboardcoba', async (req, res) => {
 })
 
 // Modular routes
-app.use(adminRoutes);
-app.use(superadminRoutes);
-app.use(operatorRoutes);
+app.use(authRoutes);
+app.use('/deputis', checkRole(['ROLE_SUPERADMIN']), deputiRoutes);
+app.use('/direktorats', checkRole(['ROLE_SUPERADMIN']), direktoratRoutes);
+app.use('/surveys', checkRole(['ROLE_OPERATOR']), kegiatanRoutes);
+app.use('/outputs', checkRole(['ROLE_SUPERADMIN']), outputRoutes);
+app.use('/programs', checkRole(['ROLE_SUPERADMIN']), programRoutes);
+app.use('/provinces', checkRole(['ROLE_SUPERADMIN']), provinceRoutes);
+app.use('/roles', checkRole(['ROLE_SUPERADMIN']), roleRoutes);
+app.use('/satkers', checkRole(['ROLE_SUPERADMIN']), satkerRoutes);
+app.use('/users', checkRole(['ROLE_SUPERADMIN', 'ROLE_ADMIN']), userRoutes);
+// app.use(adminRoutes);
+// app.use(superadminRoutes);
+// app.use(operatorRoutes);
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at ${apiBaseUrl}:${port}`);
 });

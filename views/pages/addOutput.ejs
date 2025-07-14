@@ -1,0 +1,64 @@
+
+        <div class="mb-6">
+            <h1 class="text-4xl text-font font-extrabold dark:text-white">Tambah Output</h1>
+        </div>
+        <form class="w-full mx-auto" role="form" method="post" action="/outputs">
+            <div class="w-full p-6 bg-primary-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="year" id="output_year" value="<%= old?.year || '' %>" class="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
+                    <label for="output_year" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-white peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Tahun</label>                  
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'year'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="code" id="output_code" value="<%= old?.code || '' %>" class="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
+                    <label for="output_code" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-white peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Kode</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'code'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
+                </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="name" id="output_name" value="<%= old?.name || '' %>" class="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
+                    <label for="output_name" class="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-white peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'name'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
+                </div>
+                <div class="bg-primary-100 relative z-0 w-full mb-5 group">
+                    <select name="program" id="program" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
+                        <option class="bg-primary-100 text-white" value="">Pilih Program</option>
+                        <% listPrograms.forEach(program => { 
+                          const isSelected = old?.program && old?.program === program.href; %>
+                          <option class="bg-primary-100 text-white" value="<%= program.href %>" <%= isSelected ? 'selected' : '' %>><%= program.name %></option>
+                        <% }) %>    
+                      </select>                      
+                    <label for="program" class="peer-focus:font-medium absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-white peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Program</label>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'program'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+            <div class="flex justify-between">
+                <div class="mt-6">
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>            
+                </div>
+                <div class="mt-6">
+                    <a href="/outputs">
+                        <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Kembali</button>
+                    </a>
+                </div>
+            </div>
+        </form>

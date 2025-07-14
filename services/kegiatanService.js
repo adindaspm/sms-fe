@@ -16,9 +16,10 @@ async function getAllKegiatans(token) {
     (response.data._embedded.kegiatans || []).map(async (kegiatan) => {
       const idMatch = kegiatan._links?.self?.href?.match(/\/(\d+)/);
       const id = idMatch?.[1] || null;
+      const kegiatanDto = await getKegiatanById(id, token);
       return {
         id,
-        ...kegiatan
+        ...kegiatanDto
       };
     })
   );
@@ -40,11 +41,13 @@ async function getKegiatanById(id, token){
 
   let kegiatan = response.data; // data kegiatan per ID
   const statusTahap = await getStatusTahapByKegiatanId(id,token);
-
+  const progress = ( statusTahap.tahap1Percentage + statusTahap.tahap2Percentage + statusTahap.tahap3Percentage + statusTahap.tahap4Percentage + 
+    statusTahap.tahap5Percentage + statusTahap.tahap6Percentage + statusTahap.tahap7Percentage + statusTahap.tahap8Percentage ) / 8
   kegiatan = {
     id: id,
     ...kegiatan,
-    statusTahap
+    statusTahap,
+    progress
   };
 
   await setCache(cacheKey, kegiatan, 60); // TTL 60 detik

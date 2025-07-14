@@ -12,10 +12,9 @@
   <link href="/css/output.css" rel="stylesheet">
   
   <!-- <script src="/js/auth.js"></script> -->
-   
+  <script src="/js/apexcharts.min.js"></script>
   <script src="/js/flowbite.min.js"></script>
   <script src="/js/datatable.js"></script>
-  <script src="/js/darklightmode.js" ></script>
   <script>
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -27,10 +26,17 @@
   <% if (successMessage) { %>
     <!-- Modal Sukses -->
     <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div class="bg-white rounded-lg p-6 shadow-lg">
-        <h2 class="text-xl font-semibold text-green-600 mb-4">Sukses!</h2>
-        <p class="text-gray-700"><%= successMessage %></p>
-        <button onclick="closeModal('successModal')" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Tutup</button>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+        <div class="flex items-center text-green-800 dark:text-green-400">
+          <svg class="w-6 h-6 me-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+          </svg>
+          <h3 class="text-lg font-semibold">Sukses</h3>
+        </div>
+        <p class="mt-3 text-sm text-gray-800 dark:text-gray-300"><%= successMessage %></p>
+        <div class="mt-4 flex justify-end">
+          <button onclick="closeModal('successModal')" class="text-gray-800 bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Tutup</button>
+        </div>
       </div>
     </div>
     <% } %>
@@ -38,10 +44,17 @@
     <% if (errorMessage) { %>
     <!-- Modal Error -->
     <div id="errorModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div class="bg-white rounded-lg p-6 shadow-lg">
-        <h2 class="text-xl font-semibold text-red-600 mb-4">Gagal!</h2>
-        <p class="text-gray-700"><%= errorMessage %></p>
-        <button onclick="closeModal('errorModal')" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Kembali</button>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+        <div class="flex items-center text-red-800 dark:text-red-400">
+          <svg class="w-6 h-6 me-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+          </svg>
+          <h3 class="text-lg font-semibold">Gagal!</h3>
+        </div>
+        <p class="mt-3 text-sm text-gray-800 dark:text-gray-300"><%= errorMessage %></p>
+        <div class="mt-4 flex justify-end">
+          <button onclick="closeModal('errorModal')" class="text-red-800 bg-transparent border border-red-800 hover:bg-red-800 hover:text-white dark:border-red-600 dark:hover:bg-red-600 dark:text-red-400 dark:hover:text-white px-4 py-2 rounded-lg text-sm font-medium">Kembali</button>
+        </div>
       </div>
     </div>
     <% } %>
@@ -76,7 +89,7 @@
 
   <div id="popup-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
-      <h3 class="text-lg font-normal text-gray-800 mb-4">Yakin ingin melanjutkan ke tahap ini?</h3>
+      <h3 class="text-lg font-medium text-gray-800 mb-4">Yakin ingin melanjutkan ke tahap ini?</h3>
       <div class="flex justify-end gap-3">
         <button
           id="confirm-redirect"
@@ -95,7 +108,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
   <script src="/js/simple-datatables.js"></script>
   <script src="/js/pop-up.js"></script>
   <script src="/js/piechart.js"></script>
@@ -106,6 +119,7 @@
   <script src="/js/barchart.js"></script>
   <script src="/js/horizontal-barchart.js"></script>
   <script src="/js/darklightmode.js"></script>  
+  <script src="/js/notifications.js"></script>  
 
 </body>
 </html>

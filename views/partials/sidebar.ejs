@@ -20,7 +20,7 @@
         <% if (loggedInUser && loggedInUser.roles.includes('ROLE_OPERATOR')) { %>
         <ul class="font-medium border-t py-2">
         <li>
-            <a href="/operator/surveys" class="flex items-center p-2 rounded-lg group
+            <a href="/surveys" class="flex items-center p-2 rounded-lg group
             <%= activePage === 'surveys' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                 <svg class="flex-shrink-0 w-5 h-5 text-icondark transition duration-75 dark:text-gray-400 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                     <path d="M19.728 10.686c-2.38 2.256-6.153 3.381-9.875 3.381-3.722 0-7.4-1.126-9.571-3.371L0 10.437V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-7.6l-.272.286Z"/>
@@ -42,45 +42,45 @@
                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
             </svg>
         </button>
-        <ul id="dropdown-example" class="py-2 space-y-2 <%= (activePage === 'roles' || activePage === 'satkers' || activePage === 'provinces' || activePage === 'programs' || activePage === 'outputs') ? '' : 'hidden' %>">
+        <ul id="dropdown-example" class="py-2 space-y-2 <%= (activePage === 'roles' || activePage === 'satkers' || activePage === 'provinces' || activePage === 'programs' || activePage === 'outputs' || activePage === 'deputis' || activePage === 'direktorats') ? '' : 'hidden' %>">
             <li>
-                <a href="/superadmin/roles" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
+                <a href="/roles" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
                 <%= activePage === 'roles' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                     Role
                 </a>
             </li>
             <li>
-                <a href="/superadmin/satkers" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
+                <a href="/satkers" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
                 <%= activePage === 'satkers' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                     Satuan Kerja
                 </a>
             </li>
             <li>
-                <a href="/superadmin/provinces" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
+                <a href="/provinces" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
                 <%= activePage === 'provinces' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                     Provinsi
                 </a>
             </li>
             <li>
-                <a href="/superadmin/programs" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
+                <a href="/programs" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
                 <%= activePage === 'programs' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                     Program
                 </a>
             </li>
             <li>
-                <a href="/superadmin/outputs" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
+                <a href="/outputs" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
                 <%= activePage === 'outputs' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                     Output
                 </a>
             </li>
             <li>
-                <a href="/superadmin/deputis" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
+                <a href="/deputis" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
                 <%= activePage === 'deputis' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                     Deputi
                 </a>
             </li>
             <li>
-                <a href="/superadmin/direktorats" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
+                <a href="/direktorats" class="flex items-center w-full p-2 transition duration-75 rounded-lg pl-11 group 
                 <%= activePage === 'direktorats' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                     Direktorat
                 </a>
@@ -91,7 +91,7 @@
         <% if (loggedInUser && loggedInUser.roles.includes('ROLE_ADMIN')) { %>
         <ul class="font-medium border-t py-2">
         <li>
-            <a href="/admin/users" class="flex items-center p-2 rounded-lg group
+            <a href="/users" class="flex items-center p-2 rounded-lg group
             <%= activePage === 'users' ? 'bg-primary-100 text-fontdark dark:bg-gray-700 dark:text-white' : 'text-fontdark dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700' %>">
                 <svg class="flex-shrink-0 w-5 h-5 text-icondark transition duration-75 dark:text-gray-400 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                     <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>

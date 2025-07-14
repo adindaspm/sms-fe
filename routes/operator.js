@@ -77,11 +77,11 @@ router.get('/operator/programs/:id/outputs', async (req, res) => {
     res.status(500).json({ message: 'Gagal ambil output' });
   }
 });
-router.get('/operator/surveys/detail/1', async (req, res) => {
+router.get('/operator/surveys/detail/:id', async (req, res) => {
   const token = req.session.user?.accessToken;
-
+  const { id } = req.params;
   try {
-    const kegiatan = await getKegiatanById(1, token);
+    const kegiatan = await getKegiatanById(id, token);
 
     res.render('layout', {
       title: 'Detail Kegiatan | SMS',
