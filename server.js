@@ -301,24 +301,32 @@ app.get('/dashboardcoba', async (req, res) => {
       { tanggal: '29 Juni', keterangan: 'Survei A update ke fase 5 oleh BPS Jakarta Barat' }
     ]
   });
-})
+});
+app.post('/set-success-message', (req, res) => {
+  req.session.successMessage = req.body.message || 'Berhasil disimpan';
+  res.sendStatus(200);
+});
+app.post('/set-error-message', (req, res) => {
+  req.session.errorMessage = req.body.message || 'Gagal';
+  res.sendStatus(500);
+});
 
 // Modular routes
 app.use(authRoutes);
 app.use('/deputis', checkRole(['ROLE_SUPERADMIN']), deputiRoutes);
 app.use('/direktorats', checkRole(['ROLE_SUPERADMIN']), direktoratRoutes);
-app.use('/surveys', checkRole(['ROLE_OPERATOR']), kegiatanRoutes);
 app.use('/outputs', checkRole(['ROLE_SUPERADMIN']), outputRoutes);
 app.use('/programs', checkRole(['ROLE_SUPERADMIN']), programRoutes);
 app.use('/provinces', checkRole(['ROLE_SUPERADMIN']), provinceRoutes);
 app.use('/roles', checkRole(['ROLE_SUPERADMIN']), roleRoutes);
 app.use('/satkers', checkRole(['ROLE_SUPERADMIN']), satkerRoutes);
 app.use('/users', checkRole(['ROLE_SUPERADMIN', 'ROLE_ADMIN']), userRoutes);
+app.use('/surveys', checkRole(['ROLE_OPERATOR']), kegiatanRoutes);
 // app.use(adminRoutes);
 // app.use(superadminRoutes);
 // app.use(operatorRoutes);
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server running at ${apiBaseUrl}:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });

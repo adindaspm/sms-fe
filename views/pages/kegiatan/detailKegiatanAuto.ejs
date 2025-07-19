@@ -167,7 +167,7 @@
                         </select>
                     </div>
                     <% for (let i = 1; i <= 6; i++) { %>
-                        <div class="col-span-2 sm:col-span-1 subtahap" id="subtahap-wrapper-<%= i %>">
+                        <div class="col-span-2 sm:col-span-1 subtahap" id="subtahap-wrapper-<%= i %>" data-subtahap="<%= i %>">
                             <label for="subTahap<%= i %>" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subtahap <%= i %></label>
                             <div class="relative max-w-sm">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -177,7 +177,7 @@
                             </div>
                             <input
                                 datepicker
-                                datepicker-orientation="top"
+                                datepicker-orientation="top" datepicker-format="dd-mm-yyyy"
                                 id="subTahap<%= i %>"
                                 type="text"
                                 placeholder="Select date"

@@ -22,7 +22,6 @@
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const idKegiatan = window.kegiatanId;
       const tahapSlug = tahapSelect.value;
 
       // Mapping tahap slug ke idTahap
@@ -42,32 +41,43 @@
 
       const requests = [];
 
-      for (let i = 1; i <= visibleCount; i++) {
-        const input = document.getElementById(`subTahap${i}`);
-        const tanggal = input.value;
-
-        if (!tanggal) continue;
-
-        const idSubTahap = i;
-        const url = `/tahap/${idKegiatan}/${idTahap}/${idSubTahap}/rencana`;
-
-        const req = fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ tanggalRencana: tanggal })
-        });
-
-        requests.push(req);
-      }
-
       try {
-        await Promise.all(requests);
-        alert("Semua tanggal rencana berhasil dikirim!");
+        for (let i = 1; i <= visibleCount; i++) {
+          const input = document.getElementById(`subTahap${i}`);
+          const tanggal = input.value;
+
+          if (!tanggal) continue;
+
+          const idSubTahap = i;
+          const url = `/surveys/tahap/${idKegiatan}/${idTahap}/${idSubTahap}/rencana`;
+
+          await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ tanggalRencana: tanggal })
+          });
+          
+        }
+        await fetch('/set-success-message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: 'Tanggal rencana berhasil disimpan' })
+        });
+        location.reload();
       } catch (err) {
         console.error(err);
-        alert("Gagal mengirim beberapa rencana");
+        await fetch('/set-error-message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: 'Tanggal rencana gagal disimpan' })
+        });
+        location.reload();
       }
     });
 

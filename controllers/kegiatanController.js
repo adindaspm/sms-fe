@@ -136,8 +136,9 @@ exports.detail = async (req, res) => {
       kegiatan
     });
   } catch (error) {
+    req.session.errorMessage = 'Terjadi masalah pada server. Coba lagi nanti!';
     console.error('Gagal ambil detail kegiatan:', error.message);
-    res.redirect('/'); // fallback kalo error
+    res.redirect('/surveys'); // fallback kalo error
   }
 };
 
@@ -265,7 +266,11 @@ exports.updateTanggalTahap = async (req, res) => {
     const token = req.session.user?.accessToken;
 
     const { idKegiatan, idTahap, idSubTahap } = req.params;
-    const tanggalRencana = new Date(req.body.tanggalRencana).toISOString().split('T')[0];
+    
+    const [day, month, year] = req.body.tanggalRencana.split('-');
+    const tanggalRencana = `${year}-${month}-${day}`;
+
+// Kirim string tanggalRencana ke backend sebagai "2025-07-19"
 
     await axios.post(`${apiBaseUrl}/api/tahap/${idKegiatan}/${idTahap}/${idSubTahap}/tanggal-perencanaan`, tanggalRencana, {
       headers: {
@@ -277,11 +282,12 @@ exports.updateTanggalTahap = async (req, res) => {
     await delCache('all_kegiatans');
     await delCache(`kegiatan_${idKegiatan}`);
     await delCache(`statusTahapByKegiatan_${idKegiatan}`);
-    req.session.successMessage = 'Berhasil memperbarui tanggal.';
+    // req.session.successMessage = 'Berhasil memperbarui tanggal.';
+    res.sendStatus(200);
   } catch (error) {
     const { idKegiatan } = req.params;
     
-    console.error('Error saat memperbarui status:', error.response?.data || error.message);
+    console.error('Error saat menginput tanggal rencana:', error.response?.data || error.message);
 
     req.session.errorMessage = 'Gagal memperbarui tanggal.';
     res.status(500).send('Error', error);
