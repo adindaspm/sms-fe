@@ -22,6 +22,7 @@ COPY --from=build /app/public ./public
 COPY --from=build /app/views ./views
 COPY --from=build /app/routes ./routes
 COPY --from=build /app/services ./services
+COPY --from=build /app/controllers ./controllers
 COPY --from=build /app/utils ./utils
 COPY --from=build /app/middleware ./middleware
 COPY --from=build /app/server.js .
