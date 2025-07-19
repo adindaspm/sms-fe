@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadOutputs(this.value);
   });
 
+  loadOutputs(programSelect.value, outputSelect.value);
+
   if (oldProgramId) {
     loadOutputs(oldProgramId, oldOutputId);
   }

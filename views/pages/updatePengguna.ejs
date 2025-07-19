@@ -1,6 +1,6 @@
 
         <div class="mb-6">
-            <h1 class="text-4xl text-font font-extrabold dark:text-gray-100">Tambah Pengguna</h1>
+            <h1 class="text-4xl text-font font-extrabold dark:text-gray-100">Update Pengguna</h1>
         </div>
         
         <form class="w-full mx-auto" role="form" method="post" action="/users/<%= user.id %>/update">
@@ -8,8 +8,8 @@
                 <input type="text" name="id" id="id" value="<%= old?.id || user.id || '' %>" hidden />
                 
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="name" id="name" value="<%= typeof old?.name !== 'undefined' ? old.name : user.name %>" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
-                    <label for="name" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Lengkap</label>
+                    <input type="text" name="name" id="name" value="<%= typeof old?.name !== 'undefined' ? old.name : user.name %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
+                    <label for="name" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Lengkap</label>
                     <% if (errors) { 
                         const err = errors.find(e => e.path === 'name'); %>
                         <% if (err) { %>
@@ -18,8 +18,8 @@
                     <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="text" name="nip" id="nip" value="<%= typeof old?.nip !== 'undefined' ? old.nip : user.nip %>" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
-                    <label for="nip" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">NIP</label>
+                    <input type="text" name="nip" id="nip" value="<%= typeof old?.nip !== 'undefined' ? old.nip : user.nip %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
+                    <label for="nip" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">NIP</label>
                     <% if (errors) { 
                         const err = errors.find(e => e.path === 'nip'); %>
                         <% if (err) { %>
@@ -28,8 +28,8 @@
                     <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="email" name="email" id="email" value="<%= typeof old?.email !== 'undefined' ? old.email : user.email %>" class="block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
-                    <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+                    <input type="email" name="email" id="email" value="<%= typeof old?.email !== 'undefined' ? old.email : user.email %>" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" placeholder=" "  />
+                    <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
                     <% if (errors) { 
                         const err = errors.find(e => e.path === 'email'); %>
                         <% if (err) { %>
@@ -38,54 +38,59 @@
                     <% } %>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <select name="province" id="province" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
+                    <select name="province" id="province" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
                         <option value="<%= encodeURIComponent(JSON.stringify(user.satker.province)) %>" class="bg-primary-30"><%= user.satker.province.name %></option>
                         <% listProvinces.forEach(p => { 
                             const isSelected = old?.province && JSON.parse(decodeURIComponent(old.province)).id === p.id; %>
                             <option value="<%= encodeURIComponent(JSON.stringify(p)) %>" class="bg-primary-30" <%= isSelected ? 'selected' : '' %>><%= p.name %></option>
                         <% }) %>
                       </select>                      
-                    <label for="province" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Provinsi</label>
+                    <label for="province" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Provinsi</label>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <select name="satker" id="satker" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
+                    <select name="satker" id="satker" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
                         <option value="<%= encodeURIComponent(JSON.stringify(user.satker)) %>" class="bg-primary-30"><%= user.satker.name %></option>
                         <% listSatkers.forEach(s => { 
                             const isSelected = old?.satker && JSON.parse(decodeURIComponent(old.satker)).id === s.id; %>
                             <option class="bg-primary-30" value="<%= encodeURIComponent(JSON.stringify(s)) %>" data-province="<%= s.provinceCode %>" <%= isSelected ? 'selected' : '' %>><%= s.name %></option>
                         <% }) %>
                       </select>                      
-                    <label for="satker" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Satuan Kerja</label>
+                    <label for="satker" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Satuan Kerja</label>
                 </div>
                 <div class="relative z-0 w-full mb-5 group hidden" id="deputiField">
-                    <select name="deputi" id="deputi" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
-                        <option value="<%= encodeURIComponent(JSON.stringify(user.deputi)) %>" class="bg-primary-30"><%= user.namaDeputi %></option>
+                    <select name="deputi" id="deputi" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
+                        <option value="" class="bg-primary-30">Pilih Deputi</option>
                         <% listDeputis.forEach(d => { 
                             let isSelected = false;
-                            if (old?.deputi) {
+                            if (old?.deputi && Object.keys(old.deputi).length > 0) {
                                 isSelected = JSON.parse(decodeURIComponent(old.deputi)).id === d.id;
-                            } else if (user?.direktorat) {
-                                isSelected = d.code === user.direktorat.code.substring(0, 2);
+                            } else if (user?.deputiName) {
+                                isSelected = d.name === user.deputiName;
                             }
                         %>
                         <option class="bg-primary-30" value="<%= encodeURIComponent(JSON.stringify(d)) %>" data-satker="0000" <%= isSelected ? 'selected' : '' %>><%= d.name %></option>
                         <% }) %>
                     </select>                      
-                    <label for="deputi" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Deputi</label>
+                    <label for="deputi" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Deputi</label>
                 </div>
                 <div class="relative z-0 w-full mb-5 group hidden" id="direktoratField">
-                    <select name="direktorat" id="direktorat" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
-                        <option value="<%= encodeURIComponent(JSON.stringify(user.direktorat)) %>" class="bg-primary-30"><%= user.namaDirektorat %></option>
+                    <select name="direktorat" id="direktorat" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
+                        <option value="" class="bg-primary-30">Pilih Direktorat</option>
                         <% listDirektorats.forEach(d => { 
-                            const isSelected = old?.direktorat && JSON.parse(decodeURIComponent(old.direktorat)).id === d.id; %>
-                            <option class="bg-primary-30" value="<%= encodeURIComponent(JSON.stringify(d)) %>" data-deputi="<%= d.deputiCode %>" <%= isSelected ? 'selected' : '' %>><%= d.name %></option>
+                            let isSelected = false;
+                            if (old?.direktorat) {
+                                isSelected = JSON.parse(decodeURIComponent(old.direktorat)).id === d.id;
+                            } else if (user?.direktoratId) {
+                                isSelected = d.id === user.direktoratId;
+                            } %>
+                            <option class="bg-primary-30" value="<%= encodeURIComponent(JSON.stringify(d)) %>" data-deputi="<%= d.code.substring(0, 2) %>" <%= isSelected ? 'selected' : '' %>><%= d.name %></option>
                         <% }) %>
                       </select>                      
-                    <label for="direktorat" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Direktorat</label>
+                    <label for="direktorat" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Direktorat</label>
                 </div>
 
                 <div class="relative z-0 w-full mb-5 group">   
-                    <p class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Upload Foto Profil</p>                                             
+                    <p class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Upload Foto Profil</p>                                             
                     <div class="flex items-center justify-center w-full">
                     <label for="dropzone-file" class="mt-3 flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-primary-30 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-primary-50 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">

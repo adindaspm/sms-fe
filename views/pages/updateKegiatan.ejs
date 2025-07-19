@@ -4,49 +4,73 @@
             <h2 class="text-2xl text-font font-normal dark:text-gray-100 mb-6"><%= kegiatan.name %></h2>
         </div>
         
-        <form action="/surveys" method="POST" class="w-full mx-auto">
+        <form action="/surveys/<%= kegiatan.id %>/update" method="POST" class="w-full mx-auto">
             <div class="w-full p-6 bg-primary-30 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               
               <!-- Nama Aktivitas -->
               <div class="relative z-0 w-full mb-5 group">
                 <input type="text" name="name" id="nama_kegiatan" value="<%= kegiatan.name %>"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 focus:outline-none focus:ring-0 peer" 
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 focus:outline-none focus:ring-0 peer" 
                   placeholder=" ">
-                <label for="nama_kegiatan" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Aktivitas</label>
+                <label for="nama_kegiatan" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Aktivitas</label>
+                <% if (errors) { 
+                        const err = errors.find(e => e.path === 'name'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
           
               <!-- Program -->
               <div class="relative z-0 w-full mb-5 group">
                 <select name="program" id="program"  
-                  class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 dark:text-gray-100 focus:outline-none focus:ring-0 peer">
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-gray-100 focus:outline-none focus:ring-0 peer" data-old-program="<%= old?.program %>">
                   <option value="" class="bg-primary-30">Pilih Program</option>
                   <% programDtos.forEach(program => { %>
-                    <option value="<%= program.id %>" class="bg-primary-30"><%= program.name %></option>
+                    <option value="<%= program.id %>" class="bg-primary-30" <%= String(old?.program?.id ?? kegiatan?.programId) === String(program.id) ? 'selected' : '' %>><%= program.name %></option>
                   <% }); %>
                 </select>
-                <label for="program" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Program</label>
+                <label for="program" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Program</label>
+                <% if (errors) { 
+                        const err = errors.find(e => e.path === 'program'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
 
               <!-- Output -->
               <div class="relative z-0 w-full mb-5 group">
-                <select id="output" name="output" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" data-old-output="<%= old?.output %>">
-                  <option value="" class="bg-primary-30 text-gray-900" >Pilih Output</option>
+                <select id="output" name="output" class="bg-primary-50 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" data-old-output="<%= old?.output %>">
+                  <option value="<%= kegiatan.outputId %>" class="bg-primary-30 text-gray-900">Pilih Output</option>
                 </select>
-                <label for="output" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Output</label>
+                <label for="output" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Output</label>
+                <% if (errors) { 
+                        const err = errors.find(e => e.path === 'output'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
           
               <!-- Kode -->
               <div class="relative z-0 w-full mb-5 group">
                 <input type="text" name="code" id="kode" value="<%= kegiatan.code %>"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 focus:outline-none focus:ring-0 peer" 
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 focus:outline-none focus:ring-0 peer" 
                   placeholder=" ">
-                  <label for="kode" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Kode</label>
+                  <label for="kode" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Kode</label>
+                  <% if (errors) { 
+                        const err = errors.find(e => e.path === 'code'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
           
               <!-- Tanggal -->
               <div class="relative z-0 w-full mb-5 group">
                 <div class="pb-3">
-                    <p class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tanggal Pelaksanaan</p>
+                    <p class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tanggal Pelaksanaan</p>
                 </div>
                 <div class="flex items-center">
                     <div class="relative">
@@ -55,7 +79,8 @@
                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <input id="date-start" name="startDate" type="date" class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal Mulai">
+                    <input id="date-start" value="<%= new Date(kegiatan.startDate).toISOString().split('T')[0] %>" 
+                      name="startDate" type="date" class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal Selesai">
                     </div>
                     <span class="mx-4 text-gray-900 text-sm">sampai</span>
                     <div class="relative">
@@ -64,30 +89,28 @@
                             <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
                         </svg>
                     </div>
-                    <input id="date-end" name="endDate" type="date" class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal Selesai">
+                    <input id="date-end" value="<%= new Date(kegiatan.endDate).toISOString().split('T')[0] %>" 
+                      name="endDate" type="date" class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Pilih Tanggal Selesai">
                     </div>
                 </div>
+                <% if (errors) { 
+                        const err = errors.find(e => e.path === 'startDate'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
+                    <% if (errors) { 
+                        const err = errors.find(e => e.path === 'endDate'); %>
+                        <% if (err) { %>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
+                        <% } %>
+                    <% } %>
               </div>
-          
-              <!-- Satuan Kerja -->
-              <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="satkerName" value="<%= kegiatan.namaSatker %>" readonly 
-                  class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 focus:outline-none focus:ring-0 peer">
-                <label for="satker" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Satuan Kerja</label>
-              </div>
-          
-              <!-- Penanggung Jawab -->
-              <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="userName" value="<%= kegiatan.namaUser %>" readonly 
-                  class="block py-2.5 px-0 w-full text-sm text-gray-200 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 focus:outline-none focus:ring-0 peer">
-                <label for="pj" class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Nama Penanggung Jawab</label>
-              </div>
-          
             </div>
           
             <div class="flex justify-between mt-6">
-              <button type="submit" class="text-gray-200 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">Submit</button>
-              <a href="/surveys" class="text-gray-200 bg-gray-700 hover:bg-gray-800 font-medium rounded-lg text-sm px-5 py-2.5">Kembali</a>
+              <button type="submit" class="text-gray-100 bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">Submit</button>
+              <a href="/surveys" class="text-gray-100 bg-gray-700 hover:bg-gray-800 font-medium rounded-lg text-sm px-5 py-2.5">Kembali</a>
             </div>
           </form>
           

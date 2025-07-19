@@ -11,7 +11,7 @@
                     <% if (errors) { 
                         const err = errors.find(e => e.path === 'first_name'); %>
                         <% if (err) { %>
-                            <p class="text-red-500 text-sm mt-1"><%= err.msg %></p>
+                            <p class="text-red-700 text-sm mt-1"><%= err.msg %></p>
                         <% } %>
                     <% } %>
                 </div>

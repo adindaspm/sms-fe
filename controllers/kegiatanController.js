@@ -223,12 +223,12 @@ exports.update = async (req, res) => {
 
     await delCache('all_kegiatans');
     await delCache(`kegiatan_${id}`)
-    req.session.successMessage = 'Berhasil menambah kegiatan.';
+    req.session.successMessage = 'Berhasil memperbarui kegiatan.';
     res.redirect('/surveys');
   } catch (error) {
-    console.error('Error saat tambah kegiatan:', error.response?.data || error.message);
+    console.error('Error saat update kegiatan:', error.response?.data || error.message);
 
-    req.session.errorMessage = 'Gagal menambah kegiatan.';
+    req.session.errorMessage = 'Gagal memperbarui kegiatan.';
     res.redirect('/surveys/add');
     // res.status(500).send('Internal Server Error');
 

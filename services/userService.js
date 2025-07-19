@@ -39,7 +39,7 @@ exports.getUserById = async (id, token) => {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const userResponse = await axios.get(`${apiBaseUrl}/users/${id}`, {
+  const userResponse = await axios.get(`${apiBaseUrl}/api/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   const user = userResponse.data;
@@ -52,7 +52,7 @@ exports.getUserById = async (id, token) => {
 
   if (province?.code === '00') {
     direktorat = await getDirektoratByUserId(id, token);
-    deputi = direktorat?.deputi || null;
+    deputi = await getDeputiByUserId(id,token);
   }
 
   const userDto = {
@@ -183,6 +183,35 @@ const getDirektoratByUserId = async (userId, token) => {
   }
 };
 exports.getDirektoratByUserId = getDirektoratByUserId;
+
+const getDeputiByUserId = async (userId, token) => {
+  const cacheKey = `deputiByUser_${userId}`;
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const response = await axios.get(`${apiBaseUrl}/api/users/${userId}/deputi`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    });
+
+    const data = response.data;
+    const deputi = {
+      id: data.id,
+      code: data.code,
+      name: data.name
+    };
+
+    await setCache(cacheKey, deputi, 3600);
+    return deputi;
+  } catch (err) {
+    console.error(`Gagal ambil deputi untuk user ${userId}:`, err.message);
+    return null;
+  }
+};
+exports.getDeputiByUserId = getDeputiByUserId;
 
 exports.saveUser = async (payload, token) => {
   await axios.post(`${apiBaseUrl}/api/users`, payload, {

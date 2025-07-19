@@ -22,8 +22,6 @@ const validateKegiatan = [
   body('output')
     .notEmpty().withMessage('Output wajib dipilih.'),
   body('code').notEmpty().withMessage('Kode kegiatan wajib diisi.'),
-  notPastDate('startDate','Tanggal mulai'),
-  notPastDate('endDate','Tanggal selesai'),
   body('endDate')
     .custom((endDate, { req }) => {
       const startDate = req.body.startDate;
@@ -36,10 +34,7 @@ const validateKegiatan = [
         }
       }
       return true;
-    }),
-  body('satkerId')
-    .notEmpty().withMessage('Satuan kerja wajib dipilih.')
-  // body('pj').notEmpty().withMessage('Penanggung jawab wajib diisi.')
+    })
 ];
 
 module.exports = { validateKegiatan };
