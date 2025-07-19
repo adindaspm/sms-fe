@@ -7,23 +7,11 @@ async function getAllDirektorats(token) {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/direktorats`, {
-    params: { size: 10000 },
+  const response = await axios.get(`${apiBaseUrl}/api/direktorats`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const direktoratDtos = await Promise.all((response.data._embedded.direktorats || []).map(async direktorat => {
-      const idMatch = direktorat._links?.self?.href?.match(/\/(\d+)/);
-      const id = idMatch?.[1] || null;
-  
-      return {
-        id,
-        ...direktorat,
-        deputi: {
-          code: direktorat.code.substring(0,2)
-        }
-      };
-    }));
+  const direktoratDtos = response.data;
 
   await setCache(cacheKey, direktoratDtos, 60*60);
   return direktoratDtos;

@@ -7,19 +7,11 @@ async function getAllDeputis(token) {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/deputis`, {
-    params: { size: 10000 },
+  const response = await axios.get(`${apiBaseUrl}/api/deputis`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const deputiDtos = (response.data._embedded.deputis || []).map(deputi => {
-    const idMatch = deputi._links?.self?.href?.match(/\/(\d+)/);
-    return {
-      id: idMatch?.[1] || null,
-      name: deputi.name,
-      code: deputi.code
-    };
-  });
+  const deputiDtos = response.data;
 
   await setCache(cacheKey, deputiDtos, 60*60);
   return deputiDtos;

@@ -7,20 +7,11 @@ async function getAllPrograms(token) {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/programs`, {
-    params: { size: 10000 },
+  const response = await axios.get(`${apiBaseUrl}/api/programs`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const programDtos = (response.data._embedded.programs || []).map(program => {
-    const idMatch = program._links?.self?.href?.match(/\/(\d+)/);
-    const href = program._links?.self?.href;
-    return {
-      id: idMatch?.[1] || null,
-      href,
-      ...program
-    };
-  });
+  const programDtos = response.data;
 
   await setCache(cacheKey, programDtos, 60); // TTL 60 detik
   return programDtos;

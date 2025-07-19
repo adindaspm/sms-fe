@@ -20,15 +20,12 @@ exports.getAllUsers = async (token) => {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/users`, {
+  const response = await axios.get(`${apiBaseUrl}/api/users`, {
     params: { size: 10000 },
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const userDtos = (response.data._embedded?.users || []).map(user => {
-    const id = extractIdFromHref(user._links?.self?.href, 'users');
-    return { id, ...user };
-  });
+  const userDtos = (response.data || []);
 
   await setCache(cacheKey, userDtos, 60);
   return userDtos;

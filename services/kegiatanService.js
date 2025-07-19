@@ -7,22 +7,11 @@ async function getAllKegiatans(token) {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/kegiatans`, {
-    params: { size: 10000 },
+  const response = await axios.get(`${apiBaseUrl}/api/kegiatans`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const kegiatanDtos = await Promise.all(
-    (response.data._embedded.kegiatans || []).map(async (kegiatan) => {
-      const idMatch = kegiatan._links?.self?.href?.match(/\/(\d+)/);
-      const id = idMatch?.[1] || null;
-      const kegiatanDto = await getKegiatanById(id, token);
-      return {
-        id,
-        ...kegiatanDto
-      };
-    })
-  );
+  const kegiatanDtos = (response.data || []);
 
   await setCache(cacheKey, kegiatanDtos, 60); // TTL 60 detik
   return kegiatanDtos;
@@ -33,7 +22,7 @@ async function getKegiatanById(id, token){
   const cached = await getCache(cacheKey);
   if (cached) return cached;
   
-  const response = await axios.get(`${apiBaseUrl}/kegiatans/${id}`, {
+  const response = await axios.get(`${apiBaseUrl}/api/kegiatans/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

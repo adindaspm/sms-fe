@@ -7,18 +7,11 @@ async function getAllRoles(token) {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/roles`, {
-    params: { size: 10000 },
+  const response = await axios.get(`${apiBaseUrl}/api/roles`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const roleDtos = (response.data._embedded.roles || []).map(role => {
-    const idMatch = role._links?.self?.href?.match(/\/(\d+)/);
-    return {
-      id: idMatch?.[1] || null,
-      ...role
-    };
-  });
+  const roleDtos = response.data;
 
   await setCache(cacheKey, roleDtos, 60); // TTL 60 detik
   return roleDtos;

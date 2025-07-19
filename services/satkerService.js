@@ -7,23 +7,11 @@ async function getAllSatkers(token) {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/satkers`, {
-    params: { size: 10000 },
+  const response = await axios.get(`${apiBaseUrl}/api/satkers`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  const satkerDtos = await Promise.all((response.data._embedded.satkers || []).map(async satker => {
-    const idMatch = satker._links?.self?.href?.match(/\/(\d+)/);
-    const id = idMatch?.[1] || null;
-
-    return {
-      id,
-      ...satker,
-      province: {
-        code: satker.code.substring (0,2)
-      }
-    };
-  }));
+  const satkerDtos = response.data;
   
   await setCache(cacheKey, satkerDtos, 60 * 60); // TTL 60 menit
   return satkerDtos;

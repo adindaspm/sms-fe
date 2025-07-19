@@ -30,7 +30,7 @@
                     </th>
                     <th class="dark:text-white">
                         <span class="flex items-center">
-                            Satuan Kerja
+                            Program
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
                             </svg>
@@ -59,8 +59,8 @@
                   <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= kegiatan.id %></td>
                     <td class="dark:text-white"><%= kegiatan.name %></td>
-                    <td class="dark:text-white"><%= kegiatan.namaSatker %></td>
-                    <td class="dark:text-white"><%= kegiatan.namaUser %></td>
+                    <td class="dark:text-white"><%= kegiatan.programName %></td>
+                    <td class="dark:text-white"><%= kegiatan.direktoratPjName %></td>
                     <td class="dark:text-white">
                       <div class="flex justify-center">
                         <a href="/surveys/detail/<%= kegiatan.id %>" class="px-0.5">

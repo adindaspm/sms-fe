@@ -63,7 +63,13 @@
       <select id="direktoratFilter" class="w-full md:w-1/4 px-3 py-2 rounded border border-gray-300 focus:outline-none">
         <option value="">Semua Direktorat</option>
         <% direktorats.forEach(d => { %>
-          <option value="<%= d %>" <%= d === selectedDirektorat ? 'selected' : '' %>><%= d %></option>
+          <option value="<%= d %>" <%= d === selectedDirektorat ? 'selected' : '' %>><%= d.name %></option>
+        <% }) %>
+      </select>
+      <select id="direktoratFilter" class="w-full md:w-1/4 px-3 py-2 rounded border border-gray-300 focus:outline-none">
+        <option value="">Semua Program</option>
+        <% programs.forEach(d => { %>
+          <option value="<%= d %>" <%= d === selectedDirektorat ? 'selected' : '' %>><%= d.name %></option>
         <% }) %>
       </select>
     </div>
