@@ -6,6 +6,6 @@ const handleValidation = require('../middleware/handleValidation');
 
 router.get('/', outputController.index);
 router.get('/add', outputController.addForm);
-router.post('/save', validateOutput, handleValidation('layout', outputController.save));
+router.post('/save', validateOutput, handleValidation('layout', outputController.renderAddForm), outputController.save);
 
 module.exports = router;

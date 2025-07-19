@@ -7,25 +7,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const oldOutputId = outputSelect.dataset.oldOutput;
 
   async function loadOutputs(programId, selectedOutputId = null) {
-    outputSelect.innerHTML = '<option value="" class="bg-primary-100 text-white" >Loading...</option>';
+    outputSelect.innerHTML = '<option value="" class="bg-primary-30 text-gray-900" >Loading...</option>';
 
     if (!programId) {
-      outputSelect.innerHTML = '<option value="" class="bg-primary-100 text-white" >Pilih Output</option>';      
+      outputSelect.innerHTML = '<option value="" class="bg-primary-30 text-gray-900" >Pilih Output</option>';      
       return;
     }
 
     try {
-      const res = await fetch(`/operator/programs/${programId}/outputs`);
+      const res = await fetch(`/programs/${programId}/outputs`);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       const outputs = await res.json();
-      outputSelect.innerHTML = '<option value="" class="bg-primary-100 text-white" >Pilih Output</option>';
+      outputSelect.innerHTML = '<option value="" class="bg-primary-30 text-gray-900" >Pilih Output</option>';
       outputs.forEach(output => {
         const option = document.createElement('option');
         option.value = output.id;
         option.textContent = output.name;
-        option.className = 'bg-primary-100 text-white';
+        option.className = 'bg-primary-30 text-gray-900';
         if (String(output.id) === String(selectedOutputId)) {
           option.selected = true;
         }
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     } catch (err) {
       console.error('Gagal load output:', err);
-      outputSelect.innerHTML = '<option value="" class="bg-primary-100 text-white" >Gagal memuat output</option>';
+      outputSelect.innerHTML = '<option value="" class="bg-primary-30 text-gray-900" >Gagal memuat output</option>';
     }
   }
 

@@ -1,11 +1,15 @@
 const axios = require('axios');
 const { getCache, setCache } = require('../utils/cacheService');
+const FormData = require('form-data');
+const fs = require('fs');
+const path = require('path');
 const { apiBaseUrl } = require('../config');
-const { getAllKegiatans, getKegiatanById } = require("../services/kegiatanService");
+const { getAllKegiatans, getKegiatanById, getFileTahapByKegiatanId } = require("../services/kegiatanService");
 const { getAllOutputs } = require("../services/outputService");
 const { getAllPrograms } = require("../services/programService");
 const { getSatkerIdByName } = require("../services/satkerService");
 const { delCache } = require("../utils/cacheService");
+const dayjs = require('dayjs');
 
 exports.index = async (req, res) => {
   try {
@@ -292,5 +296,66 @@ exports.updateTanggalTahap = async (req, res) => {
     req.session.errorMessage = 'Gagal memperbarui tanggal.';
     res.status(500).send('Error', error);
 
+  }
+};
+
+exports.uploadFile = async (req, res) => {
+  try {
+    const token = req.session.user?.accessToken;
+
+    const { idKegiatan, idTahap } = req.params;
+    
+    const uploadedFile = req.file;
+
+    if (!uploadedFile) {
+      req.session.errorMessage = 'File tidak ditemukan dalam permintaan.';
+      return res.redirect(`/surveys/detail/${idKegiatan}`);
+    }
+
+    // Siapkan form-data
+    const form = new FormData();
+    form.append('file', fs.createReadStream(uploadedFile.path), uploadedFile.originalname);
+
+    // Kirim ke API
+    await axios.post(`${apiBaseUrl}/api/tahap/${idKegiatan}/${idTahap}/upload`, form, {
+      headers: {
+        ...form.getHeaders(),
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    await delCache('all_kegiatans');
+    await delCache(`kegiatan_${idKegiatan}`);
+    await delCache(`statusTahapByKegiatan_${idKegiatan}`);
+    req.session.successMessage = 'Berhasil mengupload file.';
+    res.redirect(`/surveys/detail/${idKegiatan}`);
+  } catch (error) {
+    const { idKegiatan } = req.params;
+    
+    console.error('Error upload file:', error.response?.data || error.message);
+
+    req.session.errorMessage = 'Terjadi kesalahan pada server. Coba lagi nanti!';
+    res.redirect(`/surveys/detail/${idKegiatan}`);
+    // res.status(500).send('Internal server error');
+
+  }
+};
+
+exports.downloadFile = async (req, res) => {
+  try {
+    const token = req.session.user?.accessToken;
+    const { idKegiatan, idTahap } = req.params;
+
+    const { stream, fileName } = await getFileTahapByKegiatanId(idKegiatan, idTahap, token);
+
+    // Tentukan ekstensi mime jika perlu, contoh untuk PDF:
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+    stream.pipe(res);
+  } catch (error) {
+    console.error('Error download file:', error.response?.data || error.message);
+    req.session.errorMessage = 'Gagal mendownload file.';
+    res.redirect(`/surveys/detail/${req.params.idKegiatan}`);
   }
 };

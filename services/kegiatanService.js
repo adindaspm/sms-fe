@@ -59,4 +59,31 @@ async function getStatusTahapByKegiatanId(kegiatanId, token) {
   return statusTahap;
 }
 
-module.exports = { getAllKegiatans, getKegiatanById, getStatusTahapByKegiatanId };
+async function getFileTahapByKegiatanId(kegiatanId, tahapId, token) {
+  // Ambil nama file
+  const response = await axios.get(`${apiBaseUrl}/api/tahap/${kegiatanId}/${tahapId}/files`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  const files = response.data;
+
+  if (!Array.isArray(files) || files.length === 0) {
+    throw new Error('Tidak ada file ditemukan');
+  }
+
+  const latestFileName = files[files.length - 1]; // Ambil yang paling akhir
+
+  // Stream file dari API eksternal
+  const downloadResponse = await axios.get(`${apiBaseUrl}/api/tahap/${kegiatanId}/${tahapId}/files/${latestFileName}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    responseType: 'stream'
+  });
+
+  return { stream: downloadResponse.data, latestFileName };
+}
+
+module.exports = { getAllKegiatans, getKegiatanById, getStatusTahapByKegiatanId, getFileTahapByKegiatanId };

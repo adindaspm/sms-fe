@@ -92,6 +92,30 @@
                                 </table>
                             </div>
 
+                           <!-- Form Upload File -->
+                            <div class="flex justify-start mt-6 bg-primary-30 dark:bg-gray-800 w-full">
+                                <form method="post" enctype="multipart/form-data" class="w-full" action="/surveys/upload/tahap/<%= kegiatan.id %>/8">
+                                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file">Upload file</label>
+                                    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file" id="file" name="file" type="file">
+                                    <p class="mt-1 text-sm text-gray-700 dark:text-gray-300" id="file">Upload notulensi rapat evaluasi</p>
+                                    <div class="mt-6 flex justify-between w-full">
+                                        <button type="submit" class="text-gray-200 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Upload File</button>            
+                                        <a href="/surveys/files/tahap/<%= kegiatan.id %>/8" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-teal-700 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
+                                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 19">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15h.01M4 12H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-3M9.5 1v10.93m4-3.93-4 4-4-4"/>
+                                            </svg>
+                                            Download Notulensi Rapat Evaluasi
+                                        </a>
+                                        <button id="complete-disseminate" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                            Selesaikan Tahap Evaluasi
+                                            <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
                             <!-- Tombol Download dan Upload -->
                             <div class="mt-6">
             

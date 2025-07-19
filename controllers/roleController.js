@@ -73,7 +73,7 @@ exports.save = async (req, res) => {
 
     // Gagal -> simpan pesan error
     req.session.errorMessage = 'Gagal menambahkan role.';
-    res.redirect('roles'); // Balik ke form role
+    res.redirect('/roles'); // Balik ke form role
   }
 };
 

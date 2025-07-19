@@ -3,6 +3,7 @@ const { getCache, setCache } = require('../utils/cacheService');
 const { apiBaseUrl } = require('../config');
 const { getAllPrograms } = require("../services/programService");
 const { delCache } = require('../utils/cacheService');
+const { getOutputsByProgramId } = require('../services/outputService');
 
 exports.index = async (req, res) => {
   try {
@@ -79,3 +80,16 @@ exports.save = async (req, res) => {
     res.redirect('programs'); // balik ke halaman form
   }
 };
+
+exports.outputsByProgram = async (req, res) => {
+  try {
+    const token = req.session.user?.accessToken;
+    const programId = req.params.id;
+
+    const outputs = await getOutputsByProgramId(programId, token);
+    res.json(outputs);
+  } catch (err) {
+    console.error('Gagal ambil output:', err.message);
+    res.status(500).json({ message: 'Gagal ambil output' });
+  }
+}

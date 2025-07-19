@@ -17,10 +17,7 @@
     animation-fill-mode: both;
     animation-duration: 0.01s;
 
-    box-shadow: theme('colors.primary.100') !important;
-    -webkit-text-fill-color: theme('colors.gray.200') !important;
-    color: theme('colors.gray.200') !important;
-    caret-color: theme('colors.gray.200') !important;
+    box-shadow: theme('colors.primary.30') !important;
     transition: background-color 9999s ease-in-out 0s;
   }
 
@@ -38,6 +35,7 @@
     -webkit-text-fill-color: theme('colors.white') !important;
     color: theme('colors.white') !important;
     caret-color: theme('colors.white') !important;
+    transition: background-color 9999s ease-in-out 0s;
   }
 
   @keyframes autofill-fix {
