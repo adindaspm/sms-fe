@@ -52,7 +52,7 @@
                         <option value="<%= encodeURIComponent(JSON.stringify(user.satker)) %>" class="bg-primary-30"><%= user.satker.name %></option>
                         <% listSatkers.forEach(s => { 
                             const isSelected = old?.satker && JSON.parse(decodeURIComponent(old.satker)).id === s.id; %>
-                            <option class="bg-primary-30" value="<%= encodeURIComponent(JSON.stringify(s)) %>" data-province="<%= s.province.code %>" <%= isSelected ? 'selected' : '' %>><%= s.name %></option>
+                            <option class="bg-primary-30" value="<%= encodeURIComponent(JSON.stringify(s)) %>" data-province="<%= s.provinceCode %>" <%= isSelected ? 'selected' : '' %>><%= s.name %></option>
                         <% }) %>
                       </select>                      
                     <label for="satker" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Satuan Kerja</label>
@@ -78,7 +78,7 @@
                         <option value="<%= encodeURIComponent(JSON.stringify(user.direktorat)) %>" class="bg-primary-30"><%= user.namaDirektorat %></option>
                         <% listDirektorats.forEach(d => { 
                             const isSelected = old?.direktorat && JSON.parse(decodeURIComponent(old.direktorat)).id === d.id; %>
-                            <option class="bg-primary-30" value="<%= encodeURIComponent(JSON.stringify(d)) %>" data-deputi="<%= d.deputi.code %>" <%= isSelected ? 'selected' : '' %>><%= d.name %></option>
+                            <option class="bg-primary-30" value="<%= encodeURIComponent(JSON.stringify(d)) %>" data-deputi="<%= d.deputiCode %>" <%= isSelected ? 'selected' : '' %>><%= d.name %></option>
                         <% }) %>
                       </select>                      
                     <label for="direktorat" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-300 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Direktorat</label>
