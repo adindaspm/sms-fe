@@ -77,7 +77,7 @@ async function showUserDetailModal(userId) {
       }};
       if (user.satker.code === '0000') {
         document.getElementById('direktoratField').classList.remove('hidden');
-        document.getElementById('detailDirektorat').value = user.namaDirektorat || '-';
+        document.getElementById('detailDirektorat').value = user.direktoratName || '-';
       } else {
         document.getElementById('direktoratField').classList.add('hidden');
       }

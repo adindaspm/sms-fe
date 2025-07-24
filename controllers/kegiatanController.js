@@ -61,7 +61,7 @@ exports.addForm = async (req, res) => {
     const programDtos = await getAllPrograms(token);
     const userId = req.session.user ? req.session.user.idUser : null;
     const userName = req.session.user ? req.session.user.namaUser : null;
-    const satkerName = req.session.user ? req.session.user.namaSatker : null;
+    const satkerName = req.session.user ? req.session.user.satkerName : null;
 
     // Cari ID Satker berdasarkan nama
     const satkerId = await getSatkerIdByName(satkerName, token);
