@@ -41,8 +41,19 @@ exports.loginUser = async (req, res) => {
     res.redirect('/');
 
   } catch (error) {
-    console.error('Login failed:', error.response ? error.response.data : error.message);
-    
+    if (error.response) {
+      // Ada response dari server (contoh: 400, 401, dsb)
+      req.session.errorMessage = 'Email dan password tidak valid!';
+      console.error('Login failed:', error.response.data || error.message);
+    } else if (error.request) {
+      // Request dikirim tapi tidak ada respons (server mati atau timeout)
+      console.error('Login failed: Tidak bisa menghubungi API. Hubungi developer.');
+      req.session.errorMessage = 'Gagal menghubungi API! Hubungi developer.';
+    } else {
+      // Error lain (misalnya error saat konfigurasi axios)
+      console.error('Login failed:', error.message);
+    }
+
     res.redirect('/login?error=true');
   }
 };
