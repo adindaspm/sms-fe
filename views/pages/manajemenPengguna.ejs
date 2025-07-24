@@ -1,7 +1,7 @@
 
         <div class="flex justify-between mb-6">
             <h1 class="text-4xl text-font font-extrabold dark:text-white">Manajemen Pengguna</h1>
-            <% if (loggedInUser && loggedInUser.roles.includes('ROLE_SUPERADMIN')) { %>
+            <% if (loggedInUser && loggedInUser.roles.some(role => role.includes('ROLE_SUPERADMIN'))) { %>
             <a href="/users/add">
                 <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Tambah Pengguna</button>
             </a>
@@ -86,6 +86,7 @@
                                 data-user='<%- JSON.stringify(userDto) %>' onclick="showUserDetailModal(<%= userDto.id %>)">
                                     Detail
                             </button>
+                            
                             <a href="/users/<%= userDto.id %>/update">
                                  <button class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700" 
                                 data-user='<%- JSON.stringify(userDto) %>'>

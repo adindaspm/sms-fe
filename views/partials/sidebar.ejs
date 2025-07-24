@@ -17,7 +17,7 @@
             </a>
         </li>
         </ul>
-        <% if (loggedInUser && loggedInUser.roles.includes('ROLE_OPERATOR')) { %>
+        <% if (loggedInUser && (loggedInUser.roles.some(role => role.includes('ROLE_OPERATOR')) || loggedInUser.roles.some(role => role.includes('ROLE_ADMIN')))) { %>
         <ul class="font-medium border-t py-2">
         <li>
             <a href="/surveys" class="flex items-center p-2 rounded-lg group
@@ -31,7 +31,7 @@
         </li>
         </ul>
         <% } %>
-        <% if (loggedInUser && loggedInUser.roles.includes('ROLE_SUPERADMIN')) { %>
+        <% if (loggedInUser && loggedInUser.roles.some(role => role.includes('ROLE_SUPERADMIN'))) { %>
         <ul class="font-medium border-t py-2">
         <button type="button" class="flex items-center w-full p-2 text-base text-fontdark transition duration-75 rounded-lg group hover:bg-primary-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
             <svg class="flex-shrink-0 w-5 h-5 text-icondark transition duration-75 dark:text-gray-400 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
@@ -88,7 +88,7 @@
         </ul>
         </ul>
         <% } %>
-        <% if (loggedInUser && loggedInUser.roles.includes('ROLE_ADMIN')) { %>
+        <% if (loggedInUser && (loggedInUser.roles.some(role => role.includes('ROLE_ADMIN')) || loggedInUser.roles.some(role => role.includes('ROLE_SUPERADMIN')))) { %>
         <ul class="font-medium border-t py-2">
         <li>
             <a href="/users" class="flex items-center p-2 rounded-lg group
