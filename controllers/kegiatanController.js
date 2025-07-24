@@ -251,17 +251,15 @@ exports.updateTahap = async (req, res) => {
     await delCache('all_kegiatans');
     await delCache(`kegiatan_${idKegiatan}`);
     await delCache(`statusTahapByKegiatan_${idKegiatan}`);
-    req.session.successMessage = 'Berhasil memperbarui status.';
-    res.redirect(`/surveys/detail/${idKegiatan}`);
+    // req.session.successMessage = 'Berhasil memperbarui status.';
+    return res.status(200).json({ success: true, message: 'Berhasil memperbarui status.' });
   } catch (error) {
     const { idKegiatan } = req.params;
     
     console.error('Error saat memperbarui status:', error.response?.data || error.message);
 
-    req.session.errorMessage = 'Gagal memperbarui status.';
-    res.redirect(`/surveys/detail/${idKegiatan}`);
-    // res.status(500).send('Internal Server Error');
-
+    // req.session.errorMessage = 'Gagal memperbarui status.';
+    return res.status(500).json({ success: false, message: 'Gagal memperbarui status.' });
   }
 };
 
@@ -346,11 +344,11 @@ exports.downloadFile = async (req, res) => {
     const token = req.session.user?.accessToken;
     const { idKegiatan, idTahap } = req.params;
 
-    const { stream, fileName } = await getFileTahapByKegiatanId(idKegiatan, idTahap, token);
-
+    const { stream, latestFileName } = await getFileTahapByKegiatanId(idKegiatan, idTahap, token);
+    
     // Tentukan ekstensi mime jika perlu, contoh untuk PDF:
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${latestFileName}"`);
 
     stream.pipe(res);
   } catch (error) {

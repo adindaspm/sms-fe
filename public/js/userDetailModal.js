@@ -11,7 +11,7 @@ async function showUserDetailModal(userId) {
       document.getElementById('detailRoles').value = user.roles?.map(r => r.name).join(', ') || '-';
       document.getElementById('detailStatus').value = user.isActive ? 'Aktif' : 'Tidak Aktif';
       document.getElementById('detailStatus').className = user.isActive ? 'block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 text-green-600 font-semibold' : 'block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 text-red-600 font-semibold';
-console.log(user);
+
       const btn = document.getElementById('gantiStatus');
       if (user.isActive === true){
         btn.innerText = 'Nonaktifkan pengguna';
@@ -21,11 +21,23 @@ console.log(user);
               method: 'POST'
             });
             if (res.ok) {
-              console.log(res);
-              alert('Pengguna dinonaktifkan');
+              // console.log(res);
+              await fetch('/set-success-message', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: 'Berhasil menonaktifkan pengguna' })
+              });
               location.reload(); // refresh untuk ambil status baru
             } else {
-              alert('Gagal menonaktifkan pengguna');
+              await fetch('/set-error-message', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: 'Gagal menonaktifkan pengguna' })
+              });
             }
           } catch (err) {
             console.error(err);
@@ -40,11 +52,23 @@ console.log(user);
               method: 'POST'
             });
             if (res.ok) {
-              console.log(res);
-              alert('Pengguna diaktifkan');
+              // console.log(res);
+              await fetch('/set-success-message', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: 'Berhasil mengaktifkan pengguna' })
+              });
               location.reload();
             } else {
-              alert('Gagal mengaktifkan pengguna');
+              await fetch('/set-error-message', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: 'Gagal mengaktifkan pengguna' })
+              });
             }
           } catch (err) {
             console.error(err);
@@ -52,7 +76,6 @@ console.log(user);
           }
       }};
       if (user.satker.code === '0000') {
-        console.log(user.namaDirektorat);
         document.getElementById('direktoratField').classList.remove('hidden');
         document.getElementById('detailDirektorat').value = user.namaDirektorat || '-';
       } else {

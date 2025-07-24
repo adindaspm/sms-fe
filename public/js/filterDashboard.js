@@ -7,6 +7,7 @@
   const paginationContainer = document.getElementById('paginationContainer');
   const searchInput = document.getElementById('searchInput');
   const yearFilter = document.getElementById('yearFilter');
+  const direktoratFilter = document.getElementById('direktoratFilter');
 
   function renderSurveiList(filteredData) {
     surveiListContainer.innerHTML = '';
@@ -23,7 +24,7 @@
       const html = `
         <div>
           <h3 class="text-base font-medium">${survei.name}</h3>
-          <p class="text-sm text-gray-800">Status: ${survei.status} | Direktorat: ${survei.namaDirektoratPJ}</p>
+          <p class="text-sm text-gray-800">Status: ${survei.status} | Direktorat: ${survei.direktoratPjName}</p>
           <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
             <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style="width: ${survei.progress}%">${survei.progress}%</div>
           </div>
@@ -51,11 +52,13 @@
   function getFilteredData() {
     const keyword = searchInput.value.toLowerCase();
     const year = yearFilter.value;
+    const direktorat = direktoratFilter.value;
 
     return listSurvei.filter(s => {
       const matchKeyword = s.name.toLowerCase().includes(keyword);
-      const matchYear = !year || s.year === year;
-      return matchKeyword && matchYear;
+      const matchYear = !year || new Date(s.startDate).getFullYear().toString() === year;
+      const matchDirektorat = !direktorat || s.direktoratPjName === direktorat;
+      return matchKeyword && matchYear && matchDirektorat;
     });
   }
 
@@ -74,6 +77,11 @@
     currentPage = 1;
     updateUI();
   });
+
+  direktoratFilter.addEventListener('change', () => {
+    currentPage = 1;
+    updateUI();
+  })
 
   // Inisialisasi awal
   updateUI();

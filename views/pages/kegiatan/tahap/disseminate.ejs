@@ -33,7 +33,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% const subtahapLabels = ['Penyusunan draft publikasi', 'Penyusunan infografis', 'Review publikasi', 'Penyelenggaraan diseminasi']; %>
+                                        <% const subtahapLabels = ['Perbarui sistem output', 'Membuat produk diseminasi', 'Mengelola rilis produk diseminasi', 'Promosi produk diseminasi', 'Mengelola bantuan konsumen diseminasi']; %>
                                         <% const tahap7 = kegiatan.statusTahap?.tahap7 || {}; %>
                                         <% const subtahapKeys = Object.keys(tahap7).filter(key => !key.includes('tanggal')); %>
 
@@ -79,10 +79,12 @@
                                             <td class="px-6 py-4">
                                                 <button
                                                     type="button"
-                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700"
+                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700
+                                                    <% if (status == 'Selesai') { %> cursor-not-allowed bg-gray-700 <% } %>"
                                                     data-modal-target="popup-modal"
                                                     data-modal-toggle="popup-modal"
-                                                    data-url="/surveys/tahap/<%= kegiatan.id %>/7/<%= index %>">
+                                                    data-url="/surveys/tahap/<%= kegiatan.id %>/7/<%= index %>"
+                                                    <% if (status == 'Selesai') { %> disabled <% } %>>
                                                     Tandai Selesai
                                                 </button>
                                             </td>
@@ -106,7 +108,7 @@
                                             </svg>
                                             Download Bukti Diseminasi
                                         </a>
-                                        <button id="complete-disseminate" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                        <button id="" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                             Selesaikan Tahap Diseminasi
                                             <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>

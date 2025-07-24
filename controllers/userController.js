@@ -111,14 +111,18 @@ exports.detail = async (req, res) => {
 };
 
 exports.activate = async (req, res) => {
-  await updateUserStatus(req, res, true, 'diaktifkan');
+  try {
+    await updateUserStatus(req, res, true);
+  } catch (error) {
+    
+  } 
 };
 
 exports.deactivate = async (req, res) => {
-  await updateUserStatus(req, res, false, 'dinonaktifkan');
+  await updateUserStatus(req, res, false);
 };
 
-async function updateUserStatus(req, res, isActive, actionText) {
+async function updateUserStatus(req, res, isActive) {
   try {
     const token = req.session.user?.accessToken;
     if (!token) return res.redirect('/login');
@@ -127,11 +131,9 @@ async function updateUserStatus(req, res, isActive, actionText) {
     await (isActive ? activateUser(id, token) : deactivateUser(id, token));
     await Promise.all([delCache(`user_${id}`), delCache('all_users')]);
 
-    req.session.successMessage = `Pengguna berhasil ${actionText}.`;
-    res.redirect('/users');
+    res.status(200).send('Ganti status berhasil')
   } catch (err) {
     console.log(err);
-    req.session.errorMessage = `Gagal ${actionText} pengguna.`;
     res.status(500).send('Internal server error');
   }
 }

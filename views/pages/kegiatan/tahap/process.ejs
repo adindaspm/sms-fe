@@ -33,7 +33,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% const subtahapLabels = ['Pembersihan data', 'Pemrosesan data mentah', 'Konversi format data', 'Imputasi data']; %>
+                                        <% const subtahapLabels = ['Integrasi data', 'Klasifikasi dan pengkodean', 'Review dan validasi', 'Edit dan imputasi data', 'Membuat variabel turunan', 'Penghitungan bobot', 'Penghitungan agregasi', 'Finalisasi data']; %>
                                         <% const tahap5 = kegiatan.statusTahap?.tahap5 || {}; %>
                                         <% const subtahapKeys = Object.keys(tahap5).filter(key => !key.includes('tanggal')); %>
 
@@ -79,10 +79,12 @@
                                             <td class="px-6 py-4">
                                                 <button
                                                     type="button"
-                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700"
+                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700
+                                                    <% if (status == 'Selesai') { %> cursor-not-allowed bg-gray-700 <% } %>"
                                                     data-modal-target="popup-modal"
                                                     data-modal-toggle="popup-modal"
-                                                    data-url="/surveys/tahap/<%= kegiatan.id %>/5/<%= index %>">
+                                                    data-url="/surveys/tahap/<%= kegiatan.id %>/5/<%= index %>"
+                                                    <% if (status == 'Selesai') { %> disabled <% } %>>
                                                     Tandai Selesai
                                                 </button>
                                             </td>

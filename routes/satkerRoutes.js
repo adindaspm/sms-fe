@@ -9,5 +9,6 @@ router.get('/add', satkerController.addForm);
 router.post('/save', validateSatker, handleValidation('layout', satkerController.renderAddForm), satkerController.save);
 router.get('/:id/update', satkerController.updateForm);
 router.post('/:id/update', validateSatker, handleValidation('layout', satkerController.renderUpdateForm), satkerController.update);
+router.get('/:id/users', satkerController.usersBySatker);
 
 module.exports = router;

@@ -23,27 +23,15 @@ async function getDirektoratsByDeputiId(deputiId, token) {
   if (cached) return cached;
 
   try {
-    const response = await axios.get(`${apiBaseUrl}/deputis/${deputiId}/listDirektorats`, {
+    const response = await axios.get(`${apiBaseUrl}/api/direktorats/deputi/${deputiId}`, {
       headers: { 
         Authorization: `Bearer ${token}` },
     });
 
-    const data = response.data._embedded?.direktorats || [];
-    const direktorats = data.map((d) => {
-      const selfHref = d._links?.self?.href || '';
-      const idMatch = selfHref.match(/\/direktorats\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      return {
-        id,
-        name: d.name,
-        code: d.code,
-      };
-    });
-
-    if (direktorats.length > 0) {
-      await setCache(cacheKey, direktorats, 60*60);
-    }
+    const direktorats = response.data;
+    
+    await setCache(cacheKey, direktorats, 60*60);
+    
     return direktorats;
   } catch (error) {
     console.error("Error di getDirektoratsByDeputiId:", error.message);

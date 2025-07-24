@@ -5,9 +5,33 @@
     const idKegiatan= document.getElementById("kegiatanId").value;
 
     function updateSubTahapVisibility() {
-      const selected = tahapSelect.value;
-      const visibleCount = selected === "specifyneeds" ? 6 : 
-                           ["design", "build", "collect", "process", "analyse", "disseminate", "evaluate"].includes(selected) ? 4 : 0;
+      const tahapSlug = tahapSelect.value;
+
+      // Mapping tahap slug ke idTahap
+      const tahapMap = {
+        specifyneeds: 1,
+        design: 2,
+        build: 3,
+        collect: 4,
+        process: 5,
+        analyse: 6,
+        disseminate: 7,
+        evaluate: 8
+      };
+
+      const idTahap = tahapMap[tahapSlug];
+      const visibleMap = {
+        1: 6,
+        2: 6,
+        3: 7,
+        4: 4,
+        5: 8,
+        6: 5,
+        7: 5,
+        8: 3
+      };
+
+      const visibleCount = visibleMap[idTahap] || 0; // fallback ke 0 jika idTahap tidak ada
 
       subtahapDivs.forEach((div) => {
         const subtahapNum = parseInt(div.getAttribute("data-subtahap"));
@@ -37,7 +61,18 @@
       };
 
       const idTahap = tahapMap[tahapSlug];
-      const visibleCount = idTahap === 1 ? 6 : 4;
+      const visibleMap = {
+        1: 6,
+        2: 6,
+        3: 7,
+        4: 4,
+        5: 8,
+        6: 5,
+        7: 5,
+        8: 3
+      };
+
+      const visibleCount = visibleMap[idTahap] || 0; // fallback ke 0 jika idTahap tidak ada
 
       const requests = [];
 

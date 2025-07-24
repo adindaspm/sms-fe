@@ -33,7 +33,7 @@ const { getAllSatkers } = require('./services/satkerService');
 const { getAllPrograms } = require('./services/programService');
 const { validatePass } = require('./validators/passValidator');
 const handleValidation = require('./middleware/handleValidation');
-const { getAllKegiatans } = require('./services/kegiatanService');
+const { getAllKegiatans, getStatisticsDirektorat, getStatisticsDeputi } = require('./services/kegiatanService');
 const { getAllDirektorats } = require('./services/direktoratService');
 
 // Set view engine EJS
@@ -285,6 +285,8 @@ app.get('/dashboardcoba', async (req, res) => {
     selectedProgram: null,
     direktorats: await getAllDirektorats(token),
     selectedDirektorat: '',
+    statisticsDirektorat: await getStatisticsDirektorat(token), 
+    statisticsDeputi: await getStatisticsDeputi(token), 
     totalSurvei: totalSurvei,
     surveiProses: surveiDalamProgres,
     surveiSelesai: surveiSelesai,
@@ -328,5 +330,5 @@ app.use('/surveys', checkRole(['ROLE_OPERATOR']), kegiatanRoutes);
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running...`);
 });

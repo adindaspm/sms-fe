@@ -73,6 +73,30 @@ async function getProvinceBySatkerId(satkerId, token) {
   }
 }
 
+async function getUsersBySatkerId(satkerId, token) {
+  try {
+    const cacheKey = `usersBySatker_${satkerId}`;
+    const cached = await getCache(cacheKey);
+    if (cached) return cached;
+
+    const response = await axios.get(`${apiBaseUrl}/api/users/satker/${satkerId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    });
+
+    // Ambil field name dan code saja dari responsenya
+    const users = response.data;
+
+    await setCache(cacheKey, users, 60*60);
+    return users;
+  } catch (err) {
+    console.error(`Gagal ambil users untuk satkerId ${satkerId}:`, err.message);
+    return null; // supaya tidak crash kalau gagal
+  }
+}
+
 async function getSatkerIdByName(query, token) {
   try {
     const sanitizedName = query.replace(/^Badan Pusat Statistik\s*/, '');
@@ -104,4 +128,4 @@ async function getSatkerIdByName(query, token) {
   }
 }
 
-module.exports = { getAllSatkers, getSatkerById, getProvinceBySatkerId, getSatkerIdByName };
+module.exports = { getAllSatkers, getSatkerById, getProvinceBySatkerId, getUsersBySatkerId, getSatkerIdByName };

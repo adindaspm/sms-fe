@@ -30,8 +30,8 @@ async function getKegiatanById(id, token){
 
   let kegiatan = response.data; // data kegiatan per ID
   const statusTahap = await getStatusTahapByKegiatanId(id,token);
-  const progress = ( statusTahap.tahap1Percentage + statusTahap.tahap2Percentage + statusTahap.tahap3Percentage + statusTahap.tahap4Percentage + 
-    statusTahap.tahap5Percentage + statusTahap.tahap6Percentage + statusTahap.tahap7Percentage + statusTahap.tahap8Percentage ) / 8
+  const progress = (( statusTahap.tahap1Percentage * 6 + statusTahap.tahap2Percentage * 6 + statusTahap.tahap3Percentage * 7 + statusTahap.tahap4Percentage * 4 + 
+    statusTahap.tahap5Percentage * 8 + statusTahap.tahap6Percentage * 5 + statusTahap.tahap7Percentage * 5 + statusTahap.tahap8Percentage * 3 ) / 44 ).toFixed(2)
   kegiatan = {
     id: id,
     ...kegiatan,
@@ -41,6 +41,40 @@ async function getKegiatanById(id, token){
 
   await setCache(cacheKey, kegiatan, 60); // TTL 60 detik
   return kegiatan;
+}
+
+async function getStatisticsDirektorat(token){
+  const cacheKey = `statisticsDirektorat`;
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+  
+  const response = await axios.get(`${apiBaseUrl}/api/kegiatans/statistics/direktorat`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+  let statisticsDirektorat = response.data;
+
+  await setCache(cacheKey, statisticsDirektorat, 60); // TTL 60 detik
+  return statisticsDirektorat;
+}
+
+async function getStatisticsDeputi(token){
+  const cacheKey = `statisticsDeputi`;
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+  
+  const response = await axios.get(`${apiBaseUrl}/api/kegiatans/statistics/deputi`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+  let statisticsDeputi = response.data;
+
+  await setCache(cacheKey, statisticsDeputi, 60); // TTL 60 detik
+  return statisticsDeputi;
 }
 
 async function getStatusTahapByKegiatanId(kegiatanId, token) {
@@ -86,4 +120,4 @@ async function getFileTahapByKegiatanId(kegiatanId, tahapId, token) {
   return { stream: downloadResponse.data, latestFileName };
 }
 
-module.exports = { getAllKegiatans, getKegiatanById, getStatusTahapByKegiatanId, getFileTahapByKegiatanId };
+module.exports = { getAllKegiatans, getKegiatanById, getStatusTahapByKegiatanId, getStatisticsDeputi, getStatisticsDirektorat, getFileTahapByKegiatanId };

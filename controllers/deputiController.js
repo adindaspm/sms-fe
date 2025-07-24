@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { getCache, setCache } = require('../utils/cacheService');
 const { apiBaseUrl } = require('../config');
-const { getAllDeputis } = require("../services/deputiService");
+const { getAllDeputis, getDirektoratsByDeputiId } = require("../services/deputiService");
 const { delCache } = require('../utils/cacheService');
 
 exports.index = async (req, res) => {
@@ -21,6 +21,28 @@ exports.index = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching deputis:', error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+exports.direktoratsByDeputi = async (req, res) => {
+  try {
+    const token = req.session.user ? req.session.user.accessToken : null;
+    if (!token) {
+      return res.redirect('/login');
+    }
+
+    const { id } = req.params;
+    const direktoratDtos = await getDirektoratsByDeputiId(id, token);
+
+    res.render('layout', {
+      title: 'Daftar Direktorat | SMS',
+      page: 'pages/direktoratsByDeputi',
+      activePage: 'deputis',
+      direktoratDtos
+    });
+  } catch (error) {
+    console.error('Error fetching direktoratsByDeputi:', error);
     res.status(500).send('Internal Server Error');
   }
 }

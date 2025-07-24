@@ -2,7 +2,7 @@ const axios = require('axios');
 const { getCache, setCache } = require('../utils/cacheService');
 const { apiBaseUrl } = require('../config');
 const { getAllProvinces } = require("../services/provinceService");
-const { getSatkerById, getAllSatkers } = require("../services/satkerService");
+const { getSatkerById, getAllSatkers, getUsersBySatkerId } = require("../services/satkerService");
 const { delCache } = require('../utils/cacheService');
 
 exports.index = async (req, res) => {
@@ -165,5 +165,27 @@ exports.update = async (req, res) => {
     console.error('Gagal memperbarui satker:', error?.response?.data || error.message);
     req.session.errorMessage = 'Gagal memperbarui satuan kerja.';
     res.redirect(req.get('Referer'));
+  }
+};
+
+exports.usersBySatker = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const token = req.session.user?.accessToken;
+
+    const satker = await getSatkerById(id, token);
+    const users = await getUsersBySatkerId(id, token);
+    res.render('layout', {
+      title: 'Daftar Pengguna | SMS',
+      page: 'pages/usersBySatker',
+      activePage: 'satkers',
+      satker,
+      users,
+      errors: null,
+      old: null
+    });
+  } catch (error) {
+    console.error('Gagal ambil users pada satker:', error.message);
+    res.send(500).status("Internal Server Error");
   }
 };

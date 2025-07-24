@@ -226,13 +226,13 @@ exports.updateUser = async (id, payload, token) => {
 };
 
 exports.activateUser = async (id, token) => {
-  await axios.patch(`${apiBaseUrl}/api/users/${id}`, { isActive: true }, { headers: { Authorization: `Bearer ${token}` } });
+  await axios.post(`${apiBaseUrl}/api/users/${id}/activate`, null, { headers: { Authorization: `Bearer ${token}` } });
   await delCache('all_users');
   await delCache(`user_${id}`);
 };
 
 exports.deactivateUser = async (id, token) => {
-  await axios.patch(`${apiBaseUrl}/api/users/${id}`, { isActive: false }, { headers: { Authorization: `Bearer ${token}` } });
+  await axios.post(`${apiBaseUrl}/api/users/${id}/deactivate`, null, { headers: { Authorization: `Bearer ${token}` } });
   await delCache('all_users');
   await delCache(`user_${id}`);
 };

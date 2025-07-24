@@ -1,4 +1,6 @@
-<div class="p-6">
+<h1 class="text-4xl font-extrabold text-fontdark dark:text-white">Dashboard</h1>
+<!-- <h2 class="text-2xl font-normal text-font dark:text-white mb-6">Superadmin</h2> -->
+<div class="mt-6">
   <!-- Filter Section -->
   <div class="flex flex-wrap items-center gap-4 mb-6 text-sm">
     <select class="p-2 border rounded w-1/6" name="year">
@@ -41,18 +43,18 @@
     </div>
   </div>
 
-  <!-- Chart Progress Fase -->
+  <!-- Chart Progress Direktorat -->
   <div class="bg-primary-30 rounded-lg p-4 shadow mb-6">
-    <h2 class="text-lg font-semibold mb-2">Distribusi Survei per Fase</h2>
-    <!-- <canvas id="faseChart" height="100"></canvas> -->
-    <div id="faseChart"></div>
+    <h2 class="text-lg font-semibold mb-2">Distribusi Survei per Direktorat</h2>
+    <!-- <canvas id="direktoratChart" height="100"></canvas> -->
+    <div id="direktoratChart"></div>
   </div>
 
   <!-- Detail Survei -->
   <div class="bg-primary-30 rounded-lg p-4 shadow mb-6">
     <h2 class="text-lg font-semibold mb-2">Progress Survei</h2>
-    <div class="flex flex-row md:flex-row md:items-center md:justify-between mb-4 gap-2">
-      <input id="searchInput" type="text" placeholder="Cari nama survei..." class="w-full md:w-1/3 px-3 py-2 rounded border border-gray-300 focus:outline-none">
+    <div class="flex flex-row md:flex-row md:items-center md:justify-between mb-4 gap-2 text-sm">
+      <input id="searchInput" type="text" placeholder="Cari nama survei..." class="w-full text-sm md:w-1/3 px-3 py-2 rounded border border-gray-300 focus:outline-none">
       
       <select id="yearFilter" class="w-full md:w-1/4 px-3 py-2 rounded border border-gray-300 focus:outline-none">
         <option value="">Semua Tahun</option>
@@ -63,7 +65,7 @@
       <select id="direktoratFilter" class="w-full md:w-1/4 px-3 py-2 rounded border border-gray-300 focus:outline-none">
         <option value="">Semua Direktorat</option>
         <% direktorats.forEach(d => { %>
-          <option value="<%= d %>" <%= d === selectedDirektorat ? 'selected' : '' %>><%= d.name %></option>
+          <option value="<%= d.name %>" <%= d === selectedDirektorat ? 'selected' : '' %>><%= d.name %></option>
         <% }) %>
       </select>
       <select id="direktoratFilter" class="w-full md:w-1/4 px-3 py-2 rounded border border-gray-300 focus:outline-none">
@@ -127,11 +129,11 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/filterDashboard.js"></script>
 <script>
-  const fase = {
+  const chartDirektorat = {
     colors: ["#1A56DB", "#FDBA8C"],
     series: {
-      name: "Jumlah survei per fase",
-      data: Object.values(<%= JSON.stringify(faseMap) %>),
+      name: "Jumlah survei per direktorat",
+      data: Object.values(<%= JSON.stringify(statisticsDirektorat) %>),
     },
     chart: {
       type: "bar",
@@ -208,9 +210,9 @@
       opacity: 1,
     },
   };
-  if(document.getElementById("faseChart") && typeof ApexCharts !== 'undefined') {
-    const chart = new ApexCharts(document.getElementById("faseChart"), fase);
-    console.log(<%= faseMap %>);
+  if(document.getElementById("direktoratChart") && typeof ApexCharts !== 'undefined') {
+    const chart = new ApexCharts(document.getElementById("direktoratChart"), chartDirektorat);
+    console.log(<%= statisticsDirektorat %>);
     chart.render();
   }
 </script>

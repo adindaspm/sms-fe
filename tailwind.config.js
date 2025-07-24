@@ -9,6 +9,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        'toast-progress': {
+          from: { width: '100%' },
+          to: { width: '0%' },
+        },
+      },
+      animation: {
+        'toast-progress': 'toast-progress 3s linear forwards',
+      },
       colors: {
         primary: {
           100:'#0099dd',

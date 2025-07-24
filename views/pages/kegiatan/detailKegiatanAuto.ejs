@@ -7,10 +7,10 @@
         <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
                 <li class="me-2" role="presentation">
-                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="umum-tab" data-tabs-target="#umum" type="button" role="tab" aria-controls="umum" aria-selected="false">Umum</button>
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="umum-tab" data-tabs-target="#umum" type="button" role="tab" aria-controls="umum">Umum</button>
                 </li>
                 <li class="me-2" role="presentation">
-                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-white dark:hover:text-gray-300" id="tahap-tab" data-tabs-target="#tahap" type="button" role="tab" aria-controls="tahap" aria-selected="false">Tahap</button>
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-primary-600 hover:border-primary-100 dark:hover:text-primary-700" id="tahap-tab" data-tabs-target="#tahap" type="button" role="tab" aria-controls="tahap">Tahap</button>
                 </li>
             </ul>
         </div>
@@ -18,7 +18,7 @@
         <!-- Main Tab Content -->
         <div id="default-tab-content">
             <!-- Tab Umum Content -->
-            <div class="hidden p-4 rounded-lg bg-primary-30 dark:bg-gray-800" id="umum" role="tabpanel" aria-labelledby="umum-tab">
+            <div class="hidden p-4 rounded-lg bg-primary-30 dark:bg-gray-800" id="umum" role="tabpanel" aria-labelledby="umum-tab" >
                 <form class="w-full mx-auto">
                     <!-- Umum form fields -->
                     <div class="relative z-0 w-full mb-5 group">
@@ -55,10 +55,10 @@
                     <div class="relative z-0 w-full mb-5 group">
                         <div class="pt-2 5">
                             <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-                                <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style="width: 45%"> 45%</div>
+                                <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style="width: <%= kegiatan.progress %>%"><%= kegiatan.progress %>%</div>
                             </div>
                         </div>
-                        <label class="absolute text-sm text-fontdark dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Status</label>
+                        <label class="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Status</label>
                     </div>
                 </form>
             </div>
@@ -77,8 +77,7 @@
                                 id="specifyneeds-tab"
                                 data-tabs-target="#specifyneeds"
                                 role="tab"
-                                aria-controls="specifyneeds"
-                                aria-selected="true">
+                                aria-controls="specifyneeds">
                                 Specify Needs
                             </button>
                         </li>
@@ -91,7 +90,7 @@
                             const currPercentage = tahap[`tahap${index}Percentage`];
                             const prevPercentage = tahap[`tahap${index - 1}Percentage`];
 
-                            const isDisabled = currPercentage === 0 && prevPercentage !== 100;
+                            const isDisabled = prevPercentage !== 100;
                             const label = tahapLabels[i];
                             const id = label.toLowerCase();
                         %>
@@ -102,7 +101,6 @@
                                 data-tabs-target="#<%= id %>"
                                 role="tab"
                                 aria-controls="<%= id %>"
-                                aria-selected="false"
                                 <%= isDisabled ? 'disabled' : '' %>>
                                 <%= label %>
                                 <% if (isDisabled) { %>
@@ -132,7 +130,7 @@
         </div>
 
 <!-- Modal Input Tanggal Rencana -->
-<div id="input-rencana" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="input-rencana" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
@@ -166,7 +164,7 @@
                             <option value="evaluate">Evaluate</option>
                         </select>
                     </div>
-                    <% for (let i = 1; i <= 6; i++) { %>
+                    <% for (let i = 1; i <= 8; i++) { %>
                         <div class="col-span-2 sm:col-span-1 subtahap" id="subtahap-wrapper-<%= i %>" data-subtahap="<%= i %>">
                             <label for="subTahap<%= i %>" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subtahap <%= i %></label>
                             <div class="relative max-w-sm">
@@ -196,3 +194,4 @@
 </div> 
 
 <script src="/js/tanggalRencana.js"></script>
+<script src="/js/saveTab.js"></script>
