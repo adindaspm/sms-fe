@@ -17,7 +17,9 @@
             </a>
         </li>
         </ul>
-        <% if (loggedInUser && (loggedInUser.roles.some(role => role.includes('ROLE_OPERATOR')) || loggedInUser.roles.some(role => role.includes('ROLE_ADMIN')))) { %>
+        <% if (loggedInUser && loggedInUser.roles.some(role =>
+            ['ROLE_ADMIN', 'ROLE_ADMIN_PUSAT', 'ROLE_ADMIN_PROVINSI', 'ROLE_ADMIN_SATKER', 'ROLE_OPERATOR', 'ROLE_OPERATOR_PUSAT', 'ROLE_OPERATOR_PROVINSI', 'ROLE_OPERATOR_SATKER'].includes(role)
+        )) { %>
         <ul class="font-medium border-t py-2">
         <li>
             <a href="/surveys" class="flex items-center p-2 rounded-lg group
@@ -88,7 +90,9 @@
         </ul>
         </ul>
         <% } %>
-        <% if (loggedInUser && (loggedInUser.roles.some(role => role.includes('ROLE_ADMIN')) || loggedInUser.roles.some(role => role.includes('ROLE_SUPERADMIN')))) { %>
+        <% if (loggedInUser && loggedInUser.roles.some(role =>
+            ['ROLE_ADMIN', 'ROLE_ADMIN_PUSAT', 'ROLE_ADMIN_PROVINSI', 'ROLE_ADMIN_SATKER', 'ROLE_SUPERADMIN'].includes(role)
+        )) { %>
         <ul class="font-medium border-t py-2">
         <li>
             <a href="/users" class="flex items-center p-2 rounded-lg group

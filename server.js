@@ -85,8 +85,8 @@ app.use('/programs', checkRole(['ROLE_SUPERADMIN']), programRoutes);
 app.use('/provinces', checkRole(['ROLE_SUPERADMIN']), provinceRoutes);
 app.use('/roles', checkRole(['ROLE_SUPERADMIN']), roleRoutes);
 app.use('/satkers', checkRole(['ROLE_SUPERADMIN']), satkerRoutes);
-app.use('/users', checkRole(['ROLE_SUPERADMIN', 'ROLE_ADMIN']), userRoutes);
-app.use('/surveys', checkRole(['ROLE_OPERATOR']), kegiatanRoutes);
+app.use('/users', checkRole(['ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_ADMIN_PUSAT', 'ROLE_ADMIN_PROVINSI', 'ROLE_ADMIN_SATKER']), userRoutes);
+app.use('/surveys', checkRole(['ROLE_OPERATOR', 'ROLE_OPERATOR_PUSAT', 'ROLE_OPERATOR_PROVINSI', 'ROLE_OPERATOR_SATKER', 'ROLE_ADMIN', 'ROLE_ADMIN_PUSAT', 'ROLE_ADMIN_PROVINSI', 'ROLE_ADMIN_SATKER','ROLE_SUPERADMIN']), kegiatanRoutes);
 
 // Start server
 app.listen(port, () => {
