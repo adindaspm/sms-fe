@@ -17,5 +17,6 @@ router.post('/tahap/:idKegiatan/:idTahap/:idSubTahap', kegiatanController.update
 router.post('/tahap/:idKegiatan/:idTahap/:idSubTahap/rencana', kegiatanController.updateTanggalTahap);
 router.get('/files/tahap/:idKegiatan/:idTahap', kegiatanController.downloadFile);
 router.post('/upload/tahap/:idKegiatan/:idTahap', upload.single('file'), kegiatanController.uploadFile);
+router.get('/summary', kegiatanController.getKegiatanSummary);
 
 module.exports = router;

@@ -24,7 +24,7 @@
       const html = `
         <div>
           <h3 class="text-base font-medium">${survei.name}</h3>
-          <p class="text-sm text-gray-800">Status: ${survei.status} | Direktorat: ${survei.direktoratPjName}</p>
+          <p class="text-sm text-gray-800">Status: ${survei.progress} | Direktorat: ${survei.direktoratPjName}</p>
           <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
             <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style="width: ${survei.progress}%">${survei.progress}%</div>
           </div>

@@ -4,7 +4,8 @@ const FormData = require('form-data');
 const fs = require('fs');
 const path = require('path');
 const { apiBaseUrl } = require('../config');
-const { getAllKegiatans, getKegiatanById, getFileTahapByKegiatanId } = require("../services/kegiatanService");
+const kegiatanService = require('../services/kegiatanService');
+const { getAllKegiatans, getFilteredKegiatans, getKegiatanById, getFileTahapByKegiatanId } = require("../services/kegiatanService");
 const { getAllOutputs } = require("../services/outputService");
 const { getAllPrograms } = require("../services/programService");
 const { getSatkerIdByName } = require("../services/satkerService");
@@ -15,12 +16,12 @@ exports.index = async (req, res) => {
   try {
     const token = req.session.user ? req.session.user.accessToken : null;
     const namaUserLogin = req.session.user ? req.session.user.namaUser : null;
-
+    const direktoratId = req.session.user ? req.session.user.direktoratId : null;
     if (!token || !namaUserLogin) {
       return res.redirect('/login');
     }
 
-    const kegiatans = await getAllKegiatans(token);
+    const kegiatans = await getFilteredKegiatans(direktoratId, token);
 
     // Kirim data ke halaman dengan 'kegiatans'
     res.render('layout', {
@@ -30,8 +31,9 @@ exports.index = async (req, res) => {
       kegiatans  // Kirim data kegiatan ke view
     });
   } catch (error) {
-    console.error('Error fetching kegiatan:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error fetching kegiatan:', error.status, ' ', error.data.message);
+    req.session.errorMessage = 'Terjadi kesalahan server! Gagal mengambil data.'
+    res.redirect('/');
   }
 };
 
@@ -77,8 +79,9 @@ exports.addForm = async (req, res) => {
       errors: null
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+    console.error('Gagal membuka form tambah kegiatan:', error.message);
+    req.session.errorMessage = 'Gagal memuat form! Coba lagi nanti.';
+    res.redirect('/surveys'); // fallback kalo error
   }
 };
 
@@ -183,7 +186,7 @@ exports.updateForm = async (req, res) => {
   } catch (error) {
     console.error('Gagal ambil detail kegiatan:', error.message);
     req.session.errorMessage = 'Gagal ambil data kegiatan';
-    res.redirect('/'); // fallback kalo error
+    res.redirect('/surveys'); // fallback kalo error
     // res.status(500).send('Internal Server Error');
 
   }
@@ -383,5 +386,30 @@ exports.downloadFile = async (req, res) => {
     console.error('Error download file:', error.response?.data || error.message);
     req.session.errorMessage = 'Gagal mendownload file.';
     res.redirect(`/surveys/detail/${req.params.idKegiatan}`);
+  }
+};
+
+exports.getKegiatanSummary = async (req, res) => {
+  try {
+    const token = req.session.user?.accessToken;
+
+    const kegiatans = await kegiatanService.getAllKegiatansWithStatus(token);
+
+    const summary = {
+      total: kegiatans.length,
+      status: await kegiatanService.countKategoriStatus(kegiatans),
+      perFase: await kegiatanService.countByKategoriTahap(kegiatans),
+      perDirektorat: kegiatanService.countByDirektorat(kegiatans),
+      perProgram: kegiatanService.countByProgram(kegiatans),
+      perOutput: kegiatanService.countByOutput(kegiatans),
+      perSatker: kegiatanService.countBySatker(kegiatans),
+      perTahun: kegiatanService.countByYear(kegiatans),
+      perBulan: kegiatanService.countByMonth(kegiatans)
+    };
+
+    res.json(summary);
+  } catch (error) {
+    console.error('Gagal ambil ringkasan kegiatan:', error.message);
+    res.status(500).json({ message: 'Gagal ambil ringkasan kegiatan' });
   }
 };

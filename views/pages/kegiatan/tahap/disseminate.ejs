@@ -102,7 +102,7 @@
                                     <p class="mt-1 text-sm text-gray-700 dark:text-gray-300" id="file">Upload file bukti pendukung diseminasi</p>
                                     <div class="mt-6 flex justify-between w-full">
                                         <button type="submit" class="text-gray-200 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Upload File</button>            
-                                        <a data-tooltip-target="<%= !kegiatan.statusTahap.tahap7.uploadFileName ? 'tooltip-download' : '' %>" data-tooltip-style="light" href="<%= !kegiatan.statusTahap.tahap7.uploadFileName ? '#' : `/surveys/files/tahap/${kegiatan.id}/7` %>" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-teal-700 rounded-lg focus:ring-4 focus:outline-none dark:focus:ring-teal-800
+                                        <a data-tooltip-target="<%= !kegiatan.statusTahap.tahap7.uploadFileName ? 'tooltip-downloadDisseminate' : '' %>" data-tooltip-style="light" href="<%= !kegiatan.statusTahap.tahap7.uploadFileName ? '#' : `/surveys/files/tahap/${kegiatan.id}/7` %>" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-teal-700 rounded-lg focus:ring-4 focus:outline-none dark:focus:ring-teal-800
                                             <%= !kegiatan.statusTahap.tahap7.uploadFileName ? 'bg-gray-400 cursor-not-allowed' : 'bg-teal-700 hover:bg-teal-800 focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800' %>" 
                                             <%= !kegiatan.statusTahap.tahap7.uploadFileName ? 'aria-disabled="true" tabindex="-1"' : '' %>>
                                             <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 19">
@@ -110,11 +110,11 @@
                                             </svg>
                                             Download Bukti Diseminasi
                                         </a>
-                                        <div id="tooltip-download" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 tooltip">
+                                        <div id="tooltip-downloadDisseminate" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 tooltip">
                                             Upload bukti terlebih dahulu!
                                             <div class="tooltip-arrow" data-popper-arrow></div>
                                         </div>
-                                        <button class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                                        <button type="button" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
                                             data-modal-target="popup-modal"
                                             data-modal-toggle="popup-modal"
                                             data-url="/surveys/completeTahap/<%= kegiatan.id %>/7">

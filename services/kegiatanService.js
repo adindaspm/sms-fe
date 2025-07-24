@@ -2,7 +2,7 @@ const axios = require('axios');
 const { getCache, setCache } = require('../utils/cacheService');
 const { apiBaseUrl } = require('../config');
 
-async function getAllKegiatans(token) {
+const getAllKegiatans = async function (token) {
   const cacheKey = 'all_kegiatans';
   const cached = await getCache(cacheKey);
   if (cached) return cached;
@@ -16,8 +16,21 @@ async function getAllKegiatans(token) {
   await setCache(cacheKey, kegiatanDtos, 60); // TTL 60 detik
   return kegiatanDtos;
 }
+exports.getAllKegiatans = getAllKegiatans;
 
-async function getKegiatanById(id, token){
+exports.getFilteredKegiatans = async function (direktoratId, token) {
+  const cacheKey = `kegiatansByDirektorat_${direktoratId}`;
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+
+  const kegiatans = await getAllKegiatans(token);
+  const filteredKegiatans = kegiatans.filter(k => k.direktoratPjId === direktoratId);
+  
+  await setCache(cacheKey, filteredKegiatans, 60); // TTL 60 detik
+  return filteredKegiatans;
+}
+
+exports.getKegiatanById = async function (id, token){
   const cacheKey = `kegiatan_${id}`;
   const cached = await getCache(cacheKey);
   if (cached) return cached;
@@ -43,7 +56,7 @@ async function getKegiatanById(id, token){
   return kegiatan;
 }
 
-async function getStatisticsDirektorat(token){
+exports.getStatisticsDirektorat = async function (token){
   const cacheKey = `statisticsDirektorat`;
   const cached = await getCache(cacheKey);
   if (cached) return cached;
@@ -60,7 +73,7 @@ async function getStatisticsDirektorat(token){
   return statisticsDirektorat;
 }
 
-async function getStatisticsDeputi(token){
+exports.getStatisticsDeputi = async function (token){
   const cacheKey = `statisticsDeputi`;
   const cached = await getCache(cacheKey);
   if (cached) return cached;
@@ -77,7 +90,7 @@ async function getStatisticsDeputi(token){
   return statisticsDeputi;
 }
 
-async function getStatusTahapByKegiatanId(kegiatanId, token) {
+const getStatusTahapByKegiatanId = async function (kegiatanId, token) {
   const cacheKey = `statusTahapByKegiatan_${kegiatanId}`;
   const cached = await getCache(cacheKey);
   if (cached) return cached;
@@ -92,8 +105,9 @@ async function getStatusTahapByKegiatanId(kegiatanId, token) {
   await setCache(cacheKey, statusTahap, 60); // TTL 60 detik
   return statusTahap;
 }
+exports.getStatusTahapByKegiatanId = getStatusTahapByKegiatanId;
 
-async function getFileTahapByKegiatanId(kegiatanId, tahapId, token) {
+exports.getFileTahapByKegiatanId = async function (kegiatanId, tahapId, token) {
   // Ambil nama file
   const response = await axios.get(`${apiBaseUrl}/api/tahap/${kegiatanId}/${tahapId}/files`, {
     headers: {
@@ -120,4 +134,194 @@ async function getFileTahapByKegiatanId(kegiatanId, tahapId, token) {
   return { stream: downloadResponse.data, latestFileName };
 }
 
-module.exports = { getAllKegiatans, getKegiatanById, getStatusTahapByKegiatanId, getStatisticsDeputi, getStatisticsDirektorat, getFileTahapByKegiatanId };
+exports.countByDirektorat = (kegiatans) => {
+  return kegiatans.reduce((acc, k) => {
+    const key = k.direktoratPjName || 'Tanpa Direktorat';
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+};
+
+exports.countByOutput = (kegiatans) => {
+  return kegiatans.reduce((acc, k) => {
+    const key = k.outputName || 'Tanpa Output';
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+exports.countByProgram = (kegiatans) => {
+  return kegiatans.reduce((acc, k) => {
+    const key = k.programName || 'Tanpa Program';
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+exports.countBySatker = (kegiatans) => {
+  return kegiatans.reduce((acc, k) => {
+    const key = k.satkerName || 'Tanpa Satker';
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+exports.countByYear = (kegiatans) => {
+  return kegiatans.reduce((acc, k) => {
+    const year = new Date(k.startDate).getFullYear();
+    acc[year] = (acc[year] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+exports.countByMonth = (kegiatans) => {
+  return kegiatans.reduce((acc, k) => {
+    const date = new Date(k.startDate);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+function getKategoriKegiatan(kegiatan) {
+  const now = new Date();
+  const start = new Date(kegiatan.startDate);
+  const end = new Date(kegiatan.endDate);
+  const status = kegiatan.statusTahap;
+
+  if (status.tahap1Percentage === 0 && start > now) {
+    return "Belum Mulai";
+  }
+
+  if (semuaTahapSelesai(status)) {
+    return "Selesai";
+  }
+
+  if ((end < now && !semuaTahapSelesai(status)) || (start < now && semuaTahapKosong(status))) {
+    return "Terlambat";
+  }
+
+  if (start <= now && !semuaTahapKosong(status) && !semuaTahapSelesai(status)) {
+    return "Berjalan";
+  }
+
+  return "Tidak Diketahui";
+}
+
+exports.listKegiatanAkanDatang = (kegiatans, now = new Date()) => {
+  return kegiatans.filter(k => new Date(k.startDate) > now);
+}
+
+exports.getAllKegiatansWithStatus = async (token) => {
+  const cacheKey = 'kegiatans_with_status';
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+
+  const kegiatans = await getAllKegiatans(token);
+
+  const listWithStatus = await Promise.all(
+    kegiatans.map(async k => {
+      const status = await getStatusTahapByKegiatanId(k.id, token);
+      return { ...k, statusTahap: status }; // atau bisa statusRingkasan: status?.statusAkhir
+    })
+  );
+
+  await setCache(cacheKey, listWithStatus, 3600); // cache 2 menit
+  return listWithStatus;
+}
+
+function semuaTahapSelesai(statusTahap) {
+  return [1,2,3,4,5,6,7,8].every(i => statusTahap[`tahap${i}Percentage`] === 100);
+}
+
+function semuaTahapKosong(statusTahap) {
+  return [1,2,3,4,5,6,7,8].every(i => statusTahap[`tahap${i}Percentage`] === 0);
+}
+
+exports.countKategoriStatus = async function (kegiatans) {
+  const cacheKey = 'kategoriStatus';
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+
+  const hasil = {
+    belumMulai: 0,
+    selesai: 0,
+    terlambat: 0,
+    berjalan: 0,
+    tidakDiketahui: 0,
+  };
+
+  for (const kegiatan of kegiatans) {
+    const kategori = getKategoriKegiatan(kegiatan);
+    if (kategori === "Belum Mulai") hasil.belumMulai++;
+    else if (kategori === "Selesai") hasil.selesai++;
+    else if (kategori === "Terlambat") hasil.terlambat++;
+    else if (kategori === "Berjalan") hasil.berjalan++;
+    else hasil.tidakDiketahui++;
+  }
+
+  await setCache(cacheKey, hasil, 3600);
+  return hasil;
+}
+
+function getTahapAktif(statusTahap) {
+  for (let i = 1; i <= 8; i++) {
+    const current = statusTahap[`tahap${i}Percentage`];
+    const next = statusTahap[`tahap${i + 1}Percentage`] || 0;
+
+    if (current > 0 && next === 0) {
+      return i;
+    }
+  }
+  return 0; // Tahap belum mulai sama sekali atau sudah selesai
+}
+
+const tahapKategoriMap = {
+  1: "Specify Needs",
+  2: "Design",
+  3: "Build",
+  4: "Collect",
+  5: "Process",
+  6: "Analyse",
+  7: "Disseminate",
+  8: "Evaluate",
+};
+
+exports.countByKategoriTahap = async function (kegiatans) {
+  const hasil = {
+    "Specify Needs": 0,
+    "Design": 0,
+    "Build": 0,
+    "Collect": 0,
+    "Process": 0,
+    "Analyse": 0,
+    "Disseminate": 0,
+    "Evaluate": 0,
+    "Belum Dimulai": 0,
+    "Selesai": 0
+  };
+
+  for (const kegiatan of kegiatans) {
+    const status = kegiatan.statusTahap;
+
+    if (semuaTahapSelesai(status)) {
+      hasil["Selesai"]++;
+      continue;
+    }
+
+    if (semuaTahapKosong(status)) {
+      hasil["Belum Dimulai"]++;
+      continue;
+    }
+
+    const tahapAktif = getTahapAktif(status);
+    const kategori = tahapKategoriMap[tahapAktif];
+
+    if (kategori) {
+      hasil[kategori]++;
+    }
+  }
+
+  return hasil;
+}
+

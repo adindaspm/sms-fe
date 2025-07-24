@@ -92,6 +92,15 @@ exports.getUserByEmail = async (email, token) => {
   return userDto;
 };
 
+exports.getCurrentUser = async (token) => {
+  const response = await axios.get(`${apiBaseUrl}/api/users/current`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const user = response.data;
+  return user;
+};
+
 /**
  * Ambil daftar role untuk user.
  */

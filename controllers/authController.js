@@ -1,5 +1,5 @@
 const { loginAndSave } = require("../services/authService");
-const { getUserByEmail } = require("../services/userService");
+const { getUserByEmail, getCurrentUser } = require("../services/userService");
 
 exports.login = async (req, res) => {
   try {
@@ -25,7 +25,7 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
     const loginResponse = await loginAndSave(email, password);
     const accessToken = loginResponse.accessToken;
-    const userData = await getUserByEmail(email, accessToken);
+    const userData = await getCurrentUser(accessToken);
 
     // Simpan semuanya ke session
     req.session.user = {
@@ -34,7 +34,11 @@ exports.loginUser = async (req, res) => {
       accessToken: accessToken,
       roles: loginResponse.roles,
       namaUser: userData.name,       // <-- nama user dari /users
-      namaSatker: userData.namaSatker,
+      satkerName: userData.satkerName,
+      satkerId: userData.satkerId,
+      direktoratId: userData.direktoratId,
+      direktoratName: userData.direktoratName,
+      deputiName: userData.deputiName
     };
 
     // Kalau sukses, langsung redirect ke /
