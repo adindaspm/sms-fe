@@ -12,6 +12,7 @@ router.post('/save', validateKegiatan, handleValidation('layout', kegiatanContro
 router.get('/detail/:id', kegiatanController.detail);
 router.get('/:id/update', kegiatanController.updateForm);
 router.post('/:id/update', validateKegiatan, handleValidation('layout', kegiatanController.renderUpdateForm), kegiatanController.update);
+router.post('/completeTahap/:idKegiatan/:idTahap', kegiatanController.completeTahap);
 router.post('/tahap/:idKegiatan/:idTahap/:idSubTahap', kegiatanController.updateTahap);
 router.post('/tahap/:idKegiatan/:idTahap/:idSubTahap/rencana', kegiatanController.updateTanggalTahap);
 router.get('/files/tahap/:idKegiatan/:idTahap', kegiatanController.downloadFile);

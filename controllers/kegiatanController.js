@@ -263,6 +263,34 @@ exports.updateTahap = async (req, res) => {
   }
 };
 
+exports.completeTahap = async (req, res) => {
+  try {
+    const token = req.session.user?.accessToken;
+
+    const { idKegiatan, idTahap } = req.params;
+
+    await axios.post(`${apiBaseUrl}/api/tahap/${idKegiatan}/${idTahap}/complete`, true, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    await delCache('all_kegiatans');
+    await delCache(`kegiatan_${idKegiatan}`);
+    await delCache(`statusTahapByKegiatan_${idKegiatan}`);
+    // req.session.successMessage = 'Berhasil memperbarui status.';
+    return res.status(200).json({ success: true, message: 'Berhasil memperbarui status.' });
+  } catch (error) {
+    const { idKegiatan } = req.params;
+    
+    console.error('Error saat memperbarui status:', error.response?.data || error.message);
+
+    // req.session.errorMessage = 'Gagal memperbarui status.';
+    return res.status(500).json({ success: false, message: 'Gagal memperbarui status.' });
+  }
+};
+
 exports.updateTanggalTahap = async (req, res) => {
   try {
     const token = req.session.user?.accessToken;
