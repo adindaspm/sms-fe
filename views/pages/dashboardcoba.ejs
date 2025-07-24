@@ -3,19 +3,19 @@
 <div class="mt-6">
   <!-- Summary Cards -->
   <div class="grid grid-cols-4 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="bg-primary-30 rounded-lg p-4 shadow">
+    <div class="bg-primary-30 dark:bg-gray-800rounded-lg p-4 shadow">
       <h2 class="text-black font-medium text-sm">Dalam Proses</h2>
       <p id="berjalanKegiatan" class="text-2xl font-bold text-yellow-700">...</p>
     </div>
-    <div class="bg-primary-30 rounded-lg p-4 shadow">
+    <div class="bg-primary-30 dark:bg-gray-800rounded-lg p-4 shadow">
       <h2 class="text-black font-medium text-sm">Selesai</h2>
       <p id="selesaiKegiatan" class="text-2xl font-bold text-green-700">...</p>
     </div>
-    <div class="bg-primary-30 rounded-lg p-4 shadow">
+    <div class="bg-primary-30 dark:bg-gray-800rounded-lg p-4 shadow">
       <h2 class="text-black font-medium text-sm">Terlambat</h2>
       <p id="terlambatKegiatan" class="text-2xl font-bold text-red-700">...</p>
     </div>
-    <div class="bg-primary-30 rounded-lg p-4 shadow">
+    <div class="bg-primary-30 dark:bg-gray-800rounded-lg p-4 shadow">
       <h2 class="text-black font-medium text-sm">Akan Datang</h2>
       <p id="belumMulaiKegiatan" class="text-2xl font-bold text-gray-700">...</p>
     </div>
@@ -23,31 +23,31 @@
 
   <div class="grid grid-col-3 sm:grid-cols-1 lg:grid-cols-3 gap-4">
     <!-- Pie chart: Kegiatan per Program -->
-    <div class="row-span-2 col-span-1 md:col-span-2 bg-primary-30 p-4 rounded-xl shadow mb-6">
+    <div class="row-span-2 col-span-1 md:col-span-2 bg-primary-30 dark:bg-gray-800p-4 rounded-xl shadow mb-6">
       <h2 class="text-lg font-semibold mb-2">Kegiatan per Program</h2>
       <div id="chartProgram" class="w-full"></div>
     </div>
 
     <!-- Line chart: Jumlah Kegiatan per Tahun -->
-    <div class="col-span-2 row-span-1 md:col-span-3 bg-primary-30 p-4 rounded-xl shadow mb-6">
+    <div class="col-span-2 row-span-1 md:col-span-3 bg-primary-30 dark:bg-gray-800p-4 rounded-xl shadow mb-6">
       <h2 class="text-lg font-semibold mb-2">Jumlah Kegiatan per Tahun</h2>
       <div id="chartTahun" class="w-full"></div>
     </div>
     
     <!-- Bar chart: Jumlah Kegiatan per Fase -->
-    <div class="col-span-2 row-span-1 md:col-span-3 bg-primary-30 p-4 rounded-xl shadow mb-6">
+    <div class="col-span-2 row-span-1 md:col-span-3 bg-primary-30 dark:bg-gray-800p-4 rounded-xl shadow mb-6">
       <h2 class="text-lg font-semibold mb-2">Jumlah Kegiatan per Fase</h2>
       <div id="chartFase" class="w-full"></div>
     </div>
 
     <!-- Pie chart: Kegiatan per Direktorat -->
-    <div class="col-span-1 row-span-2 md:col-span-2 bg-primary-30 p-4 rounded-xl shadow mb-6">
+    <div class="col-span-1 row-span-2 md:col-span-2 bg-primary-30 dark:bg-gray-800p-4 rounded-xl shadow mb-6">
       <h2 class="text-lg font-semibold mb-2">Kegiatan per Direktorat</h2>
       <div id="chartDirektorat" class="w-full"></div>
     </div>
 
     <!-- Detail Survei -->
-    <div class="bg-primary-30 rounded-lg p-4 shadow mb-6">
+    <div class="bg-primary-30 dark:bg-gray-800rounded-lg p-4 shadow mb-6">
       <h2 class="text-lg font-semibold mb-2">Progress Survei</h2>
       <div class="flex flex-row md:flex-row md:items-center md:justify-between mb-4 gap-2 text-sm">
         <input id="searchInput" type="text" placeholder="Cari nama survei..." class="w-full text-sm md:w-1/3 px-3 py-2 rounded border border-gray-300 focus:outline-none">
@@ -81,7 +81,7 @@
   </div>
   
   <!-- Dokumen Fase 7 dan 8 -->
-  <div class="bg-primary-30 rounded-lg p-4 shadow mb-6">
+  <div class="bg-primary-30 dark:bg-gray-800rounded-lg p-4 shadow mb-6">
     <h2 class="text-lg font-semibold mb-2">Upload Dokumen Dissemination & Evaluation</h2>
     <div class="overflow-x-auto">
       <table class="min-w-full table-auto text-sm text-left">
@@ -112,7 +112,7 @@
   </div>
 
   <!-- Aktivitas Terbaru -->
-  <div class="bg-primary-30 rounded-lg p-4 shadow">
+  <div class="bg-primary-30 dark:bg-gray-800rounded-lg p-4 shadow">
     <h2 class="text-lg font-semibold mb-2">Aktivitas Terbaru</h2>
     <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1">
       <% activityLogs.forEach(log => { %>
