@@ -18,13 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const subBtn = document.querySelector(`#subtahap-tab [data-tabs-target="${savedSub}"]`);
         if (subBtn) subBtn.click();
       }
-    }, 100); // delay sedikit biar Flowbite siap
+    }, 200); // delay sedikit biar Flowbite siap
 
     // 3. Saat klik tab utama, simpan ID-nya
     document.querySelectorAll('#default-tab [data-tabs-target]').forEach(btn => {
       btn.addEventListener('click', () => {
         localStorage.setItem('activeMainTab', btn.getAttribute('data-tabs-target'));
         localStorage.removeItem('activeTabId');
+        console.log(btn);
       });
     });
 
