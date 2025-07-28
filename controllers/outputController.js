@@ -76,22 +76,22 @@ exports.save = async (req, res) => {
       name,
       code,
       year,
-      program: program
+      program: JSON.parse(decodeURIComponent(program))
     };
     // Kirim ke API
-    await axios.post(`${apiBaseUrl}/outputs`, requestBody, {
+    await axios.post(`${apiBaseUrl}/api/outputs`, requestBody, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
     delCache(`all_outputs`);
 
     req.session.successMessage = 'Output berhasil ditambahkan.';
-    res.redirect('outputs');
+    res.redirect('/outputs');
   } catch (error) {
     console.error('Gagal menyimpan output:', error.response ? error.response.data : error.message);
     
     req.session.errorMessage = 'Gagal menambahkan output.';
-    res.redirect('outputs/add'); // balik ke halaman form
+    res.redirect('/outputs/add'); // balik ke halaman form
     
     // res.status(500).send('Internal Server Error');
   }

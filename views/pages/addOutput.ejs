@@ -37,9 +37,9 @@
                 <div class="bg-primary-30 relative z-0 w-full mb-5 group">
                     <select name="program" id="program" class="bg-primary-50 dark:bg-gray-800 dark:border-gray-600 block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent dark:bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-100 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-gray-300 peer" >
                         <option class="bg-primary-30 text-gray-900 dark:bg-gray-800 dark:text-gray-100" value="">Pilih Program</option>
-                        <% listPrograms.forEach(program => { 
-                          const isSelected = old?.program && old?.program === program.href; %>
-                          <option class="bg-primary-30 text-gray-900 dark:bg-gray-800 dark:text-gray-100" value="<%= program.href %>" <%= isSelected ? 'selected' : '' %>><%= program.name %></option>
+                        <% listPrograms.forEach(p => { 
+                          const isSelected = old?.program && JSON.parse(decodeURIComponent(old.program)).id === p.id; %>
+                          <option class="bg-primary-30 text-gray-900 dark:bg-gray-800 dark:text-gray-100" value="<%= encodeURIComponent(JSON.stringify(p)) %>" <%= isSelected ? 'selected' : '' %>><%= p.name %></option>
                         <% }) %>    
                       </select>                      
                     <label for="program" class="peer-focus:font-medium absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-gray-900 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Program</label>
