@@ -1,6 +1,6 @@
   async function loadKegiatanSummary() {
     const token = localStorage.getItem('token'); // atau ambil dari tempat lain
-    const res = await fetch('/surveys/summary');
+    const res = await fetch('/summaryKegiatan');
     const data = await res.json();
 
     // Tampilkan angka
@@ -18,6 +18,7 @@
         width: "100%",
         type: "donut", 
       },
+      colors: ["#E1341E", "#E11ECB", "#E1951E", "#961EE1"],
       labels: programLabels,
       series: programCounts,
       tooltip: {
@@ -41,6 +42,7 @@
     const direktoratCounts = Object.values(data.perDirektorat);
     new ApexCharts(document.querySelector("#chartDirektorat"), {
       chart: { type: 'donut', height: 400 },
+      colors: ["#E1341E", "#E11ECB", "#E1951E", "#961EE1"],
       labels: direktoratLabels,
       series: direktoratCounts,
       tooltip: {

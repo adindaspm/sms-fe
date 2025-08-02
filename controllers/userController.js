@@ -6,18 +6,20 @@ const { getAllDirektorats } = require('../services/direktoratService');
 const { getAllProvinces } = require('../services/provinceService');
 const { getAllRoles } = require('../services/roleService');
 const { getAllSatkers } = require('../services/satkerService');
-const { getAllUsers, saveUser, getUserById, getRolesByUser, assignUserRole, removeUserRole, updateUser, activateUser, deactivateUser } = require('../services/userService');
+const { getAllUsers, getFilteredUsers, saveUser, getUserById, getRolesByUser, assignUserRole, removeUserRole, updateUser, activateUser, deactivateUser } = require('../services/userService');
 const { delCache } = require('../utils/cacheService');
 
 
 exports.index = async (req, res) => {
   try {
+    const satkerName = req.session.user ? req.session.user.satkerName : null;
     const token = req.session.user?.accessToken;
     if (!token) return res.redirect('/login');
 
-    const userDtos = await getAllUsers(token);
+    const userDtos = await getFilteredUsers(satkerName, token);
     res.render('layout', { title: 'Pengguna | SMS', page: 'pages/manajemenPengguna', activePage: 'users', userDtos });
   } catch (error) {
+    console.log(error);
     req.session.errorMessage = 'Gagal mengambil data pengguna.';
     res.redirect(req.get('Referer'));
   }
@@ -79,7 +81,7 @@ exports.save = async (req, res) => {
       email,
       password: nip,
       satker: JSON.parse(decodeURIComponent(satker)),
-      direktorat: JSON.parse(decodeURIComponent(direktorat)),
+      ...(direktorat && Object.keys(direktorat).length > 0 && {direktorat: JSON.parse(decodeURIComponent(direktorat))}),
       isActive: true
     };
 
@@ -88,6 +90,7 @@ exports.save = async (req, res) => {
     req.session.successMessage = 'Pengguna berhasil ditambahkan.';
     res.redirect('/users');
   } catch (err) {
+    console.log(err);
     req.session.errorMessage = 'Gagal menambahkan pengguna.';
     res.redirect(req.get('Referer'));
   }
@@ -174,7 +177,11 @@ exports.assignRole = async (req, res) => {
     res.redirect(`/users/${id}/roles`);
   } catch (err) {
     console.log(err);
-    req.session.errorMessage = 'Gagal menambahkan role pengguna.';
+    if (err.status = 403) {
+      req.session.errorMessage = 'Anda tidak memiliki akses untuk role ini.';      
+    } else {
+      req.session.errorMessage = 'Gagal menambahkan role pengguna.';
+    }
     res.redirect(req.get('Referer'));
   }
 };
@@ -254,7 +261,7 @@ exports.update = async (req, res) => {
       nip,
       email,
       satker: JSON.parse(decodeURIComponent(satker)),
-      direktorat: JSON.parse(decodeURIComponent(direktorat))
+      ...(direktorat && Object.keys(direktorat).length > 0 && {direktorat: JSON.parse(decodeURIComponent(direktorat))})
     };
 
     await updateUser(id, payload, token);

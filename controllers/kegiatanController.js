@@ -17,11 +17,12 @@ exports.index = async (req, res) => {
     const token = req.session.user ? req.session.user.accessToken : null;
     const namaUserLogin = req.session.user ? req.session.user.namaUser : null;
     const direktoratId = req.session.user ? req.session.user.direktoratId : null;
+    const satkerId = req.session.user ? req.session.user.satkerId : null;
     if (!token || !namaUserLogin) {
       return res.redirect('/login');
     }
 
-    const kegiatans = await getFilteredKegiatans(direktoratId, token);
+    const kegiatans = await getFilteredKegiatans(direktoratId, satkerId, token);
 
     // Kirim data ke halaman dengan 'kegiatans'
     res.render('layout', {
@@ -31,7 +32,7 @@ exports.index = async (req, res) => {
       kegiatans  // Kirim data kegiatan ke view
     });
   } catch (error) {
-    console.error('Error fetching kegiatan:', error.status, ' ', error.data.message);
+    console.error('Error fetching kegiatan:', error);
     req.session.errorMessage = 'Terjadi kesalahan server! Gagal mengambil data.'
     res.redirect('/');
   }
@@ -43,7 +44,7 @@ exports.renderAddForm = async (req) => {
   const userId = req.session.user ? req.session.user.idUser : null;
   const userName = req.session.user ? req.session.user.namaUser : null;
   const satkerName = req.session.user ? req.session.user.namaSatker : null;
-  const satkerId = await getSatkerIdByName(satkerName, token);
+  const satkerId = req.session.user ? req.session.user.satkerId : null;
   return {
     title: 'Tambah Kegiatan | SMS',
     page: 'pages/addKegiatan', 
@@ -63,7 +64,6 @@ exports.addForm = async (req, res) => {
     const userName = req.session.user ? req.session.user.namaUser : null;
     const satkerName = req.session.user ? req.session.user.satkerName : null;
     const satkerId = req.session.user ? req.session.user.satkerId : null;
-
     res.render('layout', {
       title: 'Tambah Kegiatan | SMS',
       page: 'pages/addKegiatan', 
@@ -93,7 +93,8 @@ exports.save = async (req, res) => {
       code,
       startDate,
       endDate,
-      userId
+      userId,
+      satkerId
     } = req.body;
 
     const tahun = dayjs(startDate).format('YYYY');    
@@ -103,6 +104,7 @@ exports.save = async (req, res) => {
       name,
       code,
       user: {id:Number(userId)},
+      satker: {id:Number(satkerId)}, 
       output: {id:Number(output)},
       startDate,
       endDate,
@@ -115,7 +117,8 @@ exports.save = async (req, res) => {
       }
     });
 
-    delCache('all_kegiatans');
+    await delCache('all_kegiatans');
+    await delCache('kegiatans_with_status');
     req.session.successMessage = 'Berhasil menambah kegiatan.';
     res.redirect('/surveys');
   } catch (error) {
@@ -224,6 +227,7 @@ exports.update = async (req, res) => {
 
     await delCache('all_kegiatans');
     await delCache(`kegiatan_${id}`)
+    await delCache('kegiatans_with_status');
     req.session.successMessage = 'Berhasil memperbarui kegiatan.';
     res.redirect('/surveys');
   } catch (error) {
@@ -252,6 +256,7 @@ exports.updateTahap = async (req, res) => {
     await delCache('all_kegiatans');
     await delCache(`kegiatan_${idKegiatan}`);
     await delCache(`statusTahapByKegiatan_${idKegiatan}`);
+    await delCache('kegiatans_with_status');
     // req.session.successMessage = 'Berhasil memperbarui status.';
     return res.status(200).json({ success: true, message: 'Berhasil memperbarui status.' });
   } catch (error) {
@@ -280,6 +285,7 @@ exports.completeTahap = async (req, res) => {
     await delCache('all_kegiatans');
     await delCache(`kegiatan_${idKegiatan}`);
     await delCache(`statusTahapByKegiatan_${idKegiatan}`);
+    await delCache('kegiatans_with_status');
     // req.session.successMessage = 'Berhasil memperbarui status.';
     return res.status(200).json({ success: true, message: 'Berhasil memperbarui status.' });
   } catch (error) {
@@ -313,6 +319,7 @@ exports.updateTanggalTahap = async (req, res) => {
     await delCache('all_kegiatans');
     await delCache(`kegiatan_${idKegiatan}`);
     await delCache(`statusTahapByKegiatan_${idKegiatan}`);
+    await delCache('kegiatans_with_status');
     // req.session.successMessage = 'Berhasil memperbarui tanggal.';
     res.sendStatus(200);
   } catch (error) {
@@ -354,6 +361,7 @@ exports.uploadFile = async (req, res) => {
     await delCache('all_kegiatans');
     await delCache(`kegiatan_${idKegiatan}`);
     await delCache(`statusTahapByKegiatan_${idKegiatan}`);
+    await delCache('kegiatans_with_status');
     req.session.successMessage = 'Berhasil mengupload file.';
     res.redirect(`/surveys/detail/${idKegiatan}`);
   } catch (error) {

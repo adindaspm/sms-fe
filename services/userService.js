@@ -15,13 +15,12 @@ const extractIdFromHref = (href, prefix) => {
 /**
  * Ambil semua user dengan cache.
  */
-exports.getAllUsers = async (token) => {
+const getAllUsers = async (token) => {
   const cacheKey = 'all_users';
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
   const response = await axios.get(`${apiBaseUrl}/api/users`, {
-    params: { size: 10000 },
     headers: { Authorization: `Bearer ${token}` }
   });
 
@@ -29,6 +28,28 @@ exports.getAllUsers = async (token) => {
 
   await setCache(cacheKey, userDtos, 60);
   return userDtos;
+};
+exports.getAllUsers = getAllUsers;
+
+exports.getFilteredUsers = async (satkerName, token) => {
+  const cacheKey = `usersBySatker_${satkerName}`;
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+
+  const response = await axios.get(`${apiBaseUrl}/api/users`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const users = await getAllUsers(token);
+  let filteredUsers;
+  if (satkerName != "BPS RI") {
+    filteredUsers = users.filter(u => u.satkerName === satkerName);
+  } else {
+    filteredUsers = users;
+  }
+
+  await setCache(cacheKey, filteredUsers, 60);
+  return filteredUsers;
 };
 
 /**

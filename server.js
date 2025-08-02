@@ -27,6 +27,8 @@ const provinceRoutes = require('./routes/provinceRoutes');
 const roleRoutes = require('./routes/roleRoutes');
 const satkerRoutes = require('./routes/satkerRoutes');
 const userRoutes = require('./routes/userRoutes');
+// Controller
+const programController = require('./controllers/programController');
 
 
 const { getAllSatkers } = require('./services/satkerService');
@@ -81,12 +83,13 @@ app.use('/', generalRoutes);
 app.use('/deputis', checkRole(['ROLE_SUPERADMIN']), deputiRoutes);
 app.use('/direktorats', checkRole(['ROLE_SUPERADMIN']), direktoratRoutes);
 app.use('/outputs', checkRole(['ROLE_SUPERADMIN']), outputRoutes);
+app.get('/programs/:id/outputs', checkRole(['ROLE_SUPERADMIN', 'ROLE_OPERATOR', 'ROLE_OPERATOR_PUSAT', 'ROLE_OPERATOR_PROVINSI', 'ROLE_OPERATOR_SATKER']), programController.outputsByProgram);
 app.use('/programs', checkRole(['ROLE_SUPERADMIN']), programRoutes);
 app.use('/provinces', checkRole(['ROLE_SUPERADMIN']), provinceRoutes);
 app.use('/roles', checkRole(['ROLE_SUPERADMIN']), roleRoutes);
 app.use('/satkers', checkRole(['ROLE_SUPERADMIN']), satkerRoutes);
 app.use('/users', checkRole(['ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_ADMIN_PUSAT', 'ROLE_ADMIN_PROVINSI', 'ROLE_ADMIN_SATKER']), userRoutes);
-app.use('/surveys', checkRole(['ROLE_OPERATOR', 'ROLE_OPERATOR_PUSAT', 'ROLE_OPERATOR_PROVINSI', 'ROLE_OPERATOR_SATKER', 'ROLE_ADMIN', 'ROLE_ADMIN_PUSAT', 'ROLE_ADMIN_PROVINSI', 'ROLE_ADMIN_SATKER','ROLE_SUPERADMIN']), kegiatanRoutes);
+app.use('/surveys', checkRole(['ROLE_OPERATOR', 'ROLE_OPERATOR_PUSAT', 'ROLE_OPERATOR_PROVINSI', 'ROLE_OPERATOR_SATKER', 'ROLE_ADMIN', 'ROLE_ADMIN_PUSAT', 'ROLE_ADMIN_PROVINSI', 'ROLE_ADMIN_SATKER']), kegiatanRoutes);
 
 // Start server
 app.listen(port, () => {

@@ -3,12 +3,15 @@ const router = express.Router();
 
 const { validatePass } = require('../validators/passValidator');
 const handleValidation = require('../middleware/handleValidation');
+const kegiatanController = require('../controllers/kegiatanController');
 const { getAllKegiatans } = require('../services/kegiatanService');
 const { getAllSatkers } = require('../services/satkerService');
 const { getAllPrograms } = require('../services/programService');
 const { getAllDirektorats } = require('../services/direktoratService');
 
 // Dashboard
+router.get('/summaryKegiatan', kegiatanController.getKegiatanSummary);
+
 router.get('/', (req, res) => {
   const labelsSatker = ['BPS A', 'BPS B', 'BPS C'];
   const dataSatker = [10, 20, 30];

@@ -27,8 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
         option.style.display = 'none';
       }
     });
-
-    direktoratSelect.selectedIndex = 0;
   }
 
   deputiSelect.addEventListener('change', function () {
@@ -56,12 +54,30 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   // Trigger saat load jika ada nilai `old`
   const oldDeputi = deputiSelect.value;
+  const oldDirektorat = direktoratSelect.value;
   if (oldDeputi) {
     try {
-      const parsed = JSON.parse(decodeURIComponent(oldDeputi));
-      filterDirektoratsByDeputi(parsed.code);
+      const parsedDeputi = JSON.parse(decodeURIComponent(oldDeputi));
+      filterDirektoratsByDeputi(parsedDeputi.code);
+
+      // Setelah filtering, set kembali selected direktorat jika ada
+      if (oldDirektorat) {
+        const parsedDirektorat = JSON.parse(decodeURIComponent(oldDirektorat));
+        const options = direktoratSelect.querySelectorAll('option');
+        options.forEach(option => {
+          try {
+            const optValue = JSON.parse(decodeURIComponent(option.value));
+            if (optValue.id === parsedDirektorat.id) {
+              option.selected = true;
+            }
+          } catch (e) {
+            // skip
+          }
+        });
+      }
+
     } catch (e) {
-      // skip
+      filterDirektoratsByDeputi('');
     }
   }
   

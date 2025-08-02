@@ -1,8 +1,8 @@
 
       <div class="flex justify-between mb-6">
-        <h1 class="text-4xl text-font font-extrabold dark:text-white">Kelola Peran Pengguna</h1>
+        <h1 class="text-4xl text-gray-800 font-extrabold dark:text-white">Kelola Peran Pengguna</h1>
         <a href="/users">
-          <button class="text-gray-800 dark:text-gray-300 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Kembali</button>
+          <button class="text-gray-100 dark:text-gray-300 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Kembali</button>
         </a>
       </div>
   
@@ -11,19 +11,19 @@
         <h2 class="text-2xl text-gray-800 dark:text-gray-300 font-bold mb-4">User Information</h2>
         <div class="grid grid-cols-2 gap-4">
           <div class="relative z-0 w-full mb-5 group">
-            <input type="text" id="user_id" class="block py-2.5 px-0 w-full text-sm text-font bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.id %>" disabled />
+            <input type="text" id="user_id" class="block py-2.5 px-0 w-full text-sm text-gray-800 bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.id %>" disabled />
             <label for="user_id" class="absolute text-sm text-gray-800 dark:text-gray-300 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]">User ID</label>
           </div>
           <div class="relative z-0 w-full mb-5 group">
-            <input type="text" id="user_name" class="block py-2.5 px-0 w-full text-sm text-font bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.name %>" disabled />
+            <input type="text" id="user_name" class="block py-2.5 px-0 w-full text-sm text-gray-800 bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.name %>" disabled />
             <label for="user_name" class="absolute text-sm text-gray-800 dark:text-gray-300 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]">Name</label>
           </div>
           <div class="relative z-0 w-full mb-5 group">
-            <input type="text" id="user_email" class="block py-2.5 px-0 w-full text-sm text-font bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.email %>" disabled />
+            <input type="text" id="user_email" class="block py-2.5 px-0 w-full text-sm text-gray-800 bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.email %>" disabled />
             <label for="user_email" class="absolute text-sm text-gray-800 dark:text-gray-300 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]">Email</label>
           </div>
           <div class="relative z-0 w-full mb-5 group">
-            <input type="text" id="user_satker" class="block py-2.5 px-0 w-full text-sm text-font bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.namaSatker %>" disabled />
+            <input type="text" id="user_satker" class="block py-2.5 px-0 w-full text-sm text-gray-800 bg-transparent border-0 border-b-2 border-primary-100 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="<%= userDto.satkerName %>" disabled />
             <label for="user_satker" class="absolute text-sm text-gray-800 dark:text-gray-300 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]">Satuan Kerja</label>
           </div>
         </div>
@@ -33,7 +33,7 @@
         <!-- Current Roles -->
         <div class="w-full h-full p-6 bg-primary-30 border border-primary-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-6">
           <h2 class="text-2xl text-gray-800 dark:text-gray-300 font-bold mb-4">Current Roles</h2>
-          <div class="overflow-x-auto text-font">
+          <div class="overflow-x-auto text-gray-800">
             <table id="roles-table">
               <thead>
                 <tr>
@@ -47,7 +47,7 @@
                   <% userRoleDtos.forEach(role => { %>
                     <tr>
                       <td class="font-medium text-gray-800 dark:text-gray-300 whitespace-nowrap dark:text-white"><%= role.id %></td>
-                      <td class="text-font"><%= role.name %></td>
+                      <td class="text-gray-800"><%= role.name %></td>
                       <td class="flex justify-center">
                         <form action="/users/<%= userDto.id %>/roles/remove" method="post">
                           <input type="hidden" name="roleId" value="<%= role.id %>" />
@@ -81,7 +81,7 @@
                     <option value="<%= role.id %>"><%= role.name %></option>
                   <% }); %>
                 </select>
-                <button type="submit" class="text-gray-800 dark:text-gray-300 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-2/5 sm:w-auto px-2.5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="submit" class="text-gray-100 dark:text-gray-300 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-2/5 sm:w-auto px-2.5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   Assign Role
                 </button>
               </div>

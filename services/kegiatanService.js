@@ -18,13 +18,19 @@ const getAllKegiatans = async function (token) {
 }
 exports.getAllKegiatans = getAllKegiatans;
 
-exports.getFilteredKegiatans = async function (direktoratId, token) {
-  const cacheKey = `kegiatansByDirektorat_${direktoratId}`;
+exports.getFilteredKegiatans = async function (direktoratId, satkerId, token) {
+  const cacheKey = `kegiatansByDirektoratOrSatker_${direktoratId}_${satkerId}`;
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
   const kegiatans = await getAllKegiatans(token);
-  const filteredKegiatans = kegiatans.filter(k => k.direktoratPjId === direktoratId);
+  const filteredKegiatans = kegiatans.filter(k => {
+    if (direktoratId) {
+      return k.direktoratPjId === direktoratId;
+    } else {
+      return k.satkerId === satkerId;
+    }
+  });
   
   await setCache(cacheKey, filteredKegiatans, 60); // TTL 60 detik
   return filteredKegiatans;
