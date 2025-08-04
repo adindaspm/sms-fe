@@ -2,6 +2,9 @@ FROM node:alpine3.19 AS build
 
 WORKDIR /app
 
+# Install git
+RUN apk add --no-cache git
+
 COPY package.json .
 COPY package-lock.json .
 RUN npm install

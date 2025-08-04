@@ -23,7 +23,7 @@ exports.getFilteredKegiatans = async function (direktoratId, satkerId, token) {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const kegiatans = await getAllKegiatans(token);
+  const kegiatans = await getAllKegiatansWithStatus(token);
   const filteredKegiatans = kegiatans.filter(k => {
     if (direktoratId) {
       return k.direktoratPjId === direktoratId;
@@ -218,7 +218,7 @@ exports.listKegiatanAkanDatang = (kegiatans, now = new Date()) => {
   return kegiatans.filter(k => new Date(k.startDate) > now);
 }
 
-exports.getAllKegiatansWithStatus = async (token) => {
+const getAllKegiatansWithStatus = async (token) => {
   const cacheKey = 'kegiatans_with_status';
   const cached = await getCache(cacheKey);
   if (cached) return cached;
@@ -227,14 +227,16 @@ exports.getAllKegiatansWithStatus = async (token) => {
 
   const listWithStatus = await Promise.all(
     kegiatans.map(async k => {
-      const status = await getStatusTahapByKegiatanId(k.id, token);
-      return { ...k, statusTahap: status }; // atau bisa statusRingkasan: status?.statusAkhir
+      k.statusTahap = await getStatusTahapByKegiatanId(k.id, token);
+      k.kategori = getKategoriKegiatan(k);
+      return { ...k }; 
     })
   );
 
   await setCache(cacheKey, listWithStatus, 3600); // cache 2 menit
   return listWithStatus;
 }
+exports.getAllKegiatansWithStatus = getAllKegiatansWithStatus;
 
 function semuaTahapSelesai(statusTahap) {
   return [1,2,3,4,5,6,7,8].every(i => statusTahap[`tahap${i}Percentage`] === 100);
@@ -258,11 +260,10 @@ exports.countKategoriStatus = async function (kegiatans) {
   };
 
   for (const kegiatan of kegiatans) {
-    const kategori = getKategoriKegiatan(kegiatan);
-    if (kategori === "Belum Mulai") hasil.belumMulai++;
-    else if (kategori === "Selesai") hasil.selesai++;
-    else if (kategori === "Terlambat") hasil.terlambat++;
-    else if (kategori === "Berjalan") hasil.berjalan++;
+    if (kegiatan.kategori === "Belum Mulai") hasil.belumMulai++;
+    else if (kegiatan.kategori === "Selesai") hasil.selesai++;
+    else if (kegiatan.kategori === "Terlambat") hasil.terlambat++;
+    else if (kegiatan.kategori === "Berjalan") hasil.berjalan++;
     else hasil.tidakDiketahui++;
   }
 

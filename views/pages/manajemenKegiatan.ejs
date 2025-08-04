@@ -48,6 +48,14 @@
                     </th>
                     <th class="dark:text-white">
                         <span class="flex items-center">
+                            Status
+                            <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th class="dark:text-white">
+                        <span class="flex items-center">
                             Aksi
                             <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
@@ -63,6 +71,17 @@
                     <td class="dark:text-white"><%= kegiatan.name %></td>
                     <td class="dark:text-white"><%= kegiatan.programName %></td>
                     <td class="dark:text-white"><%= kegiatan.direktoratPjName %></td>
+                    <td class="font-semibold <%= 
+                        kegiatan.kategori === 'Selesai' 
+                            ? 'text-green-600' 
+                            : kegiatan.kategori === 'Terlambat' 
+                            ? 'text-red-600' 
+                            : kegiatan.kategori === 'Berjalan' 
+                                ? 'text-blue-600' 
+                                : 'text-gray-800' 
+                    %>">
+                        <%= kegiatan.kategori %>
+                    </td>
                     <td class="dark:text-white">
                       <div class="flex justify-center">
                         <a href="/surveys/detail/<%= kegiatan.id %>" class="px-0.5">

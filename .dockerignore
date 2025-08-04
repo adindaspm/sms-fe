@@ -12,7 +12,6 @@ package-lock.yaml
 .DS_Store
 
 # Git files
-.git
 .gitignore
 
 # Docker sendiri
