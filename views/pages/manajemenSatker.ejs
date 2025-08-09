@@ -60,20 +60,28 @@
                       <td class="dark:text-white"><%= satkerDto.code %></td>
                       <td class="dark:text-white"><%= satkerDto.address %></td>
                       <td class="dark:text-white">
-                        <div class="flex justify-between">
-                            <a href="/satkers/<%= satkerDto.id %>/update" class="px-1">
-                                <button class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700">Edit</button>
+                        <div class="flex justify-between items-center align-middle">
+                            <a href="/satkers/<%= satkerDto.id %>/users" data-tooltip-target="tooltip-daftarPenggunaSatker-<%= satkerDto.id %>" class="px-1">
+                                <i class="fa-solid fa-user-group text-green-500"></i>
                             </a>
-                            <a href="/satkers/<%= satkerDto.id %>/users" class="px-1">
-                                <button class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700">Daftar Pengguna</button>
+                            <div id="tooltip-daftarPenggunaSatker-<%= satkerDto.id %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                Lihat Daftar Pengguna
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                            <a href="/satkers/<%= satkerDto.id %>/update" data-tooltip-target="tooltip-updateSatker-<%= satkerDto.id %>" class="px-1">
+                                <i class="fa-solid fa-pen-to-square text-blue-500 text-lg"></i>
                             </a>
+                            <div id="tooltip-updateSatker-<%= satkerDto.id %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                Perbarui Data Satker
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                         </div>
                       </td>
                     </tr>
                   <% }); %>
                 <% } else { %>
                   <tr>
-                    <td colspan="3" class="text-center dark:text-white">Data tidak tersedia</td>
+                    <td colspan="5" class="text-center dark:text-white">Data tidak tersedia</td>
                   </tr>
                 <% } %>
               </tbody>

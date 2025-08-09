@@ -333,6 +333,39 @@ exports.updateTanggalTahap = async (req, res) => {
   }
 };
 
+exports.updateTanggalRealisasi = async (req, res) => {
+  try {
+    const token = req.session.user?.accessToken;
+
+    const { idKegiatan, idTahap, idSubTahap } = req.params;
+    
+    const [day, month, year] = req.body.tanggalRealisasi.split('-');
+    const tanggalRealisasi = `${year}-${month}-${day}`;
+
+    await axios.post(`${apiBaseUrl}/api/tahap/${idKegiatan}/${idTahap}/${idSubTahap}/tanggal-realisasi`, tanggalRealisasi, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    await delCache('all_kegiatans');
+    await delCache(`kegiatan_${idKegiatan}`);
+    await delCache(`statusTahapByKegiatan_${idKegiatan}`);
+    await delCache('kegiatans_with_status');
+    // req.session.successMessage = 'Berhasil memperbarui tanggal.';
+    res.sendStatus(200);
+  } catch (error) {
+    const { idKegiatan } = req.params;
+    
+    console.error('Error saat menginput tanggal rencana:', error.response?.data || error.message);
+
+    req.session.errorMessage = 'Gagal memperbarui tanggal.';
+    res.status(500).send('Error', error);
+
+  }
+};
+
 exports.uploadFile = async (req, res) => {
   try {
     const token = req.session.user?.accessToken;
@@ -342,8 +375,23 @@ exports.uploadFile = async (req, res) => {
     const uploadedFile = req.file;
 
     if (!uploadedFile) {
+      console.error('Error upload file: File tidak ditemukan');
       req.session.errorMessage = 'File tidak ditemukan dalam permintaan.';
-      return res.redirect(`/surveys/detail/${idKegiatan}`);
+      res.status(500).send('Internal server error');
+    }
+
+    // Validasi jenis file (PDF)
+    if (uploadedFile.mimetype !== 'application/pdf') {
+      console.error('Error upload file: Bukan file pdf');
+      req.session.errorMessage = 'Hanya file PDF yang diperbolehkan.';
+      res.status(500).send('Internal server error');
+    }
+
+    // Validasi ukuran file (maksimal 5 MB)
+    if (uploadedFile.size > 5 * 1024 * 1024) {
+      console.error('Error upload file: Ukuran lebih dari 5 MB');
+      req.session.errorMessage = 'Ukuran file maksimal 5 MB.';
+      res.status(500).send('Internal server error');
     }
 
     // Siapkan form-data
@@ -363,16 +411,14 @@ exports.uploadFile = async (req, res) => {
     await delCache(`statusTahapByKegiatan_${idKegiatan}`);
     await delCache('kegiatans_with_status');
     req.session.successMessage = 'Berhasil mengupload file.';
-    res.redirect(`/surveys/detail/${idKegiatan}`);
+    res.status(200).send('Upload file berhasil');
   } catch (error) {
     const { idKegiatan } = req.params;
     
     console.error('Error upload file:', error.response?.data || error.message);
 
     req.session.errorMessage = 'Terjadi kesalahan pada server. Coba lagi nanti!';
-    res.redirect(`/surveys/detail/${idKegiatan}`);
-    // res.status(500).send('Internal server error');
-
+    res.status(500).send('Internal server error');
   }
 };
 
@@ -391,7 +437,7 @@ exports.downloadFile = async (req, res) => {
   } catch (error) {
     console.error('Error download file:', error.response?.data || error.message);
     req.session.errorMessage = 'Gagal mendownload file.';
-    res.redirect(`/surveys/detail/${req.params.idKegiatan}`);
+    return error;
   }
 };
 
@@ -399,7 +445,27 @@ exports.getKegiatanSummary = async (req, res) => {
   try {
     const token = req.session.user?.accessToken;
 
-    const kegiatans = await kegiatanService.getAllKegiatansWithStatus(token);
+    const { tahun, direktoratId } = req.query; // ambil filter dari query string
+
+    let kegiatans = await kegiatanService.getAllKegiatansWithStatus(token);
+
+    kegiatans = kegiatans.filter(k => {
+      const satker = k.satkerName;
+      return satker == "BPS RI";
+    });
+
+    // Filter berdasarkan tahun
+    if (tahun) {
+      kegiatans = kegiatans.filter(k => {
+        const tahunKegiatan = new Date(k.startDate).getFullYear();
+        return tahunKegiatan == tahun;
+      });
+    }
+
+    // Filter berdasarkan direktorat
+    if (direktoratId) {
+      kegiatans = kegiatans.filter(k => k.direktoratPjId == direktoratId);
+    }
 
     const summary = {
       total: kegiatans.length,

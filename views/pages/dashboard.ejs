@@ -1,7 +1,31 @@
 <h1 class="text-4xl font-extrabold text-fontdark dark:text-white">Dashboard</h1>
 <!-- <h2 class="text-2xl font-normal text-font dark:text-white mb-6">Superadmin</h2> -->
 <div class="mt-6">
-  
+  <div class="flex flex-row md:flex-row md:items-center md:justify-between mb-4 gap-2 text-sm font-medium">
+    <div class="justify-left">
+      <select id="yearFilter" class="w-full md:w-1/4 px-3 py-2 rounded border border-gray-300 focus:outline-none">
+        <option value="">Semua Tahun</option>
+        <% years.forEach(y => { %>
+          <option value="<%= y %>" <%= y === selectedYear ? 'selected' : '' %>><%= y %></option>
+        <% }) %>
+      </select>
+      <select id="direktoratFilter" class="w-full md:w-1/4 px-3 py-2 rounded border border-gray-300 focus:outline-none">
+        <option value="">Semua Direktorat</option>
+        <% direktorats.forEach(d => { %>
+          <option value="<%= d.id %>" <%= d === selectedDirektorat ? 'selected' : '' %>><%= d.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="justify-right">
+      <button type="button" id="applyFilter" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Terapkan Filter</button>
+      <button type="button" id="resetFilter" 
+        class="text-gray-700 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 
+              font-medium rounded-lg text-sm px-5 py-2.5 mb-2 
+              dark:bg-gray-700 dark:hover:bg-gray-800 dark:text-white dark:focus:ring-gray-800">
+        Reset Filter
+      </button>
+    </div>
+  </div>
   <div id="summaryLoader" role="status" class="flex justify-center items-center h-64">
       <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -12,48 +36,51 @@
   <div id="summaryError" class="hidden p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100 dark:bg-red-200 dark:text-red-900" role="alert">
     <span class="font-medium">Gagal memuat data!</span> Silakan coba lagi atau hubungi admin pusat jika masalah terus berlanjut.
   </div>
+  <div id="summaryNothing" class="hidden p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+    <span class="font-medium">Tidak ditemukan data!</span> Silakan coba lagi dengan filter lainnya.
+  </div>
   <div id="summaryContent" class="hidden">
     <!-- Summary Cards -->
     <div class="grid grid-cols-4 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <div class="bg-primary-30 dark:bg-gray-800 rounded-lg p-4 shadow">
+      <div class="bg-white border border-gray-600 dark:bg-gray-800 rounded-lg p-4 shadow">
         <h2 class="text-black dark:text-gray-300 font-medium text-sm">Dalam Proses</h2>
         <p id="berjalanKegiatan" class="text-2xl font-bold text-yellow-700">...</p>
       </div>
-      <div class="bg-primary-30 dark:bg-gray-800 rounded-lg p-4 shadow">
+      <div class="bg-white border border-gray-600 dark:bg-gray-800 rounded-lg p-4 shadow">
         <h2 class="text-black dark:text-gray-300 font-medium text-sm">Selesai</h2>
         <p id="selesaiKegiatan" class="text-2xl font-bold text-green-700">...</p>
       </div>
-      <div class="bg-primary-30 dark:bg-gray-800 rounded-lg p-4 shadow">
+      <div class="bg-white border border-gray-600 dark:bg-gray-800 rounded-lg p-4 shadow">
         <h2 class="text-black dark:text-gray-300 font-medium text-sm">Terlambat</h2>
         <p id="terlambatKegiatan" class="text-2xl font-bold text-red-700">...</p>
       </div>
-      <div class="bg-primary-30 dark:bg-gray-800 rounded-lg p-4 shadow">
+      <div class="bg-white border border-gray-600 dark:bg-gray-800 rounded-lg p-4 shadow">
         <h2 class="text-black dark:text-gray-300 font-medium text-sm">Akan Datang</h2>
         <p id="belumMulaiKegiatan" class="text-2xl font-bold text-gray-700">...</p>
       </div>
     </div>
 
     <div class="grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 gap-4">
-      <!-- Pie chart: Kegiatan per Program -->
-      <div class="col-span-1 sm:col-span-2 md:col-span-1 bg-primary-30 dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
-        <h2 class="text-black dark:text-gray-300 text-lg font-semibold mb-2">Kegiatan per Program</h2>
-        <div id="chartProgram" class="w-full"></div>
+      <!-- Pie chart: Kegiatan per Output -->
+      <div class="col-span-1 sm:col-span-1 md:col-span-1 bg-white border border-gray-600 dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
+        <h2 class="text-black dark:text-gray-300 text-lg font-semibold mb-2">Kegiatan per Output</h2>
+        <div id="chartOutput" class="w-full"></div>
       </div>
 
       <!-- Line chart: Jumlah Kegiatan per Tahun -->
-      <div class="col-span-2 sm:col-span-3 md:col-span-2 bg-primary-30 dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
+      <div class="col-span-2 sm:col-span-2 md:col-span-2 bg-white border border-gray-600 dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
         <h2 class="text-black dark:text-gray-300 text-lg font-semibold mb-2">Jumlah Kegiatan per Tahun</h2>
         <div id="chartTahun" class="w-full"></div>
       </div>
       
       <!-- Bar chart: Jumlah Kegiatan per Fase -->
-      <div class="col-span-2 sm:col-span-3 md:col-span-2 bg-primary-30 dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
+      <div class="col-span-2 sm:col-span-2 md:col-span-2 bg-white border border-gray-600 dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
         <h2 class="text-black dark:text-gray-300 text-lg font-semibold mb-2">Jumlah Kegiatan per Fase</h2>
         <div id="chartFase" class="w-full"></div>
       </div>
 
       <!-- Pie chart: Kegiatan per Direktorat -->
-      <div class="col-span-1 sm:col-span-2 md:col-span-1 bg-primary-30 dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
+      <div class="col-span-1 sm:col-span-1 md:col-span-1 bg-white border border-gray-600 dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
         <h2 class="text-black dark:text-gray-300 text-lg font-semibold mb-2">Kegiatan per Direktorat</h2>
         <div id="chartDirektorat" class="w-full"></div>
       </div>

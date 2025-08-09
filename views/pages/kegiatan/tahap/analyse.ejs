@@ -76,17 +76,31 @@
                                             <td class="px-6 py-4">
                                                 <span class="<%= color %> font-semibold"><%= status %></span>
                                             </td>
-                                            <td class="px-6 py-4">
-                                                <button
-                                                    type="button"
-                                                    class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700
-                                                    <% if (status == 'Selesai') { %> cursor-not-allowed bg-gray-700 <% } %>"
+                                            <td class="px-6 py-4 flex items-center align-middle">
+                                                <i class="fa-solid fa-calendar-check text-lg p-1
+                                                            text-green-600 hover:text-green-700
+                                                            <%= status == 'Selesai' ? 'hidden' : '' %>"
+                                                    data-tooltip-target="tooltip-tandaiSelesai-<%= kegiatan.id %>-6-<%= index %>"
                                                     data-modal-target="popup-modal"
                                                     data-modal-toggle="popup-modal"
-                                                    data-url="/surveys/tahap/<%= kegiatan.id %>/6/<%= index %>"
-                                                    <% if (status == 'Selesai') { %> disabled <% } %>>
+                                                    data-url="/surveys/tahap/<%= kegiatan.id %>/6/<%= index %>">
+                                                </i>
+                                                <i class="fa-solid fa-calendar-xmark text-lg p-1
+                                                            text-blue-600 hover:text-blue-700
+                                                            <%= status == 'Selesai' ? '' : 'hidden' %>"
+                                                    data-tooltip-target="tooltip-ubahRealisasi-<%= kegiatan.id %>-6-<%= index %>"
+                                                    data-modal-target="edit-realisasi"
+                                                    data-modal-toggle="edit-realisasi"
+                                                    data-url="/surveys/tahap/<%= kegiatan.id %>/6/<%= index %>/realisasi">
+                                                </i>
+                                                <div id="tooltip-tandaiSelesai-<%= kegiatan.id %>-6-<%= index %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
                                                     Tandai Selesai
-                                                </button>
+                                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                                </div>
+                                                <div id="tooltip-ubahRealisasi-<%= kegiatan.id %>-6-<%= index %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                                    Ubah Tanggal Realisasi
+                                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                                </div>
                                             </td>
                                         </tr>
                                         <% }) %>

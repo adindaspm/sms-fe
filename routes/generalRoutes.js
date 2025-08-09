@@ -12,7 +12,8 @@ const { getAllDirektorats } = require('../services/direktoratService');
 // Dashboard
 router.get('/summaryKegiatan', kegiatanController.getKegiatanSummary);
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+  const token = req.session.user ? req.session.user.accessToken : null;
   const labelsSatker = ['BPS A', 'BPS B', 'BPS C'];
   const dataSatker = [10, 20, 30];
   const hasDataSatker = true;
@@ -21,7 +22,15 @@ router.get('/', (req, res) => {
     title: 'Dashboard | SMS',
     page: 'pages/dashboard',
     activePage: 'dashboard',
-    labelsSatker,dataSatker,hasDataSatker
+    labelsSatker,dataSatker,hasDataSatker,
+      years: [2023, 2024, 2025],
+      selectedYear: 2025,
+      satkers: await getAllSatkers(token),
+      selectedSatker: null,
+      programs: await getAllPrograms(token),
+      selectedProgram: null,
+      direktorats: await getAllDirektorats(token),
+      selectedDirektorat: '',
   });
 });
 
@@ -201,7 +210,7 @@ router.post('/set-success-message', (req, res) => {
 
 router.post('/set-error-message', (req, res) => {
   req.session.errorMessage = req.body.message || 'Gagal';
-  res.sendStatus(500);
+  res.sendStatus(200);
 });
 
 module.exports = router;

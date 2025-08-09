@@ -47,8 +47,13 @@ exports.loginUser = async (req, res) => {
   } catch (error) {
     if (error.response) {
       // Ada response dari server (contoh: 400, 401, dsb)
-      req.session.errorMessage = 'Email dan password tidak valid!';
-      console.error('Login failed:', error.response.data || error.message);
+      if (error.status = 404) {
+        req.session.errorMessage = 'Terdapat gangguan pada backend!';
+        console.error('Login failed:', error.response.data || error.message);  
+      } else {
+        req.session.errorMessage = 'Email dan password tidak valid!';
+        console.error('Login failed:', error.response.data || error.message);
+      }
     } else if (error.request) {
       // Request dikirim tapi tidak ada respons (server mati atau timeout)
       console.error('Login failed: Tidak bisa menghubungi API. Hubungi developer.');

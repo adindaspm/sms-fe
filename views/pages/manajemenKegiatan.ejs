@@ -83,14 +83,23 @@
                         <%= kegiatan.kategori %>
                     </td>
                     <td class="dark:text-white">
-                      <div class="flex justify-center">
+                      <div class="flex justify-center items-center align-middle">
                         <a href="/surveys/detail/<%= kegiatan.id %>" class="px-0.5">
-                          <button class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700">Detail</button>
+                            <i data-tooltip-target="tooltip-detailKegiatan-<%= kegiatan.id %>" class="fa-solid fa-circle-info text-green-500 text-lg"></i>
+                            <div id="tooltip-detailKegiatan-<%= kegiatan.id %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                Lihat Detail Kegiatan
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                         </a>
+                        
                         <% if (loggedInUser && loggedInUser.roles.some(role => role.includes('ROLE_OPERATOR'))) { %>
-                        <a href="/surveys/<%= kegiatan.id %>/update" class="px-0.5">
-                          <button class="text-white bg-yellow-500 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Update</button>
+                        <a href="/surveys/<%= kegiatan.id %>/update" data-tooltip-target="tooltip-updateKegiatan-<%= kegiatan.id %>" class="px-0.5">
+                          <i class="fa-solid fa-pen-to-square text-blue-500 text-lg"></i>
                         </a>
+                        <div id="tooltip-updateKegiatan-<%= kegiatan.id %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                            Perbarui Data Kegiatan
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
                         <% } %>
                       </div>
                     </td>

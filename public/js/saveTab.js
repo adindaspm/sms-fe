@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', () => {
         localStorage.setItem('activeMainTab', btn.getAttribute('data-tabs-target'));
         localStorage.removeItem('activeTabId');
-        console.log(btn);
       });
     });
 

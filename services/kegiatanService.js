@@ -19,11 +19,7 @@ const getAllKegiatans = async function (token) {
 exports.getAllKegiatans = getAllKegiatans;
 
 exports.getFilteredKegiatans = async function (direktoratId, satkerId, token) {
-  const cacheKey = `kegiatansByDirektoratOrSatker_${direktoratId}_${satkerId}`;
-  const cached = await getCache(cacheKey);
-  if (cached) return cached;
-
-  const kegiatans = await getAllKegiatansWithStatus(token);
+ const kegiatans = await getAllKegiatansWithStatus(token);
   const filteredKegiatans = kegiatans.filter(k => {
     if (direktoratId) {
       return k.direktoratPjId === direktoratId;
@@ -32,7 +28,6 @@ exports.getFilteredKegiatans = async function (direktoratId, satkerId, token) {
     }
   });
   
-  await setCache(cacheKey, filteredKegiatans, 60); // TTL 60 detik
   return filteredKegiatans;
 }
 
@@ -247,10 +242,6 @@ function semuaTahapKosong(statusTahap) {
 }
 
 exports.countKategoriStatus = async function (kegiatans) {
-  const cacheKey = 'kategoriStatus';
-  const cached = await getCache(cacheKey);
-  if (cached) return cached;
-
   const hasil = {
     belumMulai: 0,
     selesai: 0,
@@ -267,7 +258,6 @@ exports.countKategoriStatus = async function (kegiatans) {
     else hasil.tidakDiketahui++;
   }
 
-  await setCache(cacheKey, hasil, 3600);
   return hasil;
 }
 

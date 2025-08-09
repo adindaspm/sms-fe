@@ -80,19 +80,29 @@
                             <button class="text-white bg-yellow-600 hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Kelola Peran</button>
                         </a>
                       </td>
-                      <td class="dark:text-white">
-                        <div class="flex space-x-2">
-                            <button class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700" 
+                      <td class="dark:text-white align-middle">
+                        <div class="flex space-x-2 items-center align-middle">
+                            <!-- <button class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-2.5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-700" 
                                 data-user='<%- JSON.stringify(userDto) %>' onclick="showUserDetailModal(<%= userDto.id %>)">
-                                    Detail
-                            </button>
+                                Detail
+                            </button> -->
+                            <i data-tooltip-target="tooltip-detailPengguna-<%= userDto.id %>" class="fa-solid fa-circle-info text-green-500 text-lg" data-user='<%- JSON.stringify(userDto) %>' onclick="showUserDetailModal(<%= userDto.id %>)"></i>
+                            <div id="tooltip-detailPengguna-<%= userDto.id %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                Lihat Detail Pengguna
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                             <% if (loggedInUser && loggedInUser.roles.some(role => role.includes('ROLE_SUPERADMIN'))) { %>
-                            <a href="/users/<%= userDto.id %>/update">
-                                 <button class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700" 
+                            <a href="/users/<%= userDto.id %>/update" data-tooltip-target="tooltip-updatePengguna-<%= userDto.id %>">
+                                <!-- <button class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-green-600 dark:focus:ring-blue-700" 
                                 data-user='<%- JSON.stringify(userDto) %>'>
                                     Update
-                                </button>
+                                </button> -->
+                                <i class="fa-solid fa-pen-to-square text-blue-500 text-lg"></i>
                             </a>
+                            <div id="tooltip-updatePengguna-<%= userDto.id %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                Perbarui Data Pengguna
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                             <% } %>
                         </div>
                       </td>

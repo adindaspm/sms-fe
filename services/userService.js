@@ -36,10 +36,6 @@ exports.getFilteredUsers = async (satkerName, token) => {
   const cached = await getCache(cacheKey);
   if (cached) return cached;
 
-  const response = await axios.get(`${apiBaseUrl}/api/users`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
   const users = await getAllUsers(token);
   let filteredUsers;
   if (satkerName != "BPS RI") {

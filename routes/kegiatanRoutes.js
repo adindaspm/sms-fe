@@ -4,7 +4,16 @@ const kegiatanController = require('../controllers/kegiatanController');
 const { validateKegiatan } = require('../validators/kegiatanValidator');
 const handleValidation = require('../middleware/handleValidation');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({
+  dest: 'uploads/',
+  limits: { fileSize: 5 * 1024 * 1024 }, // Max 5 MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype !== 'application/pdf') {
+      return cb(new Error('Hanya file PDF yang diperbolehkan'), false);
+    }
+    cb(null, true);
+  }
+});
 
 router.get('/', kegiatanController.index);
 router.get('/add', kegiatanController.addForm);
@@ -15,6 +24,7 @@ router.post('/:id/update', validateKegiatan, handleValidation('layout', kegiatan
 router.post('/completeTahap/:idKegiatan/:idTahap', kegiatanController.completeTahap);
 router.post('/tahap/:idKegiatan/:idTahap/:idSubTahap', kegiatanController.updateTahap);
 router.post('/tahap/:idKegiatan/:idTahap/:idSubTahap/rencana', kegiatanController.updateTanggalTahap);
+router.post('/tahap/:idKegiatan/:idTahap/:idSubTahap/realisasi', kegiatanController.updateTanggalRealisasi);
 router.get('/files/tahap/:idKegiatan/:idTahap', kegiatanController.downloadFile);
 router.post('/upload/tahap/:idKegiatan/:idTahap', upload.single('file'), kegiatanController.uploadFile);
 
