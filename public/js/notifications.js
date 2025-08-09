@@ -2,21 +2,21 @@
     {
       id: 1,
       message: "Data kegiatan berhasil diperbarui",
-      link: "/operator/kegiatan/123",
+      link: "#",
       createdAt: "2025-07-10T10:00:00Z",
       isRead: false
     },
     {
       id: 2,
       message: "Pengguna baru ditambahkan",
-      link: "/admin/users",
+      link: "#",
       createdAt: "2025-07-09T15:22:00Z",
       isRead: false
     },
     {
       id: 3,
       message: "Laporan bulanan tersedia",
-      link: "/laporan/bulanan",
+      link: "#",
       createdAt: "2025-07-08T09:15:00Z",
       isRead: true
     }
