@@ -8,6 +8,7 @@ const { getAllKegiatans } = require('../services/kegiatanService');
 const { getAllSatkers } = require('../services/satkerService');
 const { getAllPrograms } = require('../services/programService');
 const { getAllDirektorats } = require('../services/direktoratService');
+const { getAllOutputs } = require('../services/outputService');
 
 // Dashboard
 router.get('/summaryKegiatan', kegiatanController.getKegiatanSummary);
@@ -25,10 +26,8 @@ router.get('/', async (req, res) => {
     labelsSatker,dataSatker,hasDataSatker,
       years: [2023, 2024, 2025],
       selectedYear: 2025,
-      satkers: await getAllSatkers(token),
-      selectedSatker: null,
-      programs: await getAllPrograms(token),
-      selectedProgram: null,
+      outputs: await getAllOutputs(token),
+      selectedOutput: null,
       direktorats: await getAllDirektorats(token),
       selectedDirektorat: '',
   });
